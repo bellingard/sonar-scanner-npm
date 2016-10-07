@@ -1,2 +1,1 @@
-# sonar-scanner-gulp
-SonarQube Scanner for Gulp
+# NPM module to run SonarQube analyses
