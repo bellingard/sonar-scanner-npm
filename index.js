@@ -13,15 +13,25 @@ var logError = log.error;
  * Try to be smart and guess most SQ parameters from JS files that
  * might exist - like "package.json".
  */
-function defineSonarQubeScannerParams() {
+function defineSonarQubeScannerParams(params) {
   var projectBaseDir = process.cwd();
 
   // set default values if nothing is found later
+  var serverUrl = "http://localhost:9000";
+  var token = "";
   var projectKey = slug(path.basename(projectBaseDir));
   var projectName = projectKey;
   var projectVersion = "1.0";
   var projectDescription = "No description.";
   var projectHomePage = "";
+
+  // Check what's passed in the call params
+  if (params.serverUrl) {
+    serverUrl = params.serverUrl;
+  }
+  if (params.token) {
+    token = params.token;
+  }
 
   // now try to read "package.json" file
   try {
@@ -45,6 +55,8 @@ function defineSonarQubeScannerParams() {
   }
 
   var sonarqubeScannerParams = {
+    "sonar.host.url" : serverUrl,
+    "sonar.login" : token,
     "sonar.projectKey" : projectKey,
     "sonar.projectName" : projectName,
     "sonar.projectVersion" : projectVersion,
@@ -57,15 +69,14 @@ function defineSonarQubeScannerParams() {
   return sonarqubeScannerParams;
 }
 
-function scan(options) {
+function scan(params) {
   log("Starting SonarQube analysis...");
 
-  var SONAR_SCANNER_COMMAND = "sonar-scanner"
-  //var SONAR_SCANNER_COMMAND = "echo $SONARQUBE_SCANNER_PARAMS"
+  var SONAR_SCANNER_COMMAND = "sonar-scanner";
 
   var mergedEnv = {};
   extend(mergedEnv, process.env, {
-    SONARQUBE_SCANNER_PARAMS : JSON.stringify(defineSonarQubeScannerParams())
+    SONARQUBE_SCANNER_PARAMS : JSON.stringify(defineSonarQubeScannerParams(params))
   });
 
   var options_exec = {
