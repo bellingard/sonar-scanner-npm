@@ -1,0 +1,35 @@
+{
+  "name": "sonarqube-scanner",
+  "description": "SonarQube Scanner",
+  "version": "0.1.0",
+  "homepage": "https://github.com/bellingard/sonar-scanner-npm",
+  "author": {
+    "name": "Fabrice Bellingard",
+    "email": "fabrice.bellingard@sonarsource.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/bellingard/sonar-scanner-npm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bellingard/sonar-scanner-npm/issues"
+  },
+  "licenses": [
+    {
+      "type": "LGPL 3.0",
+      "url": "https://github.com/bellingard/sonar-scanner-npm/blob/master/LICENSE.txt"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "keywords": [
+    "sonarqube",
+    "sonarqube-scanner",
+    "sonarqube-runner"
+  ]
+}
