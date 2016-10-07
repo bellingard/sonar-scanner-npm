@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var exec = require('child_process').exec;
+var exec = require('child_process').execSync;
 var os = require('os');
 var format = require('util').format;
 var extend = require('extend');
@@ -84,6 +84,7 @@ function prepareExecEnvironment(params) {
   // this is the actual object that the process.exec function is waiting for
   var options_exec = {
       env : mergedEnv,
+      stdio : [0,1,2],
       // Increase the amount of data allowed on stdout or stderr
       // (if this value is exceeded then the child process is killed).
       // TODO: make this customizable
@@ -94,32 +95,26 @@ function prepareExecEnvironment(params) {
 }
 
 /*
+ * Returns the SQ Scanner executable:
+ * - the one available in the PATH if it exists (meaning user has also JAVA)
+ * - or the standalone JDK-9 binaries (that don't require JAVA on the box)
+ */
+function findExecutable() {
+  var command = "sonar-scanner";
+
+  return command;
+}
+
+/*
  * Main function that actually triggers the analysis.
  */
 function scan(params) {
   log("Starting SonarQube analysis...");
 
-  //var SONAR_SCANNER_COMMAND = "sonar-scanner";
-  var SONAR_SCANNER_COMMAND = "/Users/bellingard/Tests/_TEMP_/bdd-scanner-natif/app/bin/org.sonarsource.scanner.standalone"
-
+  var sqScannerCommand = findExecutable();
   var options_exec = prepareExecEnvironment(params);
 
-  var scanner = exec(SONAR_SCANNER_COMMAND, options_exec, function () {});
-  scanner.stdout.on('data', function (c) {
-      log(c);
-  });
-  scanner.stderr.on('data', function (c) {
-      logError(c);
-  });
-  scanner.on('exit', function (code) {
-      if (code !== 0) {
-          logError(format('Return code: %d.', code));
-          // TODO: maybe we should throw an error so that upstream code can
-          // know that something went wrong
-      }
-      log(format('Return code: %d.', code));
-  });
-
+  var scanner = exec(sqScannerCommand, options_exec);
 };
 
 module.exports = scan;
