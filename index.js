@@ -9,6 +9,22 @@ var slug = require('slug');
 var log = require('fancy-log');
 var logError = log.error;
 
+
+module.exports = scan;
+
+/*
+ * Main function that actually triggers the analysis.
+ */
+function scan(params) {
+  log("Starting SonarQube analysis...");
+
+  var sqScannerCommand = findExecutable();
+  var options_exec = prepareExecEnvironment(params);
+
+  exec(sqScannerCommand, options_exec);
+};
+
+
 /*
  * Try to be smart and guess most SQ parameters from JS files that
  * might exist - like "package.json".
@@ -69,6 +85,7 @@ function defineSonarQubeScannerParams(params) {
   return sonarqubeScannerParams;
 }
 
+
 /*
  * Add everything required into the environment variables for the SQ Scanner
  * to get executed successfully.
@@ -94,6 +111,7 @@ function prepareExecEnvironment(params) {
   return options_exec;
 }
 
+
 /*
  * Returns the SQ Scanner executable:
  * - the one available in the PATH if it exists (meaning user has also JAVA)
@@ -101,21 +119,29 @@ function prepareExecEnvironment(params) {
  */
 function findExecutable() {
   var command = "sonar-scanner";
+  if (isWindows()) {
+    command += ".bat";
+  }
+
+  try {
+    exec(command + " -v", {});
+  } catch (e) {
+    // sonar-scanner is not in the PATH => download the binaries for the
+    // correct platform
+    // => currently it's here...
+    command = "/Users/bellingard/Tests/_TEMP_/bdd-scanner-natif/app/bin/org.sonarsource.scanner.standalone";
+    if (isWindows()) {
+      command += ".bat";
+    }
+  }
 
   return command;
 }
 
+
 /*
- * Main function that actually triggers the analysis.
+ * Some util functions...
  */
-function scan(params) {
-  log("Starting SonarQube analysis...");
-
-  var sqScannerCommand = findExecutable();
-  var options_exec = prepareExecEnvironment(params);
-
-  var scanner = exec(sqScannerCommand, options_exec);
-};
-
-module.exports = scan;
-//module.exports = defineSonarQubeScannerParams;
+function isWindows() {
+  return /^win/.test(process.platform);
+}
