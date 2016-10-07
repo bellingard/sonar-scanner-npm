@@ -69,16 +69,19 @@ function defineSonarQubeScannerParams(params) {
   return sonarqubeScannerParams;
 }
 
-function scan(params) {
-  log("Starting SonarQube analysis...");
-
-  var SONAR_SCANNER_COMMAND = "sonar-scanner";
-
+/*
+ * Add everything required into the environment variables for the SQ Scanner
+ * to get executed successfully.
+ */
+function prepareExecEnvironment(params) {
   var mergedEnv = {};
+
+  // We need to merge the existing env variables (process.env) with the new ones
   extend(mergedEnv, process.env, {
     SONARQUBE_SCANNER_PARAMS : JSON.stringify(defineSonarQubeScannerParams(params))
   });
 
+  // this is the actual object that the process.exec function is waiting for
   var options_exec = {
       env : mergedEnv,
       // Increase the amount of data allowed on stdout or stderr
@@ -86,6 +89,20 @@ function scan(params) {
       // TODO: make this customizable
       maxBuffer : 1024*1024
   }
+
+  return options_exec;
+}
+
+/*
+ * Main function that actually triggers the analysis.
+ */
+function scan(params) {
+  log("Starting SonarQube analysis...");
+
+  //var SONAR_SCANNER_COMMAND = "sonar-scanner";
+  var SONAR_SCANNER_COMMAND = "/Users/bellingard/Tests/_TEMP_/bdd-scanner-natif/app/bin/org.sonarsource.scanner.standalone"
+
+  var options_exec = prepareExecEnvironment(params);
 
   var scanner = exec(SONAR_SCANNER_COMMAND, options_exec, function () {});
   scanner.stdout.on('data', function (c) {
