@@ -25,7 +25,9 @@
   },
   "dependencies": {
     "fancy-log": "^1.1.0",
-    "extend": "3.0.0"
+    "extend": "3.0.0",
+    "read-pkg": "2.0.0",
+    "slug": "0.9.1"
   },
   "devDependencies": {
   },
