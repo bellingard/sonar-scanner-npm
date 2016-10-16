@@ -68,12 +68,8 @@ function findExecutable() {
     exec(command + " -v", {});
   } catch (e) {
     // sonar-scanner is not in the PATH => download the binaries for the
-    // correct platform
-    // => currently it's here...
-    command = "/Users/bellingard/Tests/_TEMP_/bdd-scanner-natif/app/bin/org.sonarsource.scanner.standalone";
-    if (isWindows()) {
-      command += ".bat";
-    }
+    // correct platform... but this is not supported for the moment.
+    throw Error("SonarQube Scanner not found and impossible to download a compatible binary for it (yet!).");
   }
 
   return command;
@@ -85,4 +81,8 @@ function findExecutable() {
  */
 function isWindows() {
   return /^win/.test(process.platform);
+}
+
+function isMac() {
+  return /^darwin/.test(process.platform);
 }
