@@ -7,7 +7,7 @@ sonarqube: true
 
 before_install:
   # Use exact Node version.
-  - nvm use $TRAVIS_NODE_VERSION
+  #- nvm use $TRAVIS_NODE_VERSION
 
 install:
   # Install packages.
