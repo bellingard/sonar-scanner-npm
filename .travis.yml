@@ -25,7 +25,6 @@ before_script:
   - export PATH=$SONAR_SCANNER_HOME/bin:$PATH
 
 script:
-  - sonar-scanner -v
   # Actually calls Gulp - the SonarQube analysis is the default task
   - gulp
 
