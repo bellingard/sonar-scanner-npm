@@ -10,7 +10,7 @@ var log = require('fancy-log');
 var logError = log.error;
 
 // local dependencies
-var sonarQubeParams = require('./deps/sonarqube-scanner-params');
+var sonarQubeParams = require('./sonarqube-scanner-params');
 
 
 module.exports = scan;
