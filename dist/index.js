@@ -1,16 +1,11 @@
-var fs = require('fs');
-var path = require('path');
 var exec = require('child_process').execSync;
-var os = require('os');
-var format = require('util').format;
 var extend = require('extend');
-var readPackage = require('read-pkg');
-var slug = require('slug');
 var log = require('fancy-log');
 var logError = log.error;
 
 // local dependencies
 var sonarQubeParams = require('./sonarqube-scanner-params');
+var sonarQubeExecutable = require('./sonarqube-scanner-executable');
 
 
 module.exports = scan;
@@ -21,8 +16,14 @@ module.exports = scan;
 function scan(params) {
   log("Starting SonarQube analysis...");
 
-  var sqScannerCommand = findExecutable();
-  var options_exec = prepareExecEnvironment(params);
+  // determine the set of parameters to pass to the SQ Scanner
+  var sqScannerParams = sonarQubeParams(params);
+
+  // determine the command to run
+  var sqScannerCommand = sonarQubeExecutable();
+
+  // and prepare the exec options
+  var options_exec = prepareExecEnvironment(sqScannerParams);
 
   exec(sqScannerCommand, options_exec);
 };
@@ -36,7 +37,7 @@ function prepareExecEnvironment(params) {
 
   // We need to merge the existing env variables (process.env) with the new ones
   extend(mergedEnv, process.env, {
-    SONARQUBE_SCANNER_PARAMS : JSON.stringify(sonarQubeParams(params))
+    SONARQUBE_SCANNER_PARAMS : JSON.stringify(params)
   });
 
   // this is the actual object that the process.exec function is waiting for
@@ -50,39 +51,4 @@ function prepareExecEnvironment(params) {
   }
 
   return options_exec;
-}
-
-
-/*
- * Returns the SQ Scanner executable:
- * - the one available in the PATH if it exists (meaning user has also JAVA)
- * - or the standalone JDK-9 binaries (that don't require JAVA on the box)
- */
-function findExecutable() {
-  var command = "sonar-scanner";
-  if (isWindows()) {
-    command += ".bat";
-  }
-
-  try {
-    exec(command + " -v", {});
-  } catch (e) {
-    // sonar-scanner is not in the PATH => download the binaries for the
-    // correct platform... but this is not supported for the moment.
-    throw Error("SonarQube Scanner not found and impossible to download a compatible binary for it (yet!).");
-  }
-
-  return command;
-}
-
-
-/*
- * Some util functions...
- */
-function isWindows() {
-  return /^win/.test(process.platform);
-}
-
-function isMac() {
-  return /^darwin/.test(process.platform);
 }
