@@ -14,12 +14,10 @@
   "bugs": {
     "url": "https://github.com/bellingard/sonar-scanner-npm/issues"
   },
-  "licenses": [
-    {
-      "type": "LGPL 3.0",
+  "license": {
+      "type": "LGPL-3.0",
       "url": "https://github.com/bellingard/sonar-scanner-npm/blob/master/LICENSE.txt"
-    }
-  ],
+  },
   "engines": {
     "node": ">= 0.10"
   },
@@ -30,6 +28,8 @@
     "slug": "0.9.1"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "sonarqube-scanner": "0.1.0"
   },
   "keywords": [
     "sonarqube",
