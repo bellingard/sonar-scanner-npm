@@ -1,15 +1,22 @@
-language: node_js
-sudo: false
+dist: trusty
+sudo: required
+
 node_js:
   - 6
 addons:
   sonarqube: true
 
-before_install:
-  # Use exact Node version.
-  - nvm use $TRAVIS_NODE_VERSION
-
 install:
+  # Need to install latest version of the SQ Scanner for now 
+  # (waiting the improvement of the SQ Scanner for NPM module => https://github.com/bellingard/sonar-scanner-npm/issues/1)
+  - export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-2.8
+  - rm -rf $SONAR_SCANNER_HOME
+  - mkdir -p $SONAR_SCANNER_HOME
+  - curl -sSLo $HOME/.sonar/sonar-scanner.zip http://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/2.8/sonar-scanner-cli-2.8.zip
+  - unzip $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
+  - rm $HOME/.sonar/sonar-scanner.zip
+  - export PATH=$SONAR_SCANNER_HOME/bin:$PATH
+  
   # Install packages.
   - npm install
 
@@ -18,6 +25,7 @@ before_script:
   - npm install -g gulp
 
 script:
+  - echo $SONARQUBE_TOKEN
   # Actually calls Gulp - the SonarQube analysis is the default task
   - gulp
 
