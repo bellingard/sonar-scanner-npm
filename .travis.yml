@@ -1,6 +1,5 @@
-dist: trusty
-sudo: required
-
+language: node_js
+sudo: false
 node_js:
   - 6
 addons:
@@ -8,7 +7,7 @@ addons:
 
 before_install:
   # Use exact Node version.
-  #- nvm use $TRAVIS_NODE_VERSION
+  - nvm use $TRAVIS_NODE_VERSION
 
 install:
   # Install packages.
@@ -19,7 +18,6 @@ before_script:
   - npm install -g gulp
 
 script:
-  - echo $SONARQUBE_TOKEN
   # Actually calls Gulp - the SonarQube analysis is the default task
   - gulp
 
