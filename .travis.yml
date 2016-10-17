@@ -3,7 +3,8 @@ sudo: required
 
 node_js:
   - 6
-sonarqube: true
+addons:
+  sonarqube: true
 
 before_install:
   # Use exact Node version.
