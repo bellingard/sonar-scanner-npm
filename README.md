@@ -8,7 +8,7 @@ var sonarqubeScanner = require('sonarqube-scanner');
 
 gulp.task('default', function() {
   sonarqubeScanner({
-    serverUrl : "http://localhost:9000",
+    serverUrl : "https://sonarqube.com",
     token : "019d1e2e04eefdcd0caee1468f39a45e69d33d3f",
     options : {}
   });
