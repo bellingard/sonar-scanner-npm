@@ -6,8 +6,15 @@ node_js:
 addons:
   sonarqube: true
 
-install:
-  # Need to install latest version of the SQ Scanner for now 
+install:  
+  # Install packages.
+  - npm install
+
+before_script:
+  # Need Gulp ro trigger the analysis on SonarQube.com
+  - npm install -g gulp
+  
+  # Need to install latest version of the SQ Scanner for now - should be removed soon...
   # (waiting the improvement of the SQ Scanner for NPM module => https://github.com/bellingard/sonar-scanner-npm/issues/1)
   - export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-2.8
   - rm -rf $SONAR_SCANNER_HOME
@@ -16,13 +23,6 @@ install:
   - unzip $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
   - rm $HOME/.sonar/sonar-scanner.zip
   - export PATH=$SONAR_SCANNER_HOME/bin:$PATH
-  
-  # Install packages.
-  - npm install
-
-before_script:
-  # Need Gulp ro trigger the analysis on SonarQube.com
-  - npm install -g gulp
 
 script:
   - sonar-scanner -v
