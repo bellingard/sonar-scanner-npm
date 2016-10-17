@@ -1,0 +1,26 @@
+language: node_js
+sudo: false
+node_js:
+  - 6
+sonarqube: true
+
+before_install:
+  # Use exact Node version.
+  - npm use $TRAVIS_NODE_VERSION
+
+install:
+  # Install packages.
+  - npm install
+
+before_script:
+  # Need Gulp ro trigger the analysis on SonarQube.com
+  - npm install -g gulp
+
+script:
+  # Actually calls Gulp - the SonarQube analysis is the default task
+  - gulp
+
+cache:
+  directories:
+    - $HOME/.npm
+    - $HOME/.sonar/cache
