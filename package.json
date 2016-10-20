@@ -26,7 +26,9 @@
     "fancy-log": "^1.1.0",
     "extend": "3.0.0",
     "read-pkg": "2.0.0",
-    "slug": "0.9.1"
+    "slug": "0.9.1",
+    "download": "5.0.2",
+    "mkdirp": "0.5.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
