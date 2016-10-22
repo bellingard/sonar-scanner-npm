@@ -13,19 +13,21 @@ module.exports = scan;
 /*
  * Main function that actually triggers the analysis.
  */
-function scan(params) {
+function scan(params, callback) {
   log("Starting SonarQube analysis...");
 
   // determine the set of parameters to pass to the SQ Scanner
   var sqScannerParams = sonarQubeParams(params);
 
-  // determine the command to run
-  var sqScannerCommand = sonarQubeExecutable();
-
-  // and prepare the exec options
+  // prepare the exec options
   var options_exec = prepareExecEnvironment(sqScannerParams);
 
-  exec(sqScannerCommand, options_exec);
+  // determine the command to run and execute it
+  sonarQubeExecutable((sqScannerCommand) => {
+    exec(sqScannerCommand, options_exec);
+    log("SonarQube analysis finished.");
+    callback();
+  });
 };
 
 /*
