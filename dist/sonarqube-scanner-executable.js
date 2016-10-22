@@ -74,7 +74,7 @@ function getPlatformBinaries(passExecutableCallback) {
   // #2 - Download the binaries and unzip them
   log("Creating " + installFolder);
   mkdirp(installFolder);
-  var targetOS = "mac";
+  var targetOS = findTargetOS();
   var fileName = "sonarqube-scanner-"
                   + targetOS
                   + "-x86_64-"
@@ -94,6 +94,22 @@ function getPlatformBinaries(passExecutableCallback) {
           passExecutableCallback(platformExecutable);
       });
 }
+
+/*
+ * Get the target OS based on the platform name
+ */
+ function findTargetOS() {
+   if (isWindows()) {
+     return "win";
+   }
+   if (isLinux()) {
+     return "linux";
+   }
+   if (isMac()) {
+     return "mac";
+   }
+   throw Error("Your platform " + process.platform + "is currently not supported.")
+ }
 
 /*
  * Some util functions...
