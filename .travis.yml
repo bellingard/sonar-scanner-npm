@@ -3,8 +3,6 @@ sudo: required
 
 node_js:
   - 6
-addons:
-  sonarqube: true
 
 install:
   # Install packages.
@@ -13,16 +11,6 @@ install:
 before_script:
   # Need Gulp ro trigger the analysis on SonarQube.com
   - npm install -g gulp
-
-  # Need to install latest version of the SQ Scanner for now - should be removed soon...
-  # (waiting the improvement of the SQ Scanner for NPM module => https://github.com/bellingard/sonar-scanner-npm/issues/1)
-  - export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-2.8
-  - rm -rf $SONAR_SCANNER_HOME
-  - mkdir -p $SONAR_SCANNER_HOME
-  - curl -sSLo $HOME/.sonar/sonar-scanner.zip http://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/2.8/sonar-scanner-cli-2.8.zip
-  - unzip $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-  - rm $HOME/.sonar/sonar-scanner.zip
-  - export PATH=$SONAR_SCANNER_HOME/bin:$PATH
 
 script:
   # Actually calls Gulp - the SonarQube analysis is the default task
