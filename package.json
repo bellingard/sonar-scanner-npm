@@ -1,7 +1,7 @@
 {
   "name": "sonarqube-scanner",
   "description": "SonarQube Scanner - runing with or without a Java runtime",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "homepage": "https://github.com/bellingard/sonar-scanner-npm",
   "author": {
     "name": "Fabrice Bellingard",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "sonarqube-scanner": "0.2.0"
+    "sonarqube-scanner": "0.3.0"
   },
   "keywords": [
     "sonarqube",
