@@ -1,5 +1,9 @@
 # NPM module to run SonarQube analyses
 
+This NPM module makes it very easy to trigger [SonarQube](http://www.sonarqube.org)
+analyses on a JavaScript code base, without needing to install any specific tool
+or (Java) runtime.
+
 The following example shows how to run a SonarQube analysis on a JavaScript
 project using Gulp, and pushing the results to [SonarQube.com](https://sonarqube.com),
 the online SonarQube service:
