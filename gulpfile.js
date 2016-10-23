@@ -7,7 +7,9 @@ gulp.task('default', function (callback) {
     sonarqubeScanner({
         serverUrl: process.env.SONARQUBE_URL,
         token: process.env.SONARQUBE_TOKEN,
-        options: {}
+        options: {
+            "sonar.projectName" : "SonarQube Scanner for the JavaScript world"
+        }
     }, callback);
     // ----------------------------------------------------
 });
