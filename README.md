@@ -51,4 +51,4 @@ Callback (the execution of the analysis is asynchronous).
 
 ## License
 
-`node-extend` is licensed under the [MIT License][mit-license-url].
+`sonarqube-scanner` is licensed under the [LGPL v3 License](http://www.gnu.org/licenses/lgpl.txt).
