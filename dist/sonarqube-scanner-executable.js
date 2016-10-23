@@ -5,6 +5,7 @@ var mkdirp = require('mkdirp').sync;
 var Download = require('download');
 var downloadStatus = require('download-status');
 var log = require('fancy-log');
+var logError = log.error;
 
 module.exports = defineSonarQubeScannerExecutable;
 
@@ -27,9 +28,9 @@ function defineSonarQubeScannerExecutable(passExecutableCallback) {
         // TODO: we should check that it's at least v2.8+
         executableFound = true;
     } catch (e) {
-        // sonar-scanner is not in the PATH => download the binaries for the
+        // sonar-scanner is not in the PATH => we'll download the binaries for the
         // correct platform...
-        log("Trying to use the target binaries for the '" + process.platform + "' platform...");
+        log("Local install of SonarQube scanner not found.");
     }
     if (executableFound) {
         passExecutableCallback(command);
@@ -37,6 +38,7 @@ function defineSonarQubeScannerExecutable(passExecutableCallback) {
     }
 
     // #2 - Download the binaries from https://github.com/henryju/bdd-scanner-natif
+    log("Trying to use the target binaries for the '" + process.platform + "' platform...");
     if (isWindows() || isLinux() || isMac()) {
         getPlatformBinaries(passExecutableCallback);
         return;
@@ -63,8 +65,7 @@ function getPlatformBinaries(passExecutableCallback) {
         // executable exists!
         executableFound = true;
     } catch (e) {
-        // Folder does not exist - let's create it and install the binaries
-        log("Could not find executable. Proceed with download...");
+        log("Could not find executable in '" + installFolder + "'.");
     }
     if (executableFound) {
         passExecutableCallback(platformExecutable);
@@ -72,6 +73,7 @@ function getPlatformBinaries(passExecutableCallback) {
     }
 
     // #2 - Download the binaries and unzip them
+    log("Proceed with download of the platform binaries for SonarQube Scanner...");
     log("Creating " + installFolder);
     mkdirp(installFolder);
     var targetOS = findTargetOS();
@@ -87,9 +89,10 @@ function getPlatformBinaries(passExecutableCallback) {
         .get(downloadUrl)
         .dest(installFolder)
         .use(downloadStatus())
-        .run((err, files) => {
+        .run((err) => {
             if (err) {
-                throw Error("Impossible to download and extract binary:" + err.message);
+                logError("Impossible to download and extract binary: " + err.message);
+                throw err;
             }
             passExecutableCallback(platformExecutable);
         });
