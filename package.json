@@ -14,10 +14,7 @@
   "bugs": {
     "url": "https://github.com/bellingard/sonar-scanner-npm/issues"
   },
-  "license": {
-      "type": "LGPL-3.0",
-      "url": "https://github.com/bellingard/sonar-scanner-npm/blob/master/LICENSE.txt"
-  },
+  "license": "LGPL-3.0",
   "main": "dist/index.js",
   "engines": {
     "node": ">= 0.10"
