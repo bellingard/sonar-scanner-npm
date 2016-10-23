@@ -25,6 +25,7 @@ function defineSonarQubeScannerExecutable(passExecutableCallback) {
     try {
         exec(command + " -v", {});
         // if we're here, this means that the SQ Scanner can be executed
+        log("Local install of SonarQube scanner found. Using it.");
         // TODO: we should check that it's at least v2.8+
         executableFound = true;
     } catch (e) {
@@ -63,6 +64,7 @@ function getPlatformBinaries(passExecutableCallback) {
         log("Checking if executable exists: " + platformExecutable);
         fs.accessSync(platformExecutable, fs.F_OK);
         // executable exists!
+        log("Platform binaries for SonarQube scanner found. Using it.");
         executableFound = true;
     } catch (e) {
         log("Could not find executable in '" + installFolder + "'.");
