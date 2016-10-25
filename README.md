@@ -13,7 +13,7 @@ itself:
 
 ## Installation
 
-This package is available on [npm][npm-url] as: `sonarqube-scanner`
+This package is available on npm as: `sonarqube-scanner`
 
 ``` sh
 npm install sonarqube-scanner
@@ -45,7 +45,7 @@ gulp.task('default', function(callback) {
 * `parameters` *Map*
   * `serverUrl` *String* (optional) The URL of the SonarQube server. Defaults to http://localhost:9000
   * `token` *String* (optional) The token used to connect to the SonarQube server. Empty by default.
-  * `options` *Map* (optionl) Used to pass extra parameters for the SonarQube analysis. See the [official documentation](http://redirect.sonarsource.com/doc/analysis-parameters.html) for more details.
+  * `options` *Map* (optional) Used to pass extra parameters for the SonarQube analysis. See the [official documentation](http://redirect.sonarsource.com/doc/analysis-parameters.html) for more details.
 * `callback` *Function* (optional)
 Callback (the execution of the analysis is asynchronous).
 
