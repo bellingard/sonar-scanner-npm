@@ -84,8 +84,8 @@ function getPlatformBinaries(passExecutableCallback) {
         + "-x86_64-"
         + platformBinariesVersion
         + ".zip";
-    var downloadUrl = "https://github.com/henryju/bdd-scanner-natif/releases/download/"
-        + platformBinariesVersion + "/" + fileName;
+    var downloadBaseUrl = process.env.SONAR_NATIF_SCANNER_MIRROR || "https://github.com/henryju/bdd-scanner-natif/releases/download/";
+    var downloadUrl = downloadBaseUrl + platformBinariesVersion + "/" + fileName;
     log("Downloading from " + downloadUrl);
     new Download({extract: true})
         .get(downloadUrl)
