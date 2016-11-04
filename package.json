@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com/bellingard/sonar-scanner-npm.git"
+    "url": "git+https://github.com/bellingard/sonar-scanner-npm.git"
   },
   "bugs": {
     "url": "https://github.com/bellingard/sonar-scanner-npm/issues"
