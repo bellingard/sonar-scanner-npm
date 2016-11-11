@@ -1,9 +1,6 @@
 var exec = require('child_process').execSync;
 var extend = require('extend');
 var log = require('fancy-log');
-var logError = log.error;
-
-// local dependencies
 var sonarQubeParams = require('./sonarqube-scanner-params');
 var sonarQubeExecutable = require('./sonarqube-scanner-executable');
 
@@ -17,7 +14,11 @@ function scan(params, callback) {
     log("Starting SonarQube analysis...");
 
     // determine the set of parameters to pass to the SQ Scanner
-    var sqScannerParams = sonarQubeParams(params);
+    var sqScannerParams = sonarQubeParams(
+        params,
+        process.cwd(),
+        JSON.parse(process.env.SONARQUBE_SCANNER_PARAMS)
+    );
 
     // prepare the exec options
     var options_exec = prepareExecEnvironment(sqScannerParams);

@@ -1,0 +1,16 @@
+{
+  "name": "fake-project",
+  "description": "A fake project",
+  "version": "1.0.0",
+  "homepage": "https://github.com/fake/project",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fake/project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fake/project/issues"
+  },
+  "engines": {
+    "node": ">= 0.10"
+  }
+}

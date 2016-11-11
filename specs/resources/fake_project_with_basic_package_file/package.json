@@ -1,0 +1,7 @@
+{
+  "name": "fake-basic-project",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">= 0.10"
+  }
+}
