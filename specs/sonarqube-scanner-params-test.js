@@ -16,7 +16,7 @@ describe('sqScannerParams', function () {
             "sonar.exclusions": "node_modules/**"
         };
         assert.deepEqual(
-            sqScannerParams({}, path.join(process.cwd(), "specs/resources/fake_project_with_no_package_file"), null),
+            sqScannerParams({}, pathForProject("fake_project_with_no_package_file"), null),
             expectedResult);
     });
 
@@ -34,7 +34,7 @@ describe('sqScannerParams', function () {
         assert.deepEqual(
             sqScannerParams(
                 {serverUrl: "https://sonarqube.com", token: "my_token"},
-                path.join(process.cwd(), "specs/resources/fake_project_with_no_package_file"),
+                pathForProject("fake_project_with_no_package_file"),
                 null),
             expectedResult);
     });
@@ -54,7 +54,7 @@ describe('sqScannerParams', function () {
         assert.deepEqual(
             sqScannerParams(
                 {options: {"sonar.projectName": "Foo", "sonar.tests": "specs"}},
-                path.join(process.cwd(), "specs/resources/fake_project_with_no_package_file"),
+                pathForProject("fake_project_with_no_package_file"),
                 null),
             expectedResult);
     });
@@ -71,7 +71,7 @@ describe('sqScannerParams', function () {
             "sonar.exclusions": "node_modules/**"
         };
         assert.deepEqual(
-            sqScannerParams({}, path.join(process.cwd(), "specs/resources/fake_project_with_basic_package_file"), null),
+            sqScannerParams({}, pathForProject("fake_project_with_basic_package_file"), null),
             expectedResult);
     });
 
@@ -90,7 +90,7 @@ describe('sqScannerParams', function () {
             "sonar.exclusions": "node_modules/**"
         };
         assert.deepEqual(
-            sqScannerParams({}, path.join(process.cwd(), "specs/resources/fake_project_with_complete_package_file"), null),
+            sqScannerParams({}, pathForProject("fake_project_with_complete_package_file"), null),
             expectedResult);
     });
 
@@ -108,7 +108,7 @@ describe('sqScannerParams', function () {
         assert.deepEqual(
             sqScannerParams(
                 {},
-                path.join(process.cwd(), "specs/resources/fake_project_with_no_package_file"),
+                pathForProject("fake_project_with_no_package_file"),
                 {"sonar.host.url": "https://sonarqube.com", "sonar.login": "my_token"}),
             expectedResult);
     });
@@ -127,10 +127,13 @@ describe('sqScannerParams', function () {
         assert.deepEqual(
             sqScannerParams(
                 {serverUrl: "https://sonarqube.com", token: "my_token"},
-                path.join(process.cwd(), "specs/resources/fake_project_with_no_package_file"),
+                pathForProject("fake_project_with_no_package_file"),
                 {"sonar.host.url": "https://another.server.com", "sonar.login": "another_token"}),
             expectedResult);
     });
 
 });
 
+function pathForProject(projectFolder) {
+    return path.join(process.cwd(), "specs", "resources", projectFolder);
+}
