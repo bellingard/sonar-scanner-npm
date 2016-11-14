@@ -14,10 +14,14 @@ function scan(params, callback) {
     log("Starting SonarQube analysis...");
 
     // determine the set of parameters to pass to the SQ Scanner
+    var envParams = {};
+    if (process.env.SONARQUBE_SCANNER_PARAMS) {
+      envParams = JSON.parse(process.env.SONARQUBE_SCANNER_PARAMS);
+    }
     var sqScannerParams = sonarQubeParams(
         params,
         process.cwd(),
-        JSON.parse(process.env.SONARQUBE_SCANNER_PARAMS)
+        envParams
     );
 
     // prepare the exec options
