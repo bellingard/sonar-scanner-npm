@@ -13,7 +13,6 @@ gulp.task('default', ['test'], function (callback) {
             "sonar.projectName": "SonarQube Scanner for the JavaScript world",
             "sonar.sources": "dist",
             "sonar.tests": "specs",
-            "sonar.javascript.jstest.reportsPath": "coverage",
             "sonar.javascript.lcov.reportPath": "coverage/lcov.info"
         }
     }, callback);
