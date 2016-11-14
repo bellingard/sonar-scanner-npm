@@ -1,7 +1,7 @@
 {
   "name": "sonarqube-scanner",
   "description": "SonarQube Scanner for the JavaScript world - running with or without a Java runtime",
-  "version": "0.5.1",
+  "version": "1.0.0",
   "homepage": "https://github.com/bellingard/sonar-scanner-npm",
   "author": {
     "name": "Fabrice Bellingard",
@@ -33,7 +33,7 @@
     "gulp-istanbul": "^1.1.1",
     "gulp-mocha": "^3.0.1",
     "mocha": "^3.1.2",
-    "sonarqube-scanner": "0.5.0"
+    "sonarqube-scanner": "0.5.1"
   },
   "keywords": [
     "sonarqube",
