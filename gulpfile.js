@@ -5,10 +5,10 @@ var sonarqubeScanner = require('sonarqube-scanner');
 
 gulp.task('default', ['test'], function (callback) {
     // We just run a SonarQube analysis and push it to SonarQube.com
+    // (No need to pass the server URL and the token, we're using the Travis 
+    //  Addon for SonarQube.com which does this for you.)
     // ----------------------------------------------------
     sonarqubeScanner({
-        serverUrl: process.env.SONARQUBE_URL,
-        token: process.env.SONARQUBE_TOKEN,
         options: {
             "sonar.projectName": "SonarQube Scanner for the JavaScript world",
             "sonar.sources": "dist",
