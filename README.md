@@ -49,6 +49,16 @@ gulp.task('default', function(callback) {
 * `callback` *Function* (optional)
 Callback (the execution of the analysis is asynchronous).
 
+## Download From Mirrors
+
+By default, SonarQube natif scanner binaries are downloaded from `https://github.com/henryju/bdd-scanner-natif/releases/download/`.
+To use a custom mirror, set `$SONAR_NATIF_SCANNER_MIRROR`.
+
+**Example:**
+```shell
+export SONAR_NATIF_SCANNER_MIRROR=http://example.com/mirrors/sonar-natif-scanner/
+```
+
 ## License
 
 `sonarqube-scanner` is licensed under the [LGPL v3 License](http://www.gnu.org/licenses/lgpl.txt).
