@@ -1,13 +1,51 @@
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').execSync;
-var mkdirp = require('mkdirp').sync;
+var mkdirs = require('mkdirp').sync;
+var extend = require('extend');
 var Download = require('download');
 var downloadStatus = require('download-status');
 var log = require('fancy-log');
 var logError = log.error;
+var sonarQubeParams = require('./sonarqube-scanner-params');
 
-module.exports = defineSonarQubeScannerExecutable;
+module.exports.defineSonarQubeScannerExecutable = defineSonarQubeScannerExecutable;
+module.exports.prepareExecEnvironment = prepareExecEnvironment;
+
+/*
+ * Prepare the executable options (including env environments) required to run the
+ * SQ executable.
+ */
+function prepareExecEnvironment(params, process) {
+    // Define what the SQ Scanner params must be
+    var processEnvParams = {};
+    if (process.env.SONARQUBE_SCANNER_PARAMS) {
+        processEnvParams = JSON.parse(process.env.SONARQUBE_SCANNER_PARAMS);
+    }
+    var sqScannerParams = sonarQubeParams(
+        params,
+        process.cwd(),
+        processEnvParams
+    );
+
+    // We need to merge the existing env variables (process.env) with the SQ ones
+    var mergedEnv = {};
+    extend(mergedEnv, process.env, {
+        SONARQUBE_SCANNER_PARAMS: JSON.stringify(sqScannerParams)
+    });
+
+    // this is the actual object that the process.exec function is waiting for
+    var options_exec = {
+        env: mergedEnv,
+        stdio: [0, 1, 2],
+        // Increase the amount of data allowed on stdout or stderr
+        // (if this value is exceeded then the child process is killed).
+        // TODO: make this customizable
+        maxBuffer: 1024 * 1024
+    };
+
+    return options_exec;
+}
 
 /*
  * Returns the SQ Scanner executable:
@@ -77,7 +115,7 @@ function getPlatformBinaries(passExecutableCallback) {
     // #2 - Download the binaries and unzip them
     log("Proceed with download of the platform binaries for SonarQube Scanner...");
     log("Creating " + installFolder);
-    mkdirp(installFolder);
+    mkdirs(installFolder);
     var targetOS = findTargetOS();
     var fileName = "sonarqube-scanner-"
         + targetOS
