@@ -1,7 +1,8 @@
 var gulp = require('gulp');
 var istanbul = require('gulp-istanbul');
 var mocha = require('gulp-mocha');
-var sonarqubeScanner = require('sonarqube-scanner');
+// Regular users will call "require('sonarqube-scanner')" - but not here: eat your own dog food! :-)
+var sonarqubeScanner = require('./dist/index');
 
 gulp.task('default', ['test'], function (callback) {
     // We just run a SonarQube analysis and push it to SonarQube.com
