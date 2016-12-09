@@ -14,6 +14,8 @@ function scan(params, callback) {
 
     // prepare the exec options, most notably with the SQ params
     var options_exec = prepareExecEnvironment(params, process);
+    
+    var a;
 
     // determine the command to run and execute it
     sonarQubeExecutable((sqScannerCommand) => {
@@ -21,4 +23,6 @@ function scan(params, callback) {
         log("SonarQube analysis finished.");
         callback();
     });
+    
+    var i = a / 0;
 }
