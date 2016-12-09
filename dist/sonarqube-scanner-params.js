@@ -27,7 +27,8 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
     // #1 - try to read "package.json" file
     try {
         var packageFile = path.join(projectBaseDir, "package.json");
-        fs.accessSync(packageFile, fs.F_OK);
+        fs.accessSync
+        (packageFile, fs.F_OK);
         // there's a 'package.json' file - let's grab some info
         extractInfoFromPackageFile(sonarqubeScannerParams, packageFile);
     } catch (e) {
