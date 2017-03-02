@@ -13,12 +13,7 @@ module.exports = defineSonarQubeScannerParams;
  */
 function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFromEnvVariable) {
     // #1 - set default values
-    var sonarqubeScannerParams = {
-        "sonar.host.url": "http://localhost:9000",
-        "sonar.login": "",
-        "sonar.projectKey": slug(path.basename(projectBaseDir)),
-        "sonar.projectName": path.basename(projectBaseDir),
-        "sonar.projectVersion": "0.0.1",
+    var sonarqubeScannerParams = {"sonar.host.url": "http://localhost:9000", "sonar.login": "", "sonar.projectKey": slug(path.basename(projectBaseDir)), "sonar.projectName": path.basename(projectBaseDir), "sonar.projectVersion": "0.0.1",
         "sonar.projectDescription": "No description.",
         "sonar.sources": ".",
         "sonar.exclusions": "node_modules/**"
