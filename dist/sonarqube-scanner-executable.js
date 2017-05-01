@@ -9,8 +9,10 @@ var log = require('fancy-log');
 var logError = log.error;
 var sonarQubeParams = require('./sonarqube-scanner-params');
 
-module.exports.defineSonarQubeScannerExecutable = defineSonarQubeScannerExecutable;
 module.exports.prepareExecEnvironment = prepareExecEnvironment;
+module.exports.getSonarQubeScannerExecutable = getSonarQubeScannerExecutable;
+module.exports.getLocalSonarQubeScannerExecutable = getLocalSonarQubeScannerExecutable;
+
 
 /*
  * Prepare the executable options (including env environments) required to run the
@@ -48,46 +50,9 @@ function prepareExecEnvironment(params, process) {
 }
 
 /*
- * Returns the SQ Scanner executable:
- * - the one available in the PATH if it exists (meaning user has also JAVA)
- * - or the standalone JDK-9 binaries (that don't require JAVA on the box)
+ * Returns the SQ Scanner executable for the current platform
  */
-function defineSonarQubeScannerExecutable(passExecutableCallback) {
-    var command = "sonar-scanner";
-    if (isWindows()) {
-        command += ".bat";
-    }
-
-    // #1 - Try to execute the "sonar-scanner" command
-    var executableFound = false;
-    try {
-        exec(command + " -v", {});
-        // if we're here, this means that the SQ Scanner can be executed
-        log("Local install of SonarQube scanner found. Using it.");
-        // TODO: we should check that it's at least v2.8+
-        executableFound = true;
-    } catch (e) {
-        // sonar-scanner is not in the PATH => we'll download the binaries for the
-        // correct platform...
-        log("Local install of SonarQube scanner not found.");
-    }
-    if (executableFound) {
-        passExecutableCallback(command);
-        return;
-    }
-
-    // #2 - Download the binaries from https://github.com/henryju/bdd-scanner-natif
-    log(`Trying to use the target binaries for the "${process.platform}" platform...`);
-    if (isWindows() || isLinux() || isMac()) {
-        getPlatformBinaries(passExecutableCallback);
-        return;
-    }
-
-    // #3 - If we're here, nothing can be done...
-    throw Error("SonarQube Scanner not found and impossible to download a compatible binary for it.");
-}
-
-function getPlatformBinaries(passExecutableCallback) {
+function getSonarQubeScannerExecutable(passExecutableCallback) {
     const platformBinariesVersion = "3.0.1.733";
     var targetOS = findTargetOS();
     var installFolder = path.join(process.env.HOME, ".sonar", "native-sonar-scanner");
@@ -144,6 +109,30 @@ function getPlatformBinaries(passExecutableCallback) {
             }
             passExecutableCallback(platformExecutable);
         });
+}
+
+/*
+ * Returns the SQ Scanner executable if one available in the PATH (meaning user has also JAVA)
+ */
+function getLocalSonarQubeScannerExecutable(passExecutableCallback) {
+    var command = "sonar-scanner";
+    if (isWindows()) {
+        command += ".bat";
+    }
+
+    // Try to execute the "sonar-scanner" command to see if it's installed locally
+    try {
+        log("Trying to find a local install of the SonarQube Scanner");
+        exec(command + " -v", {});
+        // if we're here, this means that the SQ Scanner can be executed
+        // TODO: we should check that it's at least v2.8+
+        log("Local install of SonarQube scanner found. Using it.");
+        passExecutableCallback(command);
+        return;
+    } catch (e) {
+        // sonar-scanner is not in the PATH
+        throw Error("Local install of SonarQube scanner not found.");
+    }
 }
 
 /*

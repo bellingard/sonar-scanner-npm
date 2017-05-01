@@ -49,6 +49,18 @@ gulp.task('default', function(callback) {
 * `callback` *Function* (optional)
 Callback (the execution of the analysis is asynchronous).
 
+## FAQ
+
+#### *I constantly get "Impossible to download and extract binary [...] In such situation, the best solution is to install the standard SonarQube Scanner", what can I do?*
+
+You can install manually the [standard SonarQube Scanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html),
+which requires to have a Java Runtime Environment available too (Java 8+). Once this is done, you can replace the 2nd line
+of the example by:
+
+```javascript
+var sonarqubeScanner = require('sonarqube-scanner').customScanner;
+```
+
 ## License
 
 `sonarqube-scanner` is licensed under the [LGPL v3 License](http://www.gnu.org/licenses/lgpl.txt).
