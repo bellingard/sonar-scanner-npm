@@ -77,7 +77,7 @@ function defineSonarQubeScannerExecutable(passExecutableCallback) {
     }
 
     // #2 - Download the binaries from https://github.com/henryju/bdd-scanner-natif
-    log("Trying to use the target binaries for the '" + process.platform + "' platform...");
+    log(`Trying to use the target binaries for the "${process.platform}" platform...`);
     if (isWindows() || isLinux() || isMac()) {
         getPlatformBinaries(passExecutableCallback);
         return;
@@ -136,7 +136,10 @@ function getPlatformBinaries(passExecutableCallback) {
         .use(downloadStatus())
         .run((err) => {
             if (err) {
-                logError("Impossible to download and extract binary: " + err.message);
+                logError(`Impossible to download and extract binary: ${err.message}`);
+                logError(`SonarQube Scanner binaries probably don't exist for your OS (${targetOS}).`);
+                logError("In such situation, the best solution is to install the standard SonarQube Scanner (requires a JVM).");
+                logError("Check it out at https://redirect.sonarsource.com/doc/install-configure-scanner.html");
                 throw err;
             }
             passExecutableCallback(platformExecutable);
@@ -156,7 +159,7 @@ function findTargetOS() {
     if (isMac()) {
         return "macosx";
     }
-    throw Error("Your platform " + process.platform + "is currently not supported.")
+    throw Error(`Your platform "${process.platform}" is currently not supported.`)
 }
 
 /*
