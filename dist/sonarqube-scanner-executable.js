@@ -88,17 +88,21 @@ function defineSonarQubeScannerExecutable(passExecutableCallback) {
 }
 
 function getPlatformBinaries(passExecutableCallback) {
-    var platformBinariesVersion = "0.1";
-    var installFolder = path.join(process.env.HOME, ".sonar", "native-sonar-scanner", platformBinariesVersion);
+    const platformBinariesVersion = "3.0.1.733";
+    var targetOS = findTargetOS();
+    var installFolder = path.join(process.env.HOME, ".sonar", "native-sonar-scanner");
     var binaryExtension = "";
     if (isWindows()) {
         binaryExtension = ".bat";
     }
+    var platformExecutable = path.join(installFolder,
+        `sonar-scanner-${platformBinariesVersion}-${targetOS}`,
+        "bin",
+        `sonar-scanner${binaryExtension}`);
 
-    // #1 - Try to execute the "<installFolder>/bin/org.sonarsource.scanner.standalone" command
+    // #1 - Try to execute the scanner
     var executableFound = false;
     try {
-        var platformExecutable = path.join(installFolder, "bin", "org.sonarsource.scanner.standalone" + binaryExtension);
         log("Checking if executable exists: " + platformExecutable);
         fs.accessSync(platformExecutable, fs.F_OK);
         // executable exists!
@@ -113,18 +117,19 @@ function getPlatformBinaries(passExecutableCallback) {
     }
 
     // #2 - Download the binaries and unzip them
+    //      They are located at https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${version}-${os}.zip
     log("Proceed with download of the platform binaries for SonarQube Scanner...");
     log("Creating " + installFolder);
     mkdirs(installFolder);
-    var targetOS = findTargetOS();
-    var fileName = "sonarqube-scanner-"
-        + targetOS
-        + "-x86_64-"
+    var baseUrl = "https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/";
+    var fileName = "sonar-scanner-cli-"
         + platformBinariesVersion
+        + "-"
+        + targetOS
         + ".zip";
-    var downloadUrl = "https://github.com/henryju/bdd-scanner-natif/releases/download/"
-        + platformBinariesVersion + "/" + fileName;
-    log("Downloading from " + downloadUrl);
+    var downloadUrl = baseUrl + fileName;
+    log(`Downloading from ${downloadUrl}`);
+    log(`(executable will be saved in cache folder: ${installFolder})`);
     new Download({extract: true})
         .get(downloadUrl)
         .dest(installFolder)
@@ -143,13 +148,13 @@ function getPlatformBinaries(passExecutableCallback) {
  */
 function findTargetOS() {
     if (isWindows()) {
-        return "win";
+        return "windows";
     }
     if (isLinux()) {
         return "linux";
     }
     if (isMac()) {
-        return "mac";
+        return "macosx";
     }
     throw Error("Your platform " + process.platform + "is currently not supported.")
 }
