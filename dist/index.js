@@ -1,4 +1,4 @@
-var exec = require('child_process').execSync;
+var exec = require('child_process').execFileSync;
 var log = require('fancy-log');
 var prepareExecEnvironment = require('./sonarqube-scanner-executable').prepareExecEnvironment;
 var sonarQubeExecutable = require('./sonarqube-scanner-executable').getSonarQubeScannerExecutable;
@@ -19,7 +19,7 @@ function scan(params, callback) {
 
     // determine the command to run and execute it
     sonarQubeExecutable((sqScannerCommand) => {
-        exec(sqScannerCommand, options_exec);
+        exec(sqScannerCommand, [], options_exec);
         log("SonarQube analysis finished.");
         callback();
     });
@@ -36,7 +36,7 @@ function scanUsingCustomSonarQubeScanner(params, callback) {
 
     // determine the command to run and execute it
     localSonarQubeExecutable((sqScannerCommand) => {
-        exec(sqScannerCommand, options_exec);
+        exec(sqScannerCommand, [], options_exec);
         log("SonarQube analysis finished.");
         callback();
     });
