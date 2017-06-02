@@ -31,8 +31,9 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
         // there's a 'package.json' file - let's grab some info
         extractInfoFromPackageFile(sonarqubeScannerParams, packageFile);
     } catch (e) {
-        // No "package.json" file - let's remain on the defaults
-        log('No "package.json" file found. Using default settings.');
+        // No "package.json" file (or invalid one) - let's remain on the defaults
+        log(`No "package.json" file found (or no valid one): ${e.message}`);
+        log('=> Using default settings.');
     }
 
     // #2 - if SONARQUBE_SCANNER_PARAMS exists, extend the current params
@@ -55,6 +56,7 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
 }
 
 function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
+    log('Getting info from "package.json" file');
     var pkg = readPackage(packageFile);
     if (pkg) {
         sonarqubeScannerParams["sonar.projectKey"] = slug(pkg.name);
