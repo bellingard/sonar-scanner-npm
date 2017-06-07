@@ -28,7 +28,8 @@ gulp.task('test', ['pre-test'], function () {
 });
 
 gulp.task('pre-test', function () {
-    return gulp.src(['dist/**/*.js'])
+    return gulp.src
+    (['dist/**/*.js'])
     // Covering files
         .pipe(istanbul())
         // Force `require` to return covered files
