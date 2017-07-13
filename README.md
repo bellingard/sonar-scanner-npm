@@ -9,7 +9,8 @@ itself:
 - See the [Gulp file](https://github.com/bellingard/sonar-scanner-npm/blob/master/gulpfile.js)
 - See the [analysis results on SonarCloud](https://sonarcloud.io/dashboard?id=sonarqube-scanner)
 
-[![Build status](https://travis-ci.org/bellingard/sonar-scanner-npm.svg?branch=master)](https://travis-ci.org/bellingard/sonar-scanner-npm) [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=sonarqube-scanner)](https://sonarcloud.io/dashboard/index/sonarqube-scanner)
+[![Build status](https://travis-ci.org/bellingard/sonar-scanner-npm.svg?branch=master)](https://travis-ci.org/bellingard/sonar-scanner-npm) [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=sonarqube-scanner)](https://sonarcloud.io/dashboard/index/sonarqube-scanner) [![Quality Gate](https://img.shields.io/github/release/bellingard/sonar-scanner-npm.svg)](https://github.com/bellingard/sonar-scanner-npm/releases)
+
 
 ## Installation
 
