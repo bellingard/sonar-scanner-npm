@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var os = require('os');
 var exec = require('child_process').execSync;
 var mkdirs = require('mkdirp').sync;
 var extend = require('extend');
@@ -55,7 +56,7 @@ function prepareExecEnvironment(params, process) {
 function getSonarQubeScannerExecutable(passExecutableCallback) {
     const platformBinariesVersion = "3.0.1.733";
     var targetOS = findTargetOS();
-    var installFolder = path.join(process.env.HOME, ".sonar", "native-sonar-scanner");
+    var installFolder = path.join(os.homedir(), ".sonar", "native-sonar-scanner");
     var binaryExtension = "";
     if (isWindows()) {
         binaryExtension = ".bat";
