@@ -22,7 +22,7 @@ describe('sqScannerParams', function () {
 
     it('should propagate custom server and token', function () {
         var expectedResult = {
-            "sonar.host.url": "https://sonarqube.com",
+            "sonar.host.url": "https://sonarcloud.io",
             "sonar.login": "my_token",
             "sonar.projectKey": "fake_project_with_no_package_file",
             "sonar.projectName": "fake_project_with_no_package_file",
@@ -33,7 +33,7 @@ describe('sqScannerParams', function () {
         };
         assert.deepEqual(
             sqScannerParams(
-                {serverUrl: "https://sonarqube.com", token: "my_token"},
+                {serverUrl: "https://sonarcloud.io", token: "my_token"},
                 pathForProject("fake_project_with_no_package_file"),
                 null),
             expectedResult);
@@ -96,7 +96,7 @@ describe('sqScannerParams', function () {
 
     it('should take into account SONARQUBE_SCANNER_PARAMS env variable', function () {
         var expectedResult = {
-            "sonar.host.url": "https://sonarqube.com",
+            "sonar.host.url": "https://sonarcloud.io",
             "sonar.login": "my_token",
             "sonar.projectKey": "fake_project_with_no_package_file",
             "sonar.projectName": "fake_project_with_no_package_file",
@@ -109,13 +109,13 @@ describe('sqScannerParams', function () {
             sqScannerParams(
                 {},
                 pathForProject("fake_project_with_no_package_file"),
-                {"sonar.host.url": "https://sonarqube.com", "sonar.login": "my_token"}),
+                {"sonar.host.url": "https://sonarcloud.io", "sonar.login": "my_token"}),
             expectedResult);
     });
 
     it('should make priority to user options over SONARQUBE_SCANNER_PARAMS env variable', function () {
         var expectedResult = {
-            "sonar.host.url": "https://sonarqube.com",
+            "sonar.host.url": "https://sonarcloud.io",
             "sonar.login": "my_token",
             "sonar.projectKey": "fake_project_with_no_package_file",
             "sonar.projectName": "fake_project_with_no_package_file",
@@ -126,7 +126,7 @@ describe('sqScannerParams', function () {
         };
         assert.deepEqual(
             sqScannerParams(
-                {serverUrl: "https://sonarqube.com", token: "my_token"},
+                {serverUrl: "https://sonarcloud.io", token: "my_token"},
                 pathForProject("fake_project_with_no_package_file"),
                 {"sonar.host.url": "https://another.server.com", "sonar.login": "another_token"}),
             expectedResult);

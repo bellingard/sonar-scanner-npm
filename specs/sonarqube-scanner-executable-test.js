@@ -40,7 +40,7 @@ describe('sqScannerParams', function () {
             stdio: [0, 1, 2],
             env: {
                 SONARQUBE_SCANNER_PARAMS: JSON.stringify({
-                    "sonar.host.url": "https://sonarqube.com",
+                    "sonar.host.url": "https://sonarcloud.io",
                     "sonar.login": "",
                     "sonar.projectKey": "fake_project_with_no_package_file",
                     "sonar.projectName": "fake_project_with_no_package_file",
@@ -56,7 +56,7 @@ describe('sqScannerParams', function () {
         var fakeProcess = {
             env: {
                 SONARQUBE_SCANNER_PARAMS: JSON.stringify({
-                    "sonar.host.url": "https://sonarqube.com",
+                    "sonar.host.url": "https://sonarcloud.io",
                     "sonar.branch": "dev"
                 })
             },

@@ -4,12 +4,12 @@
 analyses on a JavaScript code base, without needing to install any specific tool
 or (Java) runtime.
 
-This module is analyzed on [SonarQube.com](https://sonarqube.com) using
+This module is analyzed on [SonarCloud](https://sonarcloud.io) using
 itself:
 - See the [Gulp file](https://github.com/bellingard/sonar-scanner-npm/blob/master/gulpfile.js)
-- See the [analysis results on SonarQube.com](https://sonarqube.com/dashboard?id=sonarqube-scanner)
+- See the [analysis results on SonarCloud](https://sonarcloud.io/dashboard?id=sonarqube-scanner)
 
-[![Build status](https://travis-ci.org/bellingard/sonar-scanner-npm.svg?branch=master)](https://travis-ci.org/bellingard/sonar-scanner-npm) [![Quality Gate](https://sonarqube.com/api/badges/gate?key=sonarqube-scanner)](https://sonarqube.com/dashboard/index/sonarqube-scanner)
+[![Build status](https://travis-ci.org/bellingard/sonar-scanner-npm.svg?branch=master)](https://travis-ci.org/bellingard/sonar-scanner-npm) [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=sonarqube-scanner)](https://sonarcloud.io/dashboard/index/sonarqube-scanner)
 
 ## Installation
 
@@ -22,7 +22,7 @@ npm install sonarqube-scanner
 ## Usage
 
 The following example shows how to run a SonarQube analysis on a JavaScript
-project using Gulp, and pushing the results to [SonarQube.com](https://sonarqube.com),
+project using Gulp, and pushing the results to [SonarCloud](https://sonarcloud.io),
 the online SonarQube service:
 
 ```javascript
@@ -31,7 +31,7 @@ var sonarqubeScanner = require('sonarqube-scanner');
 
 gulp.task('default', function(callback) {
   sonarqubeScanner({
-    serverUrl : "https://sonarqube.com",
+    serverUrl : "https://sonarcloud.io",
     token : "019d1e2e04eefdcd0caee1468f39a45e69d33d3f",
     options : {}
   }, callback);

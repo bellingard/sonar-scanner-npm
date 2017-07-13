@@ -5,9 +5,9 @@ var mocha = require('gulp-mocha');
 var sonarqubeScanner = require('./dist/index');
 
 gulp.task('default', ['test'], function (callback) {
-    // We just run a SonarQube analysis and push it to SonarQube.com
-    // (No need to pass the server URL and the token, we're using the Travis 
-    //  Addon for SonarQube.com which does this for you.)
+    // We just run a SonarQube analysis and push it to SonarCloud
+    // (No need to pass the server URL and the token, we're using the Travis
+    //  Addon for SonarCloud which does this for you.)
     // ----------------------------------------------------
     sonarqubeScanner({
         options: {
