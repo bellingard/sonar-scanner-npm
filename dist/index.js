@@ -6,12 +6,20 @@ var localSonarQubeExecutable = require('./sonarqube-scanner-executable').getLoca
 
 
 module.exports = scan;
+module.exports.cli = scanCLI;
 module.exports.customScanner = scanUsingCustomSonarQubeScanner;
 
 /*
- * Main function that actually triggers the analysis.
+ * Function used programmatically to trigger an analysis.
  */
 function scan(params, callback) {
+    scanCLI([], params, callback);
+}
+
+/*
+ * Function used by the '/bin/sonar-scanner' executable that accepts command line arguments.
+ */
+function scanCLI(cliArgs, params, callback) {
     log("Starting SonarQube analysis...");
 
     // prepare the exec options, most notably with the SQ params
@@ -19,7 +27,7 @@ function scan(params, callback) {
 
     // determine the command to run and execute it
     sonarQubeExecutable((sqScannerCommand) => {
-        exec(sqScannerCommand, [], options_exec);
+        exec(sqScannerCommand, cliArgs, options_exec);
         log("SonarQube analysis finished.");
         callback();
     });

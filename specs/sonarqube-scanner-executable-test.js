@@ -10,8 +10,6 @@ describe('sqScannerParams', function () {
             stdio: [0, 1, 2],
             env: {
                 SONARQUBE_SCANNER_PARAMS: JSON.stringify({
-                    "sonar.host.url": "http://localhost:9000",
-                    "sonar.login": "",
                     "sonar.projectKey": "fake_project_with_no_package_file",
                     "sonar.projectName": "fake_project_with_no_package_file",
                     "sonar.projectVersion": "0.0.1",
@@ -40,14 +38,13 @@ describe('sqScannerParams', function () {
             stdio: [0, 1, 2],
             env: {
                 SONARQUBE_SCANNER_PARAMS: JSON.stringify({
-                    "sonar.host.url": "https://sonarcloud.io",
-                    "sonar.login": "",
                     "sonar.projectKey": "fake_project_with_no_package_file",
                     "sonar.projectName": "fake_project_with_no_package_file",
                     "sonar.projectVersion": "0.0.1",
                     "sonar.projectDescription": "No description.",
                     "sonar.sources": ".",
                     "sonar.exclusions": "node_modules/**",
+                    "sonar.host.url": "https://sonarcloud.io",
                     "sonar.branch": "dev"
                 })
             }

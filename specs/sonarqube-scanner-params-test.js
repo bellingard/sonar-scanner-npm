@@ -6,8 +6,6 @@ describe('sqScannerParams', function () {
 
     it('should provide default values', function () {
         var expectedResult = {
-            "sonar.host.url": "http://localhost:9000",
-            "sonar.login": "",
             "sonar.projectKey": "fake_project_with_no_package_file",
             "sonar.projectName": "fake_project_with_no_package_file",
             "sonar.projectDescription": "No description.",
@@ -17,6 +15,13 @@ describe('sqScannerParams', function () {
         };
         assert.deepEqual(
             sqScannerParams({}, pathForProject("fake_project_with_no_package_file"), null),
+            expectedResult);
+    });
+
+    it('should not set default values if sonar-project.properties file exists', function () {
+        var expectedResult = {};
+        assert.deepEqual(
+            sqScannerParams({}, pathForProject("fake_project_with_sonar_properties_file"), null),
             expectedResult);
     });
 
@@ -41,8 +46,6 @@ describe('sqScannerParams', function () {
 
     it('should allow to override default settings and add new ones', function () {
         var expectedResult = {
-            "sonar.host.url": "http://localhost:9000",
-            "sonar.login": "",
             "sonar.projectKey": "fake_project_with_no_package_file",
             "sonar.projectName": "Foo",
             "sonar.projectDescription": "No description.",
@@ -59,10 +62,8 @@ describe('sqScannerParams', function () {
             expectedResult);
     });
 
-    it('should get mandatory information from  basic package.json file', function () {
+    it('should get mandatory information from basic package.json file', function () {
         var expectedResult = {
-            "sonar.host.url": "http://localhost:9000",
-            "sonar.login": "",
             "sonar.projectKey": "fake-basic-project",
             "sonar.projectName": "fake-basic-project",
             "sonar.projectDescription": "No description.",
@@ -77,8 +78,6 @@ describe('sqScannerParams', function () {
 
     it('should get all information from package.json file', function () {
         var expectedResult = {
-            "sonar.host.url": "http://localhost:9000",
-            "sonar.login": "",
             "sonar.projectKey": "fake-project",
             "sonar.projectName": "fake-project",
             "sonar.projectDescription": "A fake project",
@@ -131,7 +130,7 @@ describe('sqScannerParams', function () {
                 {"sonar.host.url": "https://another.server.com", "sonar.login": "another_token"}),
             expectedResult);
     });
-
+    
 });
 
 function pathForProject(projectFolder) {

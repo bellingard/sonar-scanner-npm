@@ -13,27 +13,33 @@ module.exports = defineSonarQubeScannerParams;
  */
 function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFromEnvVariable) {
     // #1 - set default values
-    var sonarqubeScannerParams = {
-        "sonar.host.url": "http://localhost:9000",
-        "sonar.login": "",
-        "sonar.projectKey": slug(path.basename(projectBaseDir)),
-        "sonar.projectName": path.basename(projectBaseDir),
-        "sonar.projectVersion": "0.0.1",
-        "sonar.projectDescription": "No description.",
-        "sonar.sources": ".",
-        "sonar.exclusions": "node_modules/**"
-    };
-
-    // #1 - try to read "package.json" file
+    var sonarqubeScannerParams = {};
     try {
-        var packageFile = path.join(projectBaseDir, "package.json");
-        fs.accessSync(packageFile, fs.F_OK);
-        // there's a 'package.json' file - let's grab some info
-        extractInfoFromPackageFile(sonarqubeScannerParams, packageFile);
+        var sqFile = path.join(projectBaseDir, "sonar-project.properties");
+        fs.accessSync(sqFile, fs.F_OK);
+        // there's a "sonar-project.properties" file - no need to set default values
     } catch (e) {
-        // No "package.json" file (or invalid one) - let's remain on the defaults
-        log(`No "package.json" file found (or no valid one): ${e.message}`);
-        log('=> Using default settings.');
+        // No "sonar-project.properties" file - let's add some default values
+        extend(sonarqubeScannerParams, {
+            "sonar.projectKey": slug(path.basename(projectBaseDir)),
+            "sonar.projectName": path.basename(projectBaseDir),
+            "sonar.projectVersion": "0.0.1",
+            "sonar.projectDescription": "No description.",
+            "sonar.sources": ".",
+            "sonar.exclusions": "node_modules/**"
+        });
+
+        // If there's a "package.json" file, read it to grab info
+        try {
+            var packageFile = path.join(projectBaseDir, "package.json");
+            fs.accessSync(packageFile, fs.F_OK);
+            // there's a 'package.json' file - let's grab some info
+            extractInfoFromPackageFile(sonarqubeScannerParams, packageFile);
+        } catch (e) {
+            // No "package.json" file (or invalid one) - let's remain on the defaults
+            log(`No "package.json" file found (or no valid one): ${e.message}`);
+            log('=> Using default settings.');
+        }
     }
 
     // #2 - if SONARQUBE_SCANNER_PARAMS exists, extend the current params
