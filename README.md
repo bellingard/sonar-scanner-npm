@@ -34,7 +34,9 @@ gulp.task('default', function(callback) {
   sonarqubeScanner({
     serverUrl : "https://sonarcloud.io",
     token : "019d1e2e04eefdcd0caee1468f39a45e69d33d3f",
-    options : {}
+    options : {
+      "sonar.organization": "my-org"
+    }
   }, callback);
 });
 ```
