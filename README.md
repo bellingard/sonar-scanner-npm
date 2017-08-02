@@ -1,15 +1,15 @@
-# NPM module to run SonarQube analyses
+# NPM module to run SonarQube/SonarCloud analyses
 
-`sonarqube-scanner` makes it very easy to trigger [SonarQube](http://www.sonarqube.org)
-analyses on a JavaScript code base, without needing to install any specific tool
-or (Java) runtime.
+`sonarqube-scanner` makes it very easy to trigger [SonarQube](https://www.sonarqube.org)
+/[SonarCloud](https://sonarcloud.io) analyses on a JavaScript code base, without needing 
+to install any specific tool or (Java) runtime.
 
-This module is analyzed on [SonarCloud](https://sonarcloud.io) using
+This module is analyzed on SonarCloud using
 itself:
 - See the [Gulp file](https://github.com/bellingard/sonar-scanner-npm/blob/master/gulpfile.js)
 - See the [analysis results on SonarCloud](https://sonarcloud.io/dashboard?id=sonarqube-scanner)
 
-[![Build status](https://travis-ci.org/bellingard/sonar-scanner-npm.svg?branch=master)](https://travis-ci.org/bellingard/sonar-scanner-npm) [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=sonarqube-scanner)](https://sonarcloud.io/dashboard/index/sonarqube-scanner) [![Releases](https://img.shields.io/github/release/bellingard/sonar-scanner-npm.svg)](https://github.com/bellingard/sonar-scanner-npm/releases)
+[![Build status](https://travis-ci.org/bellingard/sonar-scanner-npm.svg?branch=master)](https://travis-ci.org/bellingard/sonar-scanner-npm) [![Quality Gate on SonarCloud](https://sonarcloud.io/api/badges/gate?key=sonarqube-scanner)](https://sonarcloud.io/dashboard/index/sonarqube-scanner) [![Releases](https://img.shields.io/github/release/bellingard/sonar-scanner-npm.svg)](https://github.com/bellingard/sonar-scanner-npm/releases)
 
 
 ## Installation
@@ -22,9 +22,9 @@ npm install sonarqube-scanner
 
 ## Usage
 
-The following example shows how to run a SonarQube analysis on a JavaScript
+The following example shows how to run an analysis on a JavaScript
 project using Gulp, and pushing the results to [SonarCloud](https://sonarcloud.io),
-the online SonarQube service:
+the online code-analysis service based on SonarQube:
 
 ```javascript
 var gulp = require('gulp');
