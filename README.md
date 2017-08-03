@@ -53,7 +53,7 @@ gulp.task('default', function(callback) {
 
 **Syntax:** sonarqube-scanner **(** `parameters`, [`callback`] **)**
 
-### Arguments
+**Arguments**
 
 * `parameters` *Map*
   * `serverUrl` *String* (optional) The URL of the SonarQube server. Defaults to http://localhost:9000
@@ -74,8 +74,10 @@ cd my-project
 sonar-scanner
 ```
 
+**Specifying properties/settings**
+
 * If there's a `package.json` file in the folder, it will be read to feed the analysis with basic information (like project name or version)
-* If there's a `sonar-project.properties`file in the folder, it will behave like the [original SonarQube Scanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html)
+* If there's a `sonar-project.properties` file in the folder, it will behave like the [original SonarQube Scanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html)
 * Additional [analysis parameters](https://redirect.sonarsource.com/doc/analysis-parameters.html) can be passed on the command line using the standard `-Dsonar.xxx=yyy` syntax
   * Example: 
   
