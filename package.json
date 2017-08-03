@@ -16,7 +16,7 @@
   },
   "license": "LGPL-3.0",
   "main": "dist/index.js",
-  "bin": "dist/bin/sonar-scanner",
+  "bin": { "sonar-scanner" : "dist/bin/sonar-scanner" },
   "engines": {
     "node": ">= 0.10"
   },
