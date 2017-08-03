@@ -16,11 +16,21 @@ itself:
 
 This package is available on npm as: `sonarqube-scanner`
 
+To add code analysis to your build files, simply add the package to your project dev dependencies:
+
 ``` sh
-npm install sonarqube-scanner
+npm install -D sonarqube-scanner
 ```
 
-## Usage
+To install the scanner globally and be able to run analyses on the command line:
+
+``` sh
+npm install -g sonarqube-scanner
+```
+
+## Usage: add code analysis to your build files
+
+_Prerequisite: you've installed the package as a dev dependency._
 
 The following example shows how to run an analysis on a JavaScript
 project using Gulp, and pushing the results to [SonarCloud](https://sonarcloud.io),
@@ -51,6 +61,22 @@ gulp.task('default', function(callback) {
   * `options` *Map* (optional) Used to pass extra parameters for the SonarQube analysis. See the [official documentation](http://redirect.sonarsource.com/doc/analysis-parameters.html) for more details.
 * `callback` *Function* (optional)
 Callback (the execution of the analysis is asynchronous).
+
+## Usage: run analyses on the command line
+
+_Prerequisite: you've installed the package globally._
+
+If you want to run an analysis without having to configure anything in the first place, simply run the `sonar-scanner` command. The following
+example assumes that you have installed SonarQube locally:
+
+```
+cd my-project
+sonar-scanner
+```
+
+* If there's a `package.json` file in the folder, it will be read to feed the analysis with basic information (like project name or version)
+* If there's a `sonar-project.properties`file in the folder, it will behave like the [original SonarQube Scanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html)
+* Additional [analysis parameters](https://redirect.sonarsource.com/doc/analysis-parameters.html) can be passed on the command line using the standard `-Dsonar.xxx=yyy` syntax
 
 ## FAQ
 
