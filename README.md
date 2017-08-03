@@ -1,7 +1,7 @@
 # NPM module to run SonarQube/SonarCloud analyses
 
 `sonarqube-scanner` makes it very easy to trigger [SonarQube](https://www.sonarqube.org)
-/[SonarCloud](https://sonarcloud.io) analyses on a JavaScript code base, without needing 
+/ [SonarCloud](https://sonarcloud.io) analyses on a JavaScript code base, without needing 
 to install any specific tool or (Java) runtime.
 
 This module is analyzed on SonarCloud using
@@ -77,6 +77,7 @@ sonar-scanner
 * If there's a `package.json` file in the folder, it will be read to feed the analysis with basic information (like project name or version)
 * If there's a `sonar-project.properties`file in the folder, it will behave like the [original SonarQube Scanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html)
 * Additional [analysis parameters](https://redirect.sonarsource.com/doc/analysis-parameters.html) can be passed on the command line using the standard `-Dsonar.xxx=yyy` syntax
+  * Example if you want to specify the server and the user token: `sonar-scanner -Dsonar.host.url=https://myserver.com -Dsonar.login=019d1e2e04eefdcd0caee1468f39a45e69d33d3f`
 
 ## FAQ
 
