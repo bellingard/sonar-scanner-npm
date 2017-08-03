@@ -77,9 +77,9 @@ sonar-scanner
 * If there's a `package.json` file in the folder, it will be read to feed the analysis with basic information (like project name or version)
 * If there's a `sonar-project.properties`file in the folder, it will behave like the [original SonarQube Scanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html)
 * Additional [analysis parameters](https://redirect.sonarsource.com/doc/analysis-parameters.html) can be passed on the command line using the standard `-Dsonar.xxx=yyy` syntax
-  * Example if you want to specify the server and the user token: 
+  * Example: 
   
-    `sonar-scanner -Dsonar.host.url=https://myserver.com -Dsonar.login=019d1e2e04eefdcd0caee1468f39a45e69d33d3f`
+    `sonar-scanner -Dsonar.host.url=https://myserver.com -Dsonar.login=019d1e2e04e`
 
 ## FAQ
 
