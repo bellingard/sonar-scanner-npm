@@ -1,12 +1,16 @@
 {
   "name": "sonarqube-scanner",
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "cache": true
+  },
   "description": "SonarQube/SonarCloud Scanner for the JavaScript world",
   "version": "2.1.0",
   "homepage": "https://github.com/bellingard/sonar-scanner-npm",
-  "author": {
-    "name": "Fabrice Bellingard",
-    "email": "fabrice.bellingard@sonarsource.com"
-  },
+  "author": "Fabrice Bellingard <fabrice.bellingard@sonarsource.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bellingard/sonar-scanner-npm.git"
@@ -16,7 +20,9 @@
   },
   "license": "LGPL-3.0",
   "main": "dist/index.js",
-  "bin": { "sonar-scanner" : "dist/bin/sonar-scanner" },
+  "bin": {
+    "sonar-scanner": "dist/bin/sonar-scanner"
+  },
   "engines": {
     "node": ">= 0.10"
   },
@@ -30,10 +36,12 @@
     "download-status": "2.2.1"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-istanbul": "^1.1.1",
-    "gulp-mocha": "^3.0.1",
-    "mocha": "^3.1.2"
+    "mocha": "^3.5.0",
+    "mocha-sonar-generic-test-coverage": "0.0.6",
+    "nyc": "^11.2.1"
+  },
+  "scripts": {
+    "test": "nyc mocha specs/*.js"
   },
   "keywords": [
     "sonarqube",
