@@ -1,9 +1,10 @@
 # Using trusty because the Travis Addon for SonarQube.com requires Java 8
 dist: trusty
 sudo: required
+language: node_js
 
 node_js:
-  - 6
+  - stable
 
 addons:
   sonarcloud:
@@ -14,13 +15,15 @@ install:
   # Install packages.
   - npm install
 
-before_script:
-  # Need Gulp ro trigger the analysis on SonarQube.com
-  - npm install -g gulp
-
 script:
-  # Actually calls Gulp - the SonarQube analysis is the default task
-  - gulp
+  - npm test -- --reporter mocha-sonar-generic-test-coverage --reporter-options outputFile=report/unittest.xml
+  - node dist/bin/sonar-scanner \
+    "-Dsonar.organization=default" \
+    "-Dsonar.projectName=SonarQube/SonarCloud Scanner for the JavaScript world" \
+    "-Dsonar.sources=dist" \
+    "-Dsonar.tests=specs" \
+    "-Dsonar.javascript.lcov.reportPath=coverage/lcov.info" \
+    "-Dsonar.genericcoverage.unitTestReportPaths=report/unittest.xml"
 
 cache:
   directories:
