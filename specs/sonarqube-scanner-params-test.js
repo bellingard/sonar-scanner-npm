@@ -3,7 +3,7 @@ var path = require('path');
 var sqScannerParams = require('../dist/sonarqube-scanner-params');
 
 describe('sqScannerParams', function () {
-    var exclusions = 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**'
+    var exclusions = 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**';
 
     it('should provide default values', function () {
         var expectedResult = {
