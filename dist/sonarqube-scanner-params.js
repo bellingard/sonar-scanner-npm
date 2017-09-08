@@ -80,5 +80,27 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
         if (pkg.repository && pkg.repository.url) {
             sonarqubeScannerParams["sonar.links.scm"] = pkg.repository.url;
         }
+        if (!pkg.devDependencies) {
+            return;
+        }
+        if (pkg.devDependencies["mocha-sonarqube-reporter"]) {
+            // https://docs.sonarqube.org/display/SONAR/Generic+Test+Data
+            sonarqubeScannerParams["sonar.testExecutionReportPaths"] = "xunit.xml";
+        }
+        if (pkg.devDependencies["mocha-sonar-generic-test-coverage"] || pkg.devDependencies["karma-sonarqube-unit-reporter"]) {
+            // https://docs.sonarqube.org/display/PLUG/Generic+Test+Coverage#GenericTestCoverage-UnitTestsExecutionResultsReportFormat
+            sonarqubeScannerParams["sonar.genericcoverage.unitTestReportPaths"] = "xunit.xml";
+        }
+        if (pkg.devDependencies.nyc || pkg.devDependencies.jest) {
+            // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
+            var reportDir =
+                // jest coverage output directory
+                pkg.jest && pkg.jest.coverageDirectory ||
+                // nyc coverage output directory
+                pkg.nyc && pkg.nyc["report-dir"] ||
+                // default directory 
+                'coverage';
+            sonarqubeScannerParams["sonar.javascript.lcov.reportPath"] = path.posix.join(reportDir, 'lcov.info')
+        }
     }
 }
