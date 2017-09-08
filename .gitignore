@@ -1,4 +1,4 @@
-# Created by https://www.gitignore.io/api/node,sonar,intellij+all
+# Created by https://www.gitignore.io/api/node,SonarQube,intellij+all
 
 ### Intellij+all ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
@@ -118,8 +118,16 @@ typings/
 .env
 
 
-### Sonar ###
-#Sonar generated dir
-/.sonar/
+### SonarQube ###
+# SonarQube ignore files.
+#
+# https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner
+# Sonar Scanner working directories
+.sonar/
 
-# End of https://www.gitignore.io/api/node,sonar,intellij+all
+# http://www.sonarlint.org/commandline/
+# SonarLint working directories, configuration files (including credentials)
+.sonarlint/
+
+# End of https://www.gitignore.io/api/node,SonarQube,intellij+all
+.scannerwork
