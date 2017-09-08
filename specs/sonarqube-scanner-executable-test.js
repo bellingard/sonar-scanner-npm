@@ -3,7 +3,8 @@ var path = require('path');
 var index = require('../dist/sonarqube-scanner-executable');
 
 describe('sqScannerParams', function () {
-
+    var exclusions = 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**'
+    
     it('should provide default values', function () {
         var expectedResult = {
             maxBuffer: 1024 * 1024,
@@ -15,7 +16,7 @@ describe('sqScannerParams', function () {
                     "sonar.projectVersion": "0.0.1",
                     "sonar.projectDescription": "No description.",
                     "sonar.sources": ".",
-                    "sonar.exclusions": "node_modules/**"
+                    "sonar.exclusions": exclusions
                 })
             }
         };
@@ -43,7 +44,7 @@ describe('sqScannerParams', function () {
                     "sonar.projectVersion": "0.0.1",
                     "sonar.projectDescription": "No description.",
                     "sonar.sources": ".",
-                    "sonar.exclusions": "node_modules/**",
+                    "sonar.exclusions": exclusions,
                     "sonar.host.url": "https://sonarcloud.io",
                     "sonar.branch": "dev"
                 })
