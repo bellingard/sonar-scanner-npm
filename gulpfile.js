@@ -11,7 +11,6 @@ gulp.task('default', ['test'], function (callback) {
     // ----------------------------------------------------
     sonarqubeScanner({
         options: {
-            "sonar.organization": "default",
             "sonar.projectName": "SonarQube/SonarCloud Scanner for the JavaScript world",
             "sonar.sources": "dist",
             "sonar.tests": "specs",
