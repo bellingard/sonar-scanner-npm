@@ -38,10 +38,15 @@ describe('sqScannerParams', function () {
         };
         assert.deepEqual(
             sqScannerParams(
-                {serverUrl: "https://sonarcloud.io", token: "my_token"},
+                {
+                    "host.url": "https://sonarcloud.io",
+                    login: "my_token"
+                },
                 pathForProject("fake_project_with_no_package_file"),
-                null),
-            expectedResult);
+                null
+            ),
+            expectedResult
+        );
     });
 
     it('should allow to override default settings and add new ones', function () {
@@ -56,7 +61,10 @@ describe('sqScannerParams', function () {
         };
         assert.deepEqual(
             sqScannerParams(
-                {options: {"sonar.projectName": "Foo", "sonar.tests": "specs"}},
+                {
+                    "projectName": "Foo",
+                    "tests": "specs"
+                },
                 pathForProject("fake_project_with_no_package_file"),
                 null),
             expectedResult);
@@ -84,7 +92,7 @@ describe('sqScannerParams', function () {
             "sonar.projectVersion": "1.0.0",
             "sonar.links.homepage": "https://github.com/fake/project",
             "sonar.links.issues": "https://github.com/fake/project/issues",
-            "sonar.links.scm": "git+https://github.com/fake/project.git",
+            "sonar.links.scm": "https://github.com/fake/project.git",
             "sonar.sources": ".",
             "sonar.exclusions": "node_modules/**"
         };
@@ -125,9 +133,16 @@ describe('sqScannerParams', function () {
         };
         assert.deepEqual(
             sqScannerParams(
-                {serverUrl: "https://sonarcloud.io", token: "my_token"},
+                {
+                    "host.url": "https://sonarcloud.io",
+                    login: "my_token"
+                },
                 pathForProject("fake_project_with_no_package_file"),
-                {"sonar.host.url": "https://another.server.com", "sonar.login": "another_token"}),
+                {
+                    "sonar.host.url": "https://another.server.com",
+                    "sonar.login": "another_token"
+                }
+            ),
             expectedResult);
     });
     

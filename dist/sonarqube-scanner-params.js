@@ -20,21 +20,19 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
         // there's a "sonar-project.properties" file - no need to set default values
     } catch (e) {
         // No "sonar-project.properties" file - let's add some default values
-        extend(sonarqubeScannerParams, {
+        sonarqubeScannerParams = {
             "sonar.projectKey": slug(path.basename(projectBaseDir)),
             "sonar.projectName": path.basename(projectBaseDir),
             "sonar.projectVersion": "0.0.1",
             "sonar.projectDescription": "No description.",
             "sonar.sources": ".",
             "sonar.exclusions": "node_modules/**"
-        });
+        };
 
         // If there's a "package.json" file, read it to grab info
         try {
-            var packageFile = path.join(projectBaseDir, "package.json");
-            fs.accessSync(packageFile, fs.F_OK);
             // there's a 'package.json' file - let's grab some info
-            extractInfoFromPackageFile(sonarqubeScannerParams, packageFile);
+            extractInfoFromPackageFile(sonarqubeScannerParams, path.join(projectBaseDir, "package.json"));
         } catch (e) {
             // No "package.json" file (or invalid one) - let's remain on the defaults
             log(`No "package.json" file found (or no valid one): ${e.message}`);
@@ -48,23 +46,17 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
     }
 
     // #3 - check what's passed in the call params - these are prevalent params
-    if (params.serverUrl) {
-        sonarqubeScannerParams["sonar.host.url"] = params.serverUrl;
-    }
-    if (params.token) {
-        sonarqubeScannerParams["sonar.login"] = params.token;
-    }
-    if (params.options) {
-        extend(sonarqubeScannerParams, params.options);
-    }
+    Object.keys(params).forEach(function(paramName) {
+        sonarqubeScannerParams[paramName.replace(/^(sonar.)?/, 'sonar.')] = params[paramName]
+    })
 
     return sonarqubeScannerParams;
 }
 
 function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
-    log('Getting info from "package.json" file');
     var pkg = readPackage(packageFile);
     if (pkg) {
+        log('Getting info from "package.json" file');
         sonarqubeScannerParams["sonar.projectKey"] = slug(pkg.name);
         sonarqubeScannerParams["sonar.projectName"] = pkg.name;
         sonarqubeScannerParams["sonar.projectVersion"] = pkg.version;
@@ -78,7 +70,7 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
             sonarqubeScannerParams["sonar.links.issues"] = pkg.bugs.url;
         }
         if (pkg.repository && pkg.repository.url) {
-            sonarqubeScannerParams["sonar.links.scm"] = pkg.repository.url;
+            sonarqubeScannerParams["sonar.links.scm"] = pkg.repository.url.replace(/^\w+\+(\w+\:\/\/)/, '$1');
         }
     }
 }

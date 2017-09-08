@@ -10,12 +10,10 @@ gulp.task('default', ['test'], function (callback) {
     //  Addon for SonarCloud which does this for you.)
     // ----------------------------------------------------
     sonarqubeScanner({
-        options: {
-            "sonar.projectName": "SonarQube/SonarCloud Scanner for the JavaScript world",
-            "sonar.sources": "dist",
-            "sonar.tests": "specs",
-            "sonar.javascript.lcov.reportPath": "coverage/lcov.info"
-        }
+        "projectName": "SonarQube/SonarCloud Scanner for the JavaScript world",
+        "sources": "dist",
+        "tests": "specs",
+        "javascript.lcov.reportPath": "coverage/lcov.info"
     }, callback);
     // ----------------------------------------------------
 });

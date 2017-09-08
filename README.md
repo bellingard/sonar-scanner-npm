@@ -42,11 +42,9 @@ var sonarqubeScanner = require('sonarqube-scanner');
 
 gulp.task('default', function(callback) {
   sonarqubeScanner({
-    serverUrl : "https://sonarcloud.io",
-    token : "019d1e2e04eefdcd0caee1468f39a45e69d33d3f",
-    options : {
-      "sonar.organization": "my-org"
-    }
+    "host.url": "https://sonarcloud.io",
+    login: "019d1e2e04eefdcd0caee1468f39a45e69d33d3f",
+    organization: "my-org"
   }, callback);
 });
 ```
@@ -55,12 +53,12 @@ gulp.task('default', function(callback) {
 
 **Arguments**
 
-* `parameters` *Map*
-  * `serverUrl` *String* (optional) The URL of the SonarQube server. Defaults to http://localhost:9000
-  * `token` *String* (optional) The token used to connect to the SonarQube server. Empty by default.
-  * `options` *Map* (optional) Used to pass extra parameters for the SonarQube analysis. See the [official documentation](http://redirect.sonarsource.com/doc/analysis-parameters.html) for more details.
+* `parameters` *Map* (optional) Used to pass extra parameters for the SonarQube analysis. See the [official documentation](http://redirect.sonarsource.com/doc/analysis-parameters.html) for more details.
 * `callback` *Function* (optional)
 Callback (the execution of the analysis is asynchronous).
+
+> For users on SonarCloud, the organization can be specified in `parameters.organization`;
+> For users using SonarCloud with Travis CI, the organization can also be specified in [`.travis.yml`](https://docs.travis-ci.com/user/sonarcloud/#Inspecting-code-with-the-SonarQube-Scanner)
 
 ## Usage: run analyses on the command line
 
