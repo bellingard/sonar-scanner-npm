@@ -58,7 +58,7 @@ gulp.task('default', function(callback) {
 Callback (the execution of the analysis is asynchronous).
 
 > For users on SonarCloud, the organization can be specified in `parameters.organization`;
-> For users using SonarCloud with Travis CI, the organization can also be specified in [`.travis.yml`](https://docs.travis-ci.com/user/sonarcloud/#Inspecting-code-with-the-SonarQube-Scanner)
+> For users using SonarCloud with Travis CI, the organization can also be specified in [`.travis.yml`](https://docs.travis-ci.com/user/sonarcloud/#Inspecting-code-with-the-SonarQube-Scanner);
 
 ## Usage: run analyses on the command line
 
