@@ -27,7 +27,9 @@ function scanCLI(cliArgs, params, callback) {
 
     // determine the command to run and execute it
     sonarQubeExecutable((sqScannerCommand) => {
-        exec(sqScannerCommand, cliArgs, options_exec);
+        exec(sqScannerCommand, cliArgs.map(function(arg) {
+            return arg.replace(/^-(D?sonar\.)?(?=\w+(\.\w+)*=)/, "-Dsonar.")
+        }), options_exec);
         log("SonarQube analysis finished.");
         callback();
     });
