@@ -39,7 +39,7 @@ describe('sqScannerParams', function () {
         assert.deepEqual(
             sqScannerParams(
                 {
-                    "serverUrl": "https://sonarcloud.io",
+                    serverUrl: "https://sonarcloud.io",
                     token: "my_token"
                 },
                 pathForProject("fake_project_with_no_package_file"),
@@ -134,7 +134,7 @@ describe('sqScannerParams', function () {
         assert.deepEqual(
             sqScannerParams(
                 {
-                    "serverUrl": "https://sonarcloud.io",
+                    serverUrl: "https://sonarcloud.io",
                     login: "my_token"
                 },
                 pathForProject("fake_project_with_no_package_file"),
