@@ -124,10 +124,10 @@ typings/
 # https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner
 # Sonar Scanner working directories
 .sonar/
+.scannerwork/
 
 # http://www.sonarlint.org/commandline/
 # SonarLint working directories, configuration files (including credentials)
 .sonarlint/
 
 # End of https://www.gitignore.io/api/node,SonarQube,intellij+all
-.scannerwork
