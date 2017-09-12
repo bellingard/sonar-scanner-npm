@@ -80,6 +80,20 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
         if (pkg.repository && pkg.repository.url) {
             sonarqubeScannerParams["sonar.links.scm"] = pkg.repository.url;
         }
+
+        // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
+        var lcovReportDir =
+            // jest coverage output directory
+            (pkg.jest && pkg.jest.coverageDirectory) ||
+            // nyc coverage output directory
+            (pkg.nyc && pkg.nyc["report-dir"]) ||
+            // default directory
+            'coverage';
+        var lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info');
+        if (fs.existsSync(lcovReportPath)) {
+            sonarqubeScannerParams["sonar.javascript.lcov.reportPath"] = lcovReportPath
+        }
+
         if (!pkg.devDependencies) {
             return;
         }
@@ -93,20 +107,6 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
             // https://docs.sonarqube.org/display/PLUG/Generic+Test+Coverage#GenericTestCoverage-UnitTestsExecutionResultsReportFormat
             if (fs.existsSync("xunit.xml")) {
                 sonarqubeScannerParams["sonar.genericcoverage.unitTestReportPaths"] = "xunit.xml";
-            }
-        }
-        if (pkg.devDependencies.nyc || pkg.devDependencies.jest) {
-            // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
-            var reportDir =
-                // jest coverage output directory
-                (pkg.jest && pkg.jest.coverageDirectory) ||
-                // nyc coverage output directory
-                (pkg.nyc && pkg.nyc["report-dir"]) ||
-                // default directory 
-                'coverage';
-            var lcovReportPath = path.posix.join(reportDir, 'lcov.info');
-            if (fs.existsSync(lcovReportPath)) {
-                sonarqubeScannerParams["sonar.javascript.lcov.reportPath"] = lcovReportPath
             }
         }
     }
