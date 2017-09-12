@@ -26,7 +26,7 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
             "sonar.projectVersion": "0.0.1",
             "sonar.projectDescription": "No description.",
             "sonar.sources": ".",
-            "sonar.exclusions": "node_modules/**"
+            "sonar.exclusions": "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**"
         });
 
         // If there's a "package.json" file, read it to grab info
