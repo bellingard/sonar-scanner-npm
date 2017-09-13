@@ -3,6 +3,7 @@ var path = require('path');
 var sqScannerParams = require('../dist/sonarqube-scanner-params');
 
 describe('sqScannerParams', function () {
+    var exclusions = "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**";
 
     it('should provide default values', function () {
         var expectedResult = {
@@ -11,7 +12,7 @@ describe('sqScannerParams', function () {
             "sonar.projectDescription": "No description.",
             "sonar.projectVersion": "0.0.1",
             "sonar.sources": ".",
-            "sonar.exclusions": "node_modules/**"
+            "sonar.exclusions": exclusions
         };
         assert.deepEqual(
             sqScannerParams({}, pathForProject("fake_project_with_no_package_file"), null),
@@ -34,7 +35,7 @@ describe('sqScannerParams', function () {
             "sonar.projectDescription": "No description.",
             "sonar.projectVersion": "0.0.1",
             "sonar.sources": ".",
-            "sonar.exclusions": "node_modules/**"
+            "sonar.exclusions": exclusions
         };
         assert.deepEqual(
             sqScannerParams(
@@ -52,7 +53,7 @@ describe('sqScannerParams', function () {
             "sonar.projectVersion": "0.0.1",
             "sonar.sources": ".",
             "sonar.tests": "specs",
-            "sonar.exclusions": "node_modules/**"
+            "sonar.exclusions": exclusions
         };
         assert.deepEqual(
             sqScannerParams(
@@ -69,7 +70,7 @@ describe('sqScannerParams', function () {
             "sonar.projectDescription": "No description.",
             "sonar.projectVersion": "1.0.0",
             "sonar.sources": ".",
-            "sonar.exclusions": "node_modules/**"
+            "sonar.exclusions": exclusions
         };
         assert.deepEqual(
             sqScannerParams({}, pathForProject("fake_project_with_basic_package_file"), null),
@@ -86,7 +87,7 @@ describe('sqScannerParams', function () {
             "sonar.links.issues": "https://github.com/fake/project/issues",
             "sonar.links.scm": "git+https://github.com/fake/project.git",
             "sonar.sources": ".",
-            "sonar.exclusions": "node_modules/**"
+            "sonar.exclusions": exclusions
         };
         assert.deepEqual(
             sqScannerParams({}, pathForProject("fake_project_with_complete_package_file"), null),
@@ -102,7 +103,7 @@ describe('sqScannerParams', function () {
             "sonar.projectDescription": "No description.",
             "sonar.projectVersion": "0.0.1",
             "sonar.sources": ".",
-            "sonar.exclusions": "node_modules/**"
+            "sonar.exclusions": exclusions
         };
         assert.deepEqual(
             sqScannerParams(
@@ -121,7 +122,7 @@ describe('sqScannerParams', function () {
             "sonar.projectDescription": "No description.",
             "sonar.projectVersion": "0.0.1",
             "sonar.sources": ".",
-            "sonar.exclusions": "node_modules/**"
+            "sonar.exclusions": exclusions
         };
         assert.deepEqual(
             sqScannerParams(
