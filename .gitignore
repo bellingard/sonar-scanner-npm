@@ -131,3 +131,5 @@ typings/
 .sonarlint/
 
 # End of https://www.gitignore.io/api/node,SonarQube,intellij+all
+
+!specs/resources/**/*
