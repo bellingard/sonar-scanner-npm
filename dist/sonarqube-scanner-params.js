@@ -28,7 +28,7 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
             "sonar.projectVersion": "0.0.1",
             "sonar.projectDescription": "No description.",
             "sonar.sources": ".",
-            "sonar.exclusions": "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**"
+            "sonar.exclusions": "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**"
         });
 
         // If there's a "package.json" file, read it to grab info
@@ -61,12 +61,21 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
 }
 
 function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
-    function fileExistsInProjectSync(file) {
-        return fs.existsSync(path.resolve(projectBaseDir, file));
-    }
     var packageFile = path.join(projectBaseDir, "package.json");
     var pkg = readPackage(packageFile);
     log('Getting info from "package.json" file');
+    function fileExistsInProjectSync(file) {
+        return fs.existsSync(path.resolve(projectBaseDir, file));
+    }
+    function dependenceExists(pkgName) {
+        return [
+            'devDependencies',
+            'dependencies',
+            'peerDependencies',
+        ].some(function(prop) {
+            return pkg[prop] && pkgName in pkg[prop];
+        });
+    }
     if (pkg) {
         sonarqubeScannerParams["sonar.projectKey"] = slug(pkg.name);
         sonarqubeScannerParams["sonar.projectName"] = pkg.name;
@@ -101,26 +110,18 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
         )).find(function(lcovReportDir) {
             var lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info');
             if (fileExistsInProjectSync(lcovReportPath)) {
+                sonarqubeScannerParams["sonar.exclusions"] += ',' + path.posix.join(lcovReportDir, '**');
                 // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
                 sonarqubeScannerParams["sonar.javascript.lcov.reportPath"] = lcovReportPath;
+                // TODO: use Generic Test Data to remove dependence of SonarJS, it is need transformation lcov to sonar generic coverage format
                 return true;
             }
         })
 
-        if (!pkg.devDependencies) {
-            return;
-        }
-        if (pkg.devDependencies["mocha-sonarqube-reporter"]) {
+        if (dependenceExists("mocha-sonarqube-reporter") && fileExistsInProjectSync("xunit.xml")) {
             // https://docs.sonarqube.org/display/SONAR/Generic+Test+Data
-            if (fileExistsInProjectSync("xunit.xml")) {
-                sonarqubeScannerParams["sonar.testExecutionReportPaths"] = "xunit.xml";
-            }
+            sonarqubeScannerParams["sonar.testExecutionReportPaths"] = "xunit.xml";
         }
-        if (pkg.devDependencies["mocha-sonar-generic-test-coverage"] || pkg.devDependencies["karma-sonarqube-unit-reporter"]) {
-            // https://docs.sonarqube.org/display/PLUG/Generic+Test+Coverage#GenericTestCoverage-UnitTestsExecutionResultsReportFormat
-            if (fileExistsInProjectSync("xunit.xml")) {
-                sonarqubeScannerParams["sonar.genericcoverage.unitTestReportPaths"] = "xunit.xml";
-            }
-        }
+        // TODO: use `glob` to lookup xunit format files and transformation to sonar generic report format
     }
 }
