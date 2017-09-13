@@ -52,9 +52,9 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
 
     // #3 - check what's passed in the call params - these are prevalent params
     Object.keys(params).forEach(function(paramName) {
-        var sonarName = (sonarNameMap[paramName] || paramName).replace(/^(?:((?:\w+\.)*?)sonar\.)?/, '$1sonar.')
-        sonarqubeScannerParams[sonarName] = params[paramName]
-    })
+        var sonarName = (sonarNameMap[paramName] || paramName).replace(/^(?:((?:\w+\.)*?)sonar\.)?/, '$1sonar.');
+        sonarqubeScannerParams[sonarName] = params[paramName];
+    });
 
     return sonarqubeScannerParams;
 }
