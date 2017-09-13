@@ -65,6 +65,7 @@ describe('sqScannerParams', function () {
 
     it('should get mandatory information from basic package.json file', function () {
         var expectedResult = {
+            "sonar.javascript.lcov.reportPath": "coverage/lcov.info",
             "sonar.projectKey": "fake-basic-project",
             "sonar.projectName": "fake-basic-project",
             "sonar.projectDescription": "No description.",
@@ -131,7 +132,39 @@ describe('sqScannerParams', function () {
                 {"sonar.host.url": "https://another.server.com", "sonar.login": "another_token"}),
             expectedResult);
     });
-    
+
+    it('should get nyc lcov file path from package.json file', function () {
+        var expectedResult = {
+            "sonar.javascript.lcov.reportPath": "nyc-coverage/lcov.info",
+            "sonar.projectKey": "fake-basic-project",
+            "sonar.projectName": "fake-basic-project",
+            "sonar.projectDescription": "No description.",
+            "sonar.projectVersion": "1.0.0",
+            "sonar.sources": ".",
+            "sonar.exclusions": exclusions
+        };
+        assert.deepEqual(
+            sqScannerParams({}, pathForProject("fake_project_with_nyc_report_file"), null),
+            expectedResult
+        );
+    });
+
+    it('should get jest lcov file path from package.json file', function () {
+        var expectedResult = {
+            "sonar.javascript.lcov.reportPath": "jest-coverage/lcov.info",
+            "sonar.projectKey": "fake-basic-project",
+            "sonar.projectName": "fake-basic-project",
+            "sonar.projectDescription": "No description.",
+            "sonar.projectVersion": "1.0.0",
+            "sonar.sources": ".",
+            "sonar.exclusions": exclusions
+        };
+        assert.deepEqual(
+            sqScannerParams({}, pathForProject("fake_project_with_jest_report_file"), null),
+            expectedResult
+        );
+    });
+
 });
 
 function pathForProject(projectFolder) {

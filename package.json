@@ -16,18 +16,22 @@
   },
   "license": "LGPL-3.0",
   "main": "dist/index.js",
-  "bin": { "sonar-scanner" : "dist/bin/sonar-scanner" },
+  "bin": {
+    "sonar-scanner": "dist/bin/sonar-scanner"
+  },
   "engines": {
     "node": ">= 0.10"
   },
   "dependencies": {
-    "fancy-log": "^1.1.0",
-    "extend": "3.0.0",
-    "read-pkg": "2.0.0",
-    "slug": "0.9.1",
-    "mkdirp": "0.5.1",
     "download": "4.4.3",
-    "download-status": "2.2.1"
+    "download-status": "2.2.1",
+    "extend": "3.0.0",
+    "fancy-log": "^1.1.0",
+    "lodash.get": "^4.4.2",
+    "lodash.uniq": "^4.5.0",
+    "mkdirp": "0.5.1",
+    "read-pkg": "2.0.0",
+    "slug": "0.9.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

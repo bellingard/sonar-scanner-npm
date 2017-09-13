@@ -4,6 +4,8 @@ var extend = require('extend');
 var readPackage = require('read-pkg').sync;
 var slug = require('slug');
 var log = require('fancy-log');
+var get = require('lodash.get');
+var uniq = require('lodash.uniq');
 
 module.exports = defineSonarQubeScannerParams;
 
@@ -31,10 +33,7 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
 
         // If there's a "package.json" file, read it to grab info
         try {
-            var packageFile = path.join(projectBaseDir, "package.json");
-            fs.accessSync(packageFile, fs.F_OK);
-            // there's a 'package.json' file - let's grab some info
-            extractInfoFromPackageFile(sonarqubeScannerParams, packageFile);
+            extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir);
         } catch (e) {
             // No "package.json" file (or invalid one) - let's remain on the defaults
             log(`No "package.json" file found (or no valid one): ${e.message}`);
@@ -61,9 +60,13 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
     return sonarqubeScannerParams;
 }
 
-function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
-    log('Getting info from "package.json" file');
+function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
+    function fileExistsInProjectSync(file) {
+        return fs.existsSync(path.resolve(projectBaseDir, file));
+    }
+    var packageFile = path.join(projectBaseDir, "package.json");
     var pkg = readPackage(packageFile);
+    log('Getting info from "package.json" file');
     if (pkg) {
         sonarqubeScannerParams["sonar.projectKey"] = slug(pkg.name);
         sonarqubeScannerParams["sonar.projectName"] = pkg.name;
@@ -81,33 +84,41 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
             sonarqubeScannerParams["sonar.links.scm"] = pkg.repository.url;
         }
 
-        var lcovReportDir =
+        uniq([
             // jest coverage output directory
             // See: http://facebook.github.io/jest/docs/en/configuration.html#coveragedirectory-string
-            (pkg.jest && pkg.jest.coverageDirectory) ||
+            'jest.coverageDirectory',
             // nyc coverage output directory
             // See: https://github.com/istanbuljs/nyc#configuring-nyc
-            (pkg.nyc && pkg.nyc["report-dir"]) ||
+            'nyc.report-dir'
+        ].map(function(path) {
+            return get(pkg, path);
+        }).filter(
+            Boolean
+        ).concat(
             // default coverage output directory
-            'coverage';
-        var lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info');
-        if (fs.existsSync(lcovReportPath)) {
-            // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
-            sonarqubeScannerParams["sonar.javascript.lcov.reportPath"] = lcovReportPath
-        }
+            'coverage'
+        )).find(function(lcovReportDir) {
+            var lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info');
+            if (fileExistsInProjectSync(lcovReportPath)) {
+                // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
+                sonarqubeScannerParams["sonar.javascript.lcov.reportPath"] = lcovReportPath;
+                return true;
+            }
+        })
 
         if (!pkg.devDependencies) {
             return;
         }
         if (pkg.devDependencies["mocha-sonarqube-reporter"]) {
             // https://docs.sonarqube.org/display/SONAR/Generic+Test+Data
-            if (fs.existsSync("xunit.xml")) {
+            if (fileExistsInProjectSync("xunit.xml")) {
                 sonarqubeScannerParams["sonar.testExecutionReportPaths"] = "xunit.xml";
             }
         }
         if (pkg.devDependencies["mocha-sonar-generic-test-coverage"] || pkg.devDependencies["karma-sonarqube-unit-reporter"]) {
             // https://docs.sonarqube.org/display/PLUG/Generic+Test+Coverage#GenericTestCoverage-UnitTestsExecutionResultsReportFormat
-            if (fs.existsSync("xunit.xml")) {
+            if (fileExistsInProjectSync("xunit.xml")) {
                 sonarqubeScannerParams["sonar.genericcoverage.unitTestReportPaths"] = "xunit.xml";
             }
         }
