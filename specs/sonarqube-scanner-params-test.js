@@ -3,6 +3,11 @@ var path = require('path');
 var sqScannerParams = require('../dist/sonarqube-scanner-params');
 
 describe('sqScannerParams', function () {
+
+    function pathForProject(projectFolder) {
+        return path.join(process.cwd(), "specs", "resources", projectFolder);
+    }
+    
     var exclusions = "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**";
 
     it('should provide default values', function () {
@@ -134,7 +139,7 @@ describe('sqScannerParams', function () {
             expectedResult);
     });
 
-    it('should get nyc lcov file path from package.json file', function () {
+    it("should get nyc lcov file path from package.json file", function () {
         var expectedResult = {
             "sonar.javascript.lcov.reportPath": "nyc-coverage/lcov.info",
             "sonar.projectKey": "fake-basic-project",
@@ -150,7 +155,7 @@ describe('sqScannerParams', function () {
         );
     });
 
-    it('should get jest lcov file path from package.json file', function () {
+    it("should get jest lcov file path from package.json file", function () {
         var expectedResult = {
             "sonar.javascript.lcov.reportPath": "jest-coverage/lcov.info",
             "sonar.projectKey": "fake-basic-project",
@@ -167,7 +172,3 @@ describe('sqScannerParams', function () {
     });
 
 });
-
-function pathForProject(projectFolder) {
-    return path.join(process.cwd(), "specs", "resources", projectFolder);
-}
