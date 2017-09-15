@@ -3,7 +3,12 @@ var path = require('path');
 var sqScannerParams = require('../dist/sonarqube-scanner-params');
 
 describe('sqScannerParams', function () {
-    var exclusions = "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**";
+
+    function pathForProject(projectFolder) {
+        return path.join(process.cwd(), "specs", "resources", projectFolder);
+    }
+    
+    var exclusions = "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**";
 
     it('should provide default values', function () {
         var expectedResult = {
@@ -65,12 +70,13 @@ describe('sqScannerParams', function () {
 
     it('should get mandatory information from basic package.json file', function () {
         var expectedResult = {
+            "sonar.javascript.lcov.reportPaths": "coverage/lcov.info",
             "sonar.projectKey": "fake-basic-project",
             "sonar.projectName": "fake-basic-project",
             "sonar.projectDescription": "No description.",
             "sonar.projectVersion": "1.0.0",
             "sonar.sources": ".",
-            "sonar.exclusions": exclusions
+            "sonar.exclusions": "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**",
         };
         assert.deepEqual(
             sqScannerParams({}, pathForProject("fake_project_with_basic_package_file"), null),
@@ -87,7 +93,8 @@ describe('sqScannerParams', function () {
             "sonar.links.issues": "https://github.com/fake/project/issues",
             "sonar.links.scm": "git+https://github.com/fake/project.git",
             "sonar.sources": ".",
-            "sonar.exclusions": exclusions
+            "sonar.testExecutionReportPaths": "xunit.xml",
+            "sonar.exclusions": exclusions,
         };
         assert.deepEqual(
             sqScannerParams({}, pathForProject("fake_project_with_complete_package_file"), null),
@@ -131,9 +138,37 @@ describe('sqScannerParams', function () {
                 {"sonar.host.url": "https://another.server.com", "sonar.login": "another_token"}),
             expectedResult);
     });
-    
-});
 
-function pathForProject(projectFolder) {
-    return path.join(process.cwd(), "specs", "resources", projectFolder);
-}
+    it("should get nyc lcov file path from package.json file", function () {
+        var expectedResult = {
+            "sonar.javascript.lcov.reportPaths": "nyc-coverage/lcov.info",
+            "sonar.projectKey": "fake-basic-project",
+            "sonar.projectName": "fake-basic-project",
+            "sonar.projectDescription": "No description.",
+            "sonar.projectVersion": "1.0.0",
+            "sonar.sources": ".",
+            "sonar.exclusions": "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,nyc-coverage/**",
+        };
+        assert.deepEqual(
+            sqScannerParams({}, pathForProject("fake_project_with_nyc_report_file"), null),
+            expectedResult
+        );
+    });
+
+    it("should get jest lcov file path from package.json file", function () {
+        var expectedResult = {
+            "sonar.javascript.lcov.reportPaths": "jest-coverage/lcov.info",
+            "sonar.projectKey": "fake-basic-project",
+            "sonar.projectName": "fake-basic-project",
+            "sonar.projectDescription": "No description.",
+            "sonar.projectVersion": "1.0.0",
+            "sonar.sources": ".",
+            "sonar.exclusions": "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,jest-coverage/**",
+        };
+        assert.deepEqual(
+            sqScannerParams({}, pathForProject("fake_project_with_jest_report_file"), null),
+            expectedResult
+        );
+    });
+
+});

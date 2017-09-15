@@ -4,6 +4,8 @@ var extend = require('extend');
 var readPackage = require('read-pkg').sync;
 var slug = require('slug');
 var log = require('fancy-log');
+var get = require('lodash.get');
+var uniq = require('lodash.uniq');
 
 module.exports = defineSonarQubeScannerParams;
 
@@ -26,15 +28,12 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
             "sonar.projectVersion": "0.0.1",
             "sonar.projectDescription": "No description.",
             "sonar.sources": ".",
-            "sonar.exclusions": "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**"
+            "sonar.exclusions": "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**"
         });
 
         // If there's a "package.json" file, read it to grab info
         try {
-            var packageFile = path.join(projectBaseDir, "package.json");
-            fs.accessSync(packageFile, fs.F_OK);
-            // there's a 'package.json' file - let's grab some info
-            extractInfoFromPackageFile(sonarqubeScannerParams, packageFile);
+            extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir);
         } catch (e) {
             // No "package.json" file (or invalid one) - let's remain on the defaults
             log(`No "package.json" file found (or no valid one): ${e.message}`);
@@ -61,9 +60,22 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
     return sonarqubeScannerParams;
 }
 
-function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
-    log('Getting info from "package.json" file');
+function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
+    var packageFile = path.join(projectBaseDir, "package.json");
     var pkg = readPackage(packageFile);
+    log('Getting info from "package.json" file');
+    function fileExistsInProjectSync(file) {
+        return fs.existsSync(path.resolve(projectBaseDir, file));
+    }
+    function dependenceExists(pkgName) {
+        return [
+            'devDependencies',
+            'dependencies',
+            'peerDependencies',
+        ].some(function(prop) {
+            return pkg[prop] && pkgName in pkg[prop];
+        });
+    }
     if (pkg) {
         sonarqubeScannerParams["sonar.projectKey"] = slug(pkg.name);
         sonarqubeScannerParams["sonar.projectName"] = pkg.name;
@@ -80,5 +92,36 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, packageFile) {
         if (pkg.repository && pkg.repository.url) {
             sonarqubeScannerParams["sonar.links.scm"] = pkg.repository.url;
         }
+
+        uniq([
+            // jest coverage output directory
+            // See: http://facebook.github.io/jest/docs/en/configuration.html#coveragedirectory-string
+            'jest.coverageDirectory',
+            // nyc coverage output directory
+            // See: https://github.com/istanbuljs/nyc#configuring-nyc
+            'nyc.report-dir'
+        ].map(function(path) {
+            return get(pkg, path);
+        }).filter(
+            Boolean
+        ).concat(
+            // default coverage output directory
+            'coverage'
+        )).find(function(lcovReportDir) {
+            var lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info');
+            if (fileExistsInProjectSync(lcovReportPath)) {
+                sonarqubeScannerParams["sonar.exclusions"] += ',' + path.posix.join(lcovReportDir, '**');
+                // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
+                sonarqubeScannerParams["sonar.javascript.lcov.reportPaths"] = lcovReportPath;
+                // TODO: use Generic Test Data to remove dependence of SonarJS, it is need transformation lcov to sonar generic coverage format
+                return true;
+            }
+        })
+
+        if (dependenceExists("mocha-sonarqube-reporter") && fileExistsInProjectSync("xunit.xml")) {
+            // https://docs.sonarqube.org/display/SONAR/Generic+Test+Data
+            sonarqubeScannerParams["sonar.testExecutionReportPaths"] = "xunit.xml";
+        }
+        // TODO: use `glob` to lookup xunit format files and transformation to sonar generic report format
     }
 }

@@ -2,8 +2,8 @@ var assert = require('assert');
 var path = require('path');
 var index = require('../dist/sonarqube-scanner-executable');
 
-describe('sqScannerParams', function () {
-    var exclusions = "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**";
+describe('sqScannerExecutable', function () {
+    var exclusions = "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**";
     
     it('should provide default values', function () {
         var expectedResult = {
