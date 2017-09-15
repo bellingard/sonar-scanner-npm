@@ -16,7 +16,9 @@
   },
   "license": "LGPL-3.0",
   "main": "dist/index.js",
-  "bin": { "sonar-scanner" : "dist/bin/sonar-scanner" },
+  "bin": {
+    "sonar-scanner": "dist/bin/sonar-scanner"
+  },
   "engines": {
     "node": ">= 0.10"
   },
@@ -30,10 +32,20 @@
     "download-status": "2.2.1"
   },
   "devDependencies": {
+    "eslint": "^4.6.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "gulp": "^3.9.1",
     "gulp-istanbul": "^1.1.1",
     "gulp-mocha": "^3.0.1",
     "mocha": "^3.1.2"
+  },
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "mocha specs"
   },
   "keywords": [
     "sonarqube",
