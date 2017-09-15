@@ -3,19 +3,19 @@ module.exports = {
 	root: true,
 	rules: {
 		"no-tabs": [
-			"off"
+			"off",
 		],
 		"indent": [
 			"error",
-			"tab"
+			"tab",
 		],
 		"quotes": [
 			"error",
-			"double"
+			"double",
 		],
-		"semi": [
+		"comma-dangle": [
 			"error",
-			"always"
-		]
-	}
-};
+			"always-multiline",
+		],
+	},
+}

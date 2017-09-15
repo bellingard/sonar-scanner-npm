@@ -1,9 +1,9 @@
-var assert = require("assert");
-var path = require("path");
-var index = require("../dist/sonarqube-scanner-executable");
+var assert = require("assert")
+var path = require("path")
+var index = require("../dist/sonarqube-scanner-executable")
 
-describe("sqScannerParams", function () {
-	var exclusions = "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**";
+describe("sqScannerExecutable", function () {
+	var exclusions = "node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**"
 
 	it("should provide default values", function () {
 		var expectedResult = {
@@ -16,22 +16,22 @@ describe("sqScannerParams", function () {
 					"sonar.projectVersion": "0.0.1",
 					"sonar.projectDescription": "No description.",
 					"sonar.sources": ".",
-					"sonar.exclusions": exclusions
-				})
-			}
-		};
+					"sonar.exclusions": exclusions,
+				}),
+			},
+		}
 
 		var fakeProcess = {
 			env: {},
 			cwd: function () {
-				return pathForProject("fake_project_with_no_package_file");
-			}
-		};
+				return pathForProject("fake_project_with_no_package_file")
+			},
+		}
 
 		assert.deepEqual(
 			index.prepareExecEnvironment({}, fakeProcess),
-			expectedResult);
-	});
+			expectedResult)
+	})
 
 	it("should read SONARQUBE_SCANNER_PARAMS provided by environment if it exists", function () {
 		var expectedResult = {
@@ -46,29 +46,29 @@ describe("sqScannerParams", function () {
 					"sonar.sources": ".",
 					"sonar.exclusions": exclusions,
 					"sonar.host.url": "https://sonarcloud.io",
-					"sonar.branch": "dev"
-				})
-			}
-		};
+					"sonar.branch": "dev",
+				}),
+			},
+		}
 
 		var fakeProcess = {
 			env: {
 				SONARQUBE_SCANNER_PARAMS: JSON.stringify({
 					"sonar.host.url": "https://sonarcloud.io",
-					"sonar.branch": "dev"
-				})
+					"sonar.branch": "dev",
+				}),
 			},
 			cwd: function () {
-				return pathForProject("fake_project_with_no_package_file");
-			}
-		};
+				return pathForProject("fake_project_with_no_package_file")
+			},
+		}
 
 		assert.deepEqual(
 			index.prepareExecEnvironment({}, fakeProcess),
-			expectedResult);
-	});
-});
+			expectedResult)
+	})
+})
 
 function pathForProject (projectFolder) {
-	return path.join(process.cwd(), "specs", "resources", projectFolder);
+	return path.join(process.cwd(), "specs", "resources", projectFolder)
 }
