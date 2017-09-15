@@ -70,7 +70,7 @@ describe('sqScannerParams', function () {
 
     it('should get mandatory information from basic package.json file', function () {
         var expectedResult = {
-            "sonar.javascript.lcov.reportPath": "coverage/lcov.info",
+            "sonar.javascript.lcov.reportPaths": "coverage/lcov.info",
             "sonar.projectKey": "fake-basic-project",
             "sonar.projectName": "fake-basic-project",
             "sonar.projectDescription": "No description.",
@@ -141,7 +141,7 @@ describe('sqScannerParams', function () {
 
     it("should get nyc lcov file path from package.json file", function () {
         var expectedResult = {
-            "sonar.javascript.lcov.reportPath": "nyc-coverage/lcov.info",
+            "sonar.javascript.lcov.reportPaths": "nyc-coverage/lcov.info",
             "sonar.projectKey": "fake-basic-project",
             "sonar.projectName": "fake-basic-project",
             "sonar.projectDescription": "No description.",
@@ -157,7 +157,7 @@ describe('sqScannerParams', function () {
 
     it("should get jest lcov file path from package.json file", function () {
         var expectedResult = {
-            "sonar.javascript.lcov.reportPath": "jest-coverage/lcov.info",
+            "sonar.javascript.lcov.reportPaths": "jest-coverage/lcov.info",
             "sonar.projectKey": "fake-basic-project",
             "sonar.projectName": "fake-basic-project",
             "sonar.projectDescription": "No description.",

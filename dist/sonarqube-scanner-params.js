@@ -112,7 +112,7 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
             if (fileExistsInProjectSync(lcovReportPath)) {
                 sonarqubeScannerParams["sonar.exclusions"] += ',' + path.posix.join(lcovReportDir, '**');
                 // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
-                sonarqubeScannerParams["sonar.javascript.lcov.reportPath"] = lcovReportPath;
+                sonarqubeScannerParams["sonar.javascript.lcov.reportPaths"] = lcovReportPath;
                 // TODO: use Generic Test Data to remove dependence of SonarJS, it is need transformation lcov to sonar generic coverage format
                 return true;
             }

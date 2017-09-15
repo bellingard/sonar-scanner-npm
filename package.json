@@ -37,7 +37,8 @@
     "gulp": "^3.9.1",
     "gulp-istanbul": "^1.1.1",
     "gulp-mocha": "^3.0.1",
-    "mocha": "^3.1.2"
+    "mocha": "^3.1.2",
+    "mocha-sonarqube-reporter": "^1.0.1"
   },
   "keywords": [
     "sonarqube",
