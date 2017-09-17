@@ -1,0 +1,18 @@
+<testExecutions version="1">
+<file path="specs\sonarqube-scanner-executable-test.js">
+<testCase name="sqScannerExecutable: should provide default values" duration="6"/>
+<testCase name="sqScannerExecutable: should read SONARQUBE_SCANNER_PARAMS provided by environment if it exists" duration="10"/>
+</file>
+<file path="specs\sonarqube-scanner-params-test.js">
+<testCase name="sqScannerParams: should provide default values" duration="1"/>
+<testCase name="sqScannerParams: should not set default values if sonar-project.properties file exists" duration="0"/>
+<testCase name="sqScannerParams: should propagate custom server and token" duration="1"/>
+<testCase name="sqScannerParams: should allow to override default settings and add new ones" duration="1"/>
+<testCase name="sqScannerParams: should get mandatory information from basic package.json file" duration="65"/>
+<testCase name="sqScannerParams: should get all information from package.json file" duration="9"/>
+<testCase name="sqScannerParams: should take into account SONARQUBE_SCANNER_PARAMS env variable" duration="12"/>
+<testCase name="sqScannerParams: should make priority to user options over SONARQUBE_SCANNER_PARAMS env variable" duration="1"/>
+<testCase name="sqScannerParams: should get nyc lcov file path from package.json file" duration="1"/>
+<testCase name="sqScannerParams: should get jest lcov file path from package.json file" duration="1"/>
+</file>
+</testExecutions>

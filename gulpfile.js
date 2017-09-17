@@ -5,33 +5,33 @@ var mocha = require('gulp-mocha');
 var sonarqubeScanner = require('./dist/index');
 
 gulp.task('default', ['test'], function (callback) {
-    // We just run a SonarQube analysis and push it to SonarCloud
-    // (No need to pass the server URL and the token, we're using the Travis
-    //  Addon for SonarCloud which does this for you.)
-    // ----------------------------------------------------
-    sonarqubeScanner({
-        options: {
-            "sonar.organization": "default",
-            "sonar.projectName": "SonarQube/SonarCloud Scanner for the JavaScript world",
-            "sonar.sources": "dist",
-            "sonar.tests": "specs",
-            "sonar.javascript.lcov.reportPath": "coverage/lcov.info"
-        }
-    }, callback);
-    // ----------------------------------------------------
+	// We just run a SonarQube analysis and push it to SonarCloud
+	// (No need to pass the server URL and the token, we're using the Travis
+	//  Addon for SonarCloud which does this for you.)
+	// ----------------------------------------------------
+	sonarqubeScanner({
+		options: {
+			'sonar.projectName': 'SonarQube/SonarCloud Scanner for the JavaScript world',
+			'sonar.sources': 'dist',
+			'sonar.tests': 'specs',
+		}
+	}, callback);
+	// ----------------------------------------------------
 });
 
 gulp.task('test', ['pre-test'], function () {
-    return gulp.src(['specs/**/*.js'])
-        .pipe(mocha())
-        // Creating the reports after tests ran
-        .pipe(istanbul.writeReports());
+	return gulp.src(['specs/**/*.js'])
+		.pipe(mocha(process.env.CI && {
+			reporter: "mocha-sonarqube-reporter",
+		}))
+	// Creating the reports after tests ran
+		.pipe(istanbul.writeReports());
 });
 
 gulp.task('pre-test', function () {
-    return gulp.src(['dist/**/*.js'])
-    // Covering files
-        .pipe(istanbul())
-        // Force `require` to return covered files
-        .pipe(istanbul.hookRequire());
+	return gulp.src(['dist/**/*.js'])
+	// Covering files
+		.pipe(istanbul())
+	// Force `require` to return covered files
+		.pipe(istanbul.hookRequire());
 });
