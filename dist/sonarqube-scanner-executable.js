@@ -87,7 +87,7 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
     log("Proceed with download of the platform binaries for SonarQube Scanner...");
     log("Creating " + installFolder);
     mkdirs(installFolder);
-    var baseUrl = "https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/";
+    var baseUrl = process.env.SONAR_SCANNER_MIRROR || "https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/";
     var fileName = "sonar-scanner-cli-"
         + platformBinariesVersion
         + "-"
