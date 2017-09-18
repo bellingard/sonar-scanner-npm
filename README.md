@@ -93,6 +93,16 @@ of the example by:
 var sonarqubeScanner = require('sonarqube-scanner').customScanner;
 ```
 
+## Download From Mirrors
+
+By default, SonarQube scanner binaries are downloaded from `https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/`.
+To use a custom mirror, set `$SONAR_SCANNER_MIRROR`.
+
+**Example:**
+```shell
+export SONAR_SCANNER_MIRROR=https://npm.taobao.org/mirrors/sonar-scanner/
+```
+
 ## License
 
 `sonarqube-scanner` is licensed under the [LGPL v3 License](http://www.gnu.org/licenses/lgpl.txt).
