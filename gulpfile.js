@@ -1,37 +1,37 @@
-var gulp = require('gulp');
-var istanbul = require('gulp-istanbul');
-var mocha = require('gulp-mocha');
+var gulp = require("gulp")
+var istanbul = require("gulp-istanbul")
+var mocha = require("gulp-mocha")
 // Regular users will call "require('sonarqube-scanner')" - but not here: eat your own dog food! :-)
-var sonarqubeScanner = require('./dist/index');
+var sonarqubeScanner = require("./dist/index")
 
-gulp.task('default', ['test'], function (callback) {
+gulp.task("default", ["test"], function (callback) {
 	// We just run a SonarQube analysis and push it to SonarCloud
 	// (No need to pass the server URL and the token, we're using the Travis
 	//  Addon for SonarCloud which does this for you.)
 	// ----------------------------------------------------
 	sonarqubeScanner({
 		options: {
-			'sonar.projectName': 'SonarQube/SonarCloud Scanner for the JavaScript world',
-			'sonar.sources': 'dist',
-			'sonar.tests': 'specs',
-		}
-	}, callback);
+			"sonar.projectName": "SonarQube/SonarCloud Scanner for the JavaScript world",
+			"sonar.sources": "dist",
+			"sonar.tests": "specs",
+		},
+	}, callback)
 	// ----------------------------------------------------
-});
+})
 
-gulp.task('test', ['pre-test'], function () {
-	return gulp.src(['specs/**/*.js'])
+gulp.task("test", ["pre-test"], function () {
+	return gulp.src(["specs/**/*.js"])
 		.pipe(mocha(process.env.CI && {
 			reporter: "mocha-sonarqube-reporter",
 		}))
 	// Creating the reports after tests ran
-		.pipe(istanbul.writeReports());
-});
+		.pipe(istanbul.writeReports())
+})
 
-gulp.task('pre-test', function () {
-	return gulp.src(['dist/**/*.js'])
+gulp.task("pre-test", function () {
+	return gulp.src(["dist/**/*.js"])
 	// Covering files
 		.pipe(istanbul())
 	// Force `require` to return covered files
-		.pipe(istanbul.hookRequire());
-});
+		.pipe(istanbul.hookRequire())
+})

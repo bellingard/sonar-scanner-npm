@@ -34,11 +34,21 @@
     "slug": "0.9.1"
   },
   "devDependencies": {
+    "eslint": "^4.7.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "gulp": "^3.9.1",
     "gulp-istanbul": "^1.1.1",
     "gulp-mocha": "^3.0.1",
     "mocha": "^3.1.2",
     "mocha-sonarqube-reporter": "^1.0.1"
+  },
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "mocha specs"
   },
   "keywords": [
     "sonarqube",
