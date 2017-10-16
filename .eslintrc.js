@@ -1,21 +1,10 @@
 module.exports = {
-	extends: "standard",
+	extends: 'standard',
 	root: true,
 	rules: {
-		"no-tabs": [
-			"off",
-		],
-		"indent": [
-			"error",
-			"tab",
-		],
-		"quotes": [
-			"error",
-			"double",
-		],
-		"comma-dangle": [
-			"error",
-			"always-multiline",
-		],
-	},
-}
+	  // allow paren-less arrow functions
+	  'arrow-parens': 0,
+	  'space-before-function-paren': ['error', 'never'],
+	  'indent': ['error', 2]
+	}
+  }
