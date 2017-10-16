@@ -18,16 +18,15 @@ describe('sqScannerParams', function() {
       'sonar.sources': '.',
       'sonar.exclusions': exclusions
     }
-    assert.deepEqual(
-      sqScannerParams({}, pathForProject('fake_project_with_no_package_file'), null),
-      expectedResult)
+    assert.deepEqual(sqScannerParams({}, pathForProject('fake_project_with_no_package_file'), null), expectedResult)
   })
 
   it('should not set default values if sonar-project.properties file exists', function() {
     var expectedResult = {}
     assert.deepEqual(
       sqScannerParams({}, pathForProject('fake_project_with_sonar_properties_file'), null),
-      expectedResult)
+      expectedResult
+    )
   })
 
   it('should propagate custom server and token', function() {
@@ -71,8 +70,10 @@ describe('sqScannerParams', function() {
           'tests': 'specs'
         },
         pathForProject('fake_project_with_no_package_file'),
-        null),
-      expectedResult)
+        null
+      ),
+      expectedResult
+    )
   })
 
   it('should get mandatory information from basic package.json file', function() {
@@ -85,9 +86,7 @@ describe('sqScannerParams', function() {
       'sonar.sources': '.',
       'sonar.exclusions': 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**,coverage/**'
     }
-    assert.deepEqual(
-      sqScannerParams({}, pathForProject('fake_project_with_basic_package_file'), null),
-      expectedResult)
+    assert.deepEqual(sqScannerParams({}, pathForProject('fake_project_with_basic_package_file'), null), expectedResult)
   })
 
   it('should get all information from package.json file', function() {
@@ -100,12 +99,13 @@ describe('sqScannerParams', function() {
       'sonar.links.issues': 'https://github.com/fake/project/issues',
       'sonar.links.scm': 'https://github.com/fake/project.git',
       'sonar.sources': '.',
-      'sonar.exclusions': exclusions,
-      'sonar.testExecutionReportPaths': 'xunit.xml'
+      'sonar.testExecutionReportPaths': 'xunit.xml',
+      'sonar.exclusions': exclusions
     }
     assert.deepEqual(
       sqScannerParams({}, pathForProject('fake_project_with_complete_package_file'), null),
-      expectedResult)
+      expectedResult
+    )
   })
 
   it('should take into account SONARQUBE_SCANNER_PARAMS env variable', function() {
@@ -120,11 +120,12 @@ describe('sqScannerParams', function() {
       'sonar.exclusions': exclusions
     }
     assert.deepEqual(
-      sqScannerParams(
-        {},
-        pathForProject('fake_project_with_no_package_file'),
-        {'sonar.host.url': 'https://sonarcloud.io', 'sonar.login': 'my_token'}),
-      expectedResult)
+      sqScannerParams({}, pathForProject('fake_project_with_no_package_file'), {
+        'sonar.host.url': 'https://sonarcloud.io',
+        'sonar.login': 'my_token'
+      }),
+      expectedResult
+    )
   })
 
   it('should make priority to user options over SONARQUBE_SCANNER_PARAMS env variable', function() {
@@ -150,7 +151,8 @@ describe('sqScannerParams', function() {
           'sonar.login': 'another_token'
         }
       ),
-      expectedResult)
+      expectedResult
+    )
   })
 
   it('should get nyc lcov file path from package.json file', function() {

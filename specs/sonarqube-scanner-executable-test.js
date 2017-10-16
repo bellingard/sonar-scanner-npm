@@ -28,9 +28,7 @@ describe('sqScannerExecutable', function() {
       }
     }
 
-    assert.deepEqual(
-      index.prepareExecEnvironment({}, fakeProcess),
-      expectedResult)
+    assert.deepEqual(index.prepareExecEnvironment({}, fakeProcess), expectedResult)
   })
 
   it('should read SONARQUBE_SCANNER_PARAMS provided by environment if it exists', function() {
@@ -63,9 +61,7 @@ describe('sqScannerExecutable', function() {
       }
     }
 
-    assert.deepEqual(
-      index.prepareExecEnvironment({}, fakeProcess),
-      expectedResult)
+    assert.deepEqual(index.prepareExecEnvironment({}, fakeProcess), expectedResult)
   })
 })
 

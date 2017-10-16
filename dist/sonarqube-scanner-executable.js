@@ -60,10 +60,12 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
   if (isWindows()) {
     binaryExtension = '.bat'
   }
-  var platformExecutable = path.join(installFolder,
+  var platformExecutable = path.join(
+    installFolder,
     `sonar-scanner-${platformBinariesVersion}-${targetOS}`,
     'bin',
-    `sonar-scanner${binaryExtension}`)
+    `sonar-scanner${binaryExtension}`
+  )
 
   // #1 - Try to execute the scanner
   var executableFound = false
@@ -74,7 +76,7 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
     log('Platform binaries for SonarQube scanner found. Using it.')
     executableFound = true
   } catch (e) {
-    log("Could not find executable in '" + installFolder + "'.")
+    log('Could not find executable in "' + installFolder + '".')
   }
   if (executableFound) {
     passExecutableCallback(platformExecutable)
@@ -87,19 +89,15 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
   log('Creating ' + installFolder)
   mkdirs(installFolder)
   var baseUrl = process.env.SONAR_SCANNER_MIRROR || 'https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/'
-  var fileName = 'sonar-scanner-cli-' +
-        platformBinariesVersion +
-        '-' +
-        targetOS +
-        '.zip'
+  var fileName = 'sonar-scanner-cli-' + platformBinariesVersion + '-' + targetOS + '.zip'
   var downloadUrl = baseUrl + fileName
   log(`Downloading from ${downloadUrl}`)
   log(`(executable will be saved in cache folder: ${installFolder})`)
-  new Download({extract: true})
+  new Download({ extract: true })
     .get(downloadUrl)
     .dest(installFolder)
     .use(downloadStatus())
-    .run((err) => {
+    .run(err => {
       if (err) {
         logError(`Impossible to download and extract binary: ${err.message}`)
         logError(`SonarQube Scanner binaries probably don't exist for your OS (${targetOS}).`)
@@ -120,7 +118,7 @@ function getLocalSonarQubeScannerExecutable(passExecutableCallback) {
     command += '.bat'
   }
 
-  // Try to execute the "sonar-scanner" command to see if it's installed locally
+  // Try to execute the 'sonar-scanner' command to see if it's installed locally
   try {
     log('Trying to find a local install of the SonarQube Scanner')
     exec(command + ' -v', {})

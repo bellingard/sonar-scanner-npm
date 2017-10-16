@@ -93,21 +93,24 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
       sonarqubeScannerParams['sonar.links.scm'] = pkg.repository.url.replace(/^\w+\+(\w+:\/\/)/, '$1')
     }
 
-    uniq([
-      // jest coverage output directory
-      // See: http://facebook.github.io/jest/docs/en/configuration.html#coveragedirectory-string
-      'jest.coverageDirectory',
-      // nyc coverage output directory
-      // See: https://github.com/istanbuljs/nyc#configuring-nyc
-      'nyc.report-dir'
-    ].map(function(path) {
-      return get(pkg, path)
-    }).filter(
-      Boolean
-    ).concat(
-      // default coverage output directory
-      'coverage'
-    )).find(function(lcovReportDir) {
+    uniq(
+      [
+        // jest coverage output directory
+        // See: http://facebook.github.io/jest/docs/en/configuration.html#coveragedirectory-string
+        'jest.coverageDirectory',
+        // nyc coverage output directory
+        // See: https://github.com/istanbuljs/nyc#configuring-nyc
+        'nyc.report-dir'
+      ]
+        .map(function(path) {
+          return get(pkg, path)
+        })
+        .filter(Boolean)
+        .concat(
+          // default coverage output directory
+          'coverage'
+        )
+    ).find(function(lcovReportDir) {
       var lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info')
       if (fileExistsInProjectSync(lcovReportPath)) {
         sonarqubeScannerParams['sonar.exclusions'] += ',' + path.posix.join(lcovReportDir, '**')
