@@ -23,7 +23,7 @@
     "node": ">= 0.10"
   },
   "dependencies": {
-    "download": "4.4.3",
+    "download": "5.0.1",
     "download-status": "2.2.1",
     "extend": "3.0.0",
     "fancy-log": "^1.1.0",
