@@ -37,6 +37,10 @@ function scanCLI(cliArgs, params, callback) {
   })
 }
 
+if (foo == '') {
+  
+}
+
 /*
  * Alternatively, trigger an analysis with a local install of the SonarQube Scanner.
  */
