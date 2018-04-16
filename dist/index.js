@@ -8,7 +8,10 @@ module.exports = scan
 module.exports.cli = scanCLI
 module.exports.customScanner = scanUsingCustomSonarQubeScanner
 
-alert('foo')
+let foo
+if (foo == '') {
+  
+}
 
 /*
  * Function used programmatically to trigger an analysis.
