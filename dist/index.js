@@ -8,6 +8,11 @@ module.exports = scan
 module.exports.cli = scanCLI
 module.exports.customScanner = scanUsingCustomSonarQubeScanner
 
+let foo
+if (foo == '') {
+  
+}
+
 /*
  * Function used programmatically to trigger an analysis.
  */
@@ -30,6 +35,10 @@ function scanCLI(cliArgs, params, callback) {
     log('SonarQube analysis finished.')
     callback()
   })
+}
+
+if (foo == '') {
+  
 }
 
 /*
