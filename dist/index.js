@@ -8,6 +8,8 @@ module.exports = scan
 module.exports.cli = scanCLI
 module.exports.customScanner = scanUsingCustomSonarQubeScanner
 
+alert('foo')
+
 /*
  * Function used programmatically to trigger an analysis.
  */
