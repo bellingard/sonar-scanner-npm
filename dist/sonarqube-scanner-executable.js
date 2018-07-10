@@ -56,7 +56,7 @@ function prepareExecEnvironment(params, process) {
  * Returns the SQ Scanner executable for the current platform
  */
 function getSonarQubeScannerExecutable(passExecutableCallback) {
-  const platformBinariesVersion = '3.0.3.778'
+  const platformBinariesVersion = '3.2.0.1227'
   var targetOS = findTargetOS()
   var installFolder = path.join(os.homedir(), '.sonar', 'native-sonar-scanner')
   var binaryExtension = ''
