@@ -2,7 +2,7 @@ var fs = require('fs')
 var path = require('path')
 var extend = require('extend')
 var readPackage = require('read-pkg').sync
-var slug = require('slug')
+var slugify = require('slugify')
 var log = require('fancy-log')
 var get = require('lodash.get')
 var uniq = require('lodash.uniq')
@@ -23,7 +23,7 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
   } catch (e) {
     // No 'sonar-project.properties' file - let's add some default values
     extend(sonarqubeScannerParams, {
-      'sonar.projectKey': slug(path.basename(projectBaseDir)),
+      'sonar.projectKey': slugify(path.basename(projectBaseDir)),
       'sonar.projectName': path.basename(projectBaseDir),
       'sonar.projectVersion': '0.0.1',
       'sonar.projectDescription': 'No description.',
@@ -73,7 +73,7 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
     })
   }
   if (pkg) {
-    sonarqubeScannerParams['sonar.projectKey'] = slug(pkg.name)
+    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name)
     sonarqubeScannerParams['sonar.projectName'] = pkg.name
     sonarqubeScannerParams['sonar.projectVersion'] = pkg.version
     if (pkg.description) {
