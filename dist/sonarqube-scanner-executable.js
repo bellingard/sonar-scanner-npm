@@ -87,7 +87,18 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
   }
 
   // #2 - Download the binaries and unzip them
-  //      They are located at https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${version}-${os}.zip
+  downloadScanner(installFolder, platformBinariesVersion).then(() => {
+    passExecutableCallback(platformExecutable)
+  });
+}
+
+/*
+ * Download SQ Scanner and return a promise that is complete when it's done downloading
+ */
+function downloadScanner(installFolder, platformBinariesVersion) {
+  // Download the binaries and unzip them
+  // They are located at https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${version}-${os}.zip
+  var targetOS = findTargetOS()
   log('Proceed with download of the platform binaries for SonarQube Scanner...')
   log('Creating ' + installFolder)
   mkdirs(installFolder)
@@ -96,20 +107,21 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
   var downloadUrl = baseUrl + fileName
   log(`Downloading from ${downloadUrl}`)
   log(`(executable will be saved in cache folder: ${installFolder})`)
-  download(downloadUrl, installFolder, { extract: true })
-    .on('response', res => {
-      bar.total = res.headers['content-length']
-      res.on('data', data => bar.tick(data.length))
-    })
-    .then(() => {
-      passExecutableCallback(platformExecutable)
-    })
-    .catch((err) => {
-      logError(`ERROR: impossible to download and extract binary: ${err.message}`)
-      logError(`       SonarQube Scanner binaries probably don't exist for your OS (${targetOS}).`)
-      logError('       In such situation, the best solution is to install the standard SonarQube Scanner (requires a JVM).')
-      logError('       Check it out at https://redirect.sonarsource.com/doc/install-configure-scanner.html')
-    })
+
+  return new Promise((done) => {
+    download(downloadUrl, installFolder, { extract: true })
+      .on('response', res => {
+        bar.total = res.headers['content-length']
+        res.on('data', data => bar.tick(data.length))
+      })
+      .then(done)
+      .catch((err) => {
+        logError(`ERROR: impossible to download and extract binary: ${err.message}`)
+        logError(`       SonarQube Scanner binaries probably don't exist for your OS (${targetOS}).`)
+        logError('       In such situation, the best solution is to install the standard SonarQube Scanner (requires a JVM).')
+        logError('       Check it out at https://redirect.sonarsource.com/doc/install-configure-scanner.html')
+      })
+  })
 }
 
 /*
