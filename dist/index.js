@@ -4,7 +4,7 @@ var prepareExecEnvironment = require('./sonarqube-scanner-executable').prepareEx
 var sonarQubeExecutable = require('./sonarqube-scanner-executable').getSonarQubeScannerExecutable
 var localSonarQubeExecutable = require('./sonarqube-scanner-executable').getLocalSonarQubeScannerExecutable
 
-module.exports = scan
+module.exports = scan;
 module.exports.cli = scanCLI
 module.exports.customScanner = scanUsingCustomSonarQubeScanner
 
