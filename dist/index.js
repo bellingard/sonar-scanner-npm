@@ -48,3 +48,6 @@ function scanUsingCustomSonarQubeScanner(params, callback) {
     callback()
   })
 }
+
+// Adding an issue 
+alert('Wazzaaaa')
