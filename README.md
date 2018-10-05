@@ -83,7 +83,7 @@ sonar-scanner
   
     `sonar-scanner -Dsonar.host.url=https://myserver.com -Dsonar.login=019d1e2e04e`
 
-## Frequently Asked Questions
+## FAQ
 
 #### *I constantly get "Impossible to download and extract binary [...] In such situation, the best solution is to install the standard SonarQube Scanner", what can I do?*
 
