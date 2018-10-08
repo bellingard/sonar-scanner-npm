@@ -97,7 +97,7 @@ var sonarqubeScanner = require('sonarqube-scanner').customScanner;
 
 ## Download From Mirrors
 
-By default, SonarQube scanner binaries are downloaded from `https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/`.
+By default, SonarQube scanner binaries are downloaded from `https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/`.
 To use a custom mirror, set `$SONAR_SCANNER_MIRROR`.
 
 **Example:**

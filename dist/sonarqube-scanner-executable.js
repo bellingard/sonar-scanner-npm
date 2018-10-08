@@ -87,11 +87,11 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
   }
 
   // #2 - Download the binaries and unzip them
-  //      They are located at https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${version}-${os}.zip
+  //      They are located at https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${version}-${os}.zip
   log('Proceed with download of the platform binaries for SonarQube Scanner...')
   log('Creating ' + installFolder)
   mkdirs(installFolder)
-  var baseUrl = process.env.SONAR_SCANNER_MIRROR || 'https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/'
+  var baseUrl = process.env.SONAR_SCANNER_MIRROR || 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/'
   var fileName = 'sonar-scanner-cli-' + platformBinariesVersion + '-' + targetOS + '.zip'
   var downloadUrl = baseUrl + fileName
   log(`Downloading from ${downloadUrl}`)
