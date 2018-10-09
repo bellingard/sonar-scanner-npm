@@ -102,7 +102,7 @@ function downloadScanner(installFolder, platformBinariesVersion) {
   log('Proceed with download of the platform binaries for SonarQube Scanner...')
   log('Creating ' + installFolder)
   mkdirs(installFolder)
-  var baseUrl = process.env.SONAR_SCANNER_MIRROR || 'https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/'
+  var baseUrl = process.env.SONAR_SCANNER_MIRROR || 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/'
   var fileName = 'sonar-scanner-cli-' + platformBinariesVersion + '-' + targetOS + '.zip'
   var downloadUrl = baseUrl + fileName
   log(`Downloading from ${downloadUrl}`)
