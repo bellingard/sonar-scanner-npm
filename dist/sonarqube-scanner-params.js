@@ -9,7 +9,7 @@ var uniq = require('lodash.uniq')
 
 module.exports = defineSonarQubeScannerParams
 
-var invalidCharacterRegex = /[?$*+~.()'"!:@]/g
+var invalidCharacterRegex = /[?$*+~.()'"!:@/]/g
 
 /*
  * Try to be smart and guess most SQ parameters from JS files that
