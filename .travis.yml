@@ -17,7 +17,7 @@ install:
 
 before_script:
   # Need Gulp ro trigger the analysis on SonarQube.com
-  - npm install -g gulp
+  - npm install -g gulp-cli
 
 script:
   # Actually calls Gulp - the SonarQube analysis is the default task
