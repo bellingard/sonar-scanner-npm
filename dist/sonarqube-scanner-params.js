@@ -7,8 +7,6 @@ var log = require('fancy-log')
 var get = require('lodash.get')
 var uniq = require('lodash.uniq')
 
-slugify.extend({ '/': '-' })
-
 module.exports = defineSonarQubeScannerParams
 
 /*
@@ -75,7 +73,7 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
     })
   }
   if (pkg) {
-    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name, { remove: /@/g })
+    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name, { remove: /[@/]/g })
     sonarqubeScannerParams['sonar.projectName'] = pkg.name
     sonarqubeScannerParams['sonar.projectVersion'] = pkg.version
     if (pkg.description) {

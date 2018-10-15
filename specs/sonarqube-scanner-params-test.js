@@ -86,7 +86,7 @@ describe('sqScannerParams', function() {
   it('should get mandatory information from scoped packages package.json file', function() {
     var expectedResult = {
       'sonar.javascript.lcov.reportPaths': 'coverage/lcov.info',
-      'sonar.projectKey': 'my-fake-basic-project',
+      'sonar.projectKey': 'myfake-basic-project',
       'sonar.projectName': '@my/fake-basic-project',
       'sonar.projectDescription': 'No description.',
       'sonar.projectVersion': '1.0.0',
