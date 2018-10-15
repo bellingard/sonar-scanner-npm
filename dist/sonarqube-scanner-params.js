@@ -9,6 +9,8 @@ var uniq = require('lodash.uniq')
 
 module.exports = defineSonarQubeScannerParams
 
+var invalidCharacterRegex = /[?$*+~.()'"!:@]/g
+
 /*
  * Try to be smart and guess most SQ parameters from JS files that
  * might exist - like 'package.json'.
@@ -16,6 +18,7 @@ module.exports = defineSonarQubeScannerParams
 function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFromEnvVariable) {
   // #1 - set default values
   var sonarqubeScannerParams = {}
+
   try {
     var sqFile = path.join(projectBaseDir, 'sonar-project.properties')
     fs.accessSync(sqFile, fs.F_OK)
@@ -23,7 +26,9 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
   } catch (e) {
     // No 'sonar-project.properties' file - let's add some default values
     extend(sonarqubeScannerParams, {
-      'sonar.projectKey': slugify(path.basename(projectBaseDir)),
+      'sonar.projectKey': slugify(path.basename(projectBaseDir), {
+        remove: invalidCharacterRegex
+      }),
       'sonar.projectName': path.basename(projectBaseDir),
       'sonar.projectVersion': '0.0.1',
       'sonar.projectDescription': 'No description.',
@@ -73,7 +78,9 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
     })
   }
   if (pkg) {
-    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name)
+    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name, {
+      remove: invalidCharacterRegex
+    })
     sonarqubeScannerParams['sonar.projectName'] = pkg.name
     sonarqubeScannerParams['sonar.projectVersion'] = pkg.version
     if (pkg.description) {
