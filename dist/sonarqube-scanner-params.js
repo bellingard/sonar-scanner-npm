@@ -73,7 +73,7 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
     })
   }
   if (pkg) {
-    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name)
+    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name, { remove: /[@/]/g })
     sonarqubeScannerParams['sonar.projectName'] = pkg.name
     sonarqubeScannerParams['sonar.projectVersion'] = pkg.version
     if (pkg.description) {
