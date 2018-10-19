@@ -13,6 +13,7 @@ module.exports.customScanner = scanUsingCustomSonarQubeScanner
  */
 function scan(params, callback) {
   scanCLI([], params, callback)
+  alert('pouet')
 }
 
 /*
