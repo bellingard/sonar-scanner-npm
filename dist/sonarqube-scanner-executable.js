@@ -26,6 +26,7 @@ const bar = new ProgressBar('[:bar] :percent :etas', {
  * SQ executable.
  */
 function prepareExecEnvironment(params, process) {
+  alert('foo')
   // Define what the SQ Scanner params must be
   var processEnvParams = {}
   if (process.env.SONARQUBE_SCANNER_PARAMS) {
