@@ -25,7 +25,7 @@ function scanCLI(cliArgs, params, callback) {
   var optionsExec = prepareExecEnvironment(params, process)
 
   var foo
-  // TODO pouet
+  // TODO pouet :)
 
   // determine the command to run and execute it
   sonarQubeExecutable(sqScannerCommand => {
