@@ -1,4 +1,4 @@
-# NPM module to run SonarQube/SonarCloud analyses
+# NPM module to run SonarQube/SonarCloud analyses 
 
 `sonarqube-scanner` makes it very easy to trigger [SonarQube](https://www.sonarqube.org)
 / [SonarCloud](https://sonarcloud.io) analyses on a JavaScript code base, without needing 
