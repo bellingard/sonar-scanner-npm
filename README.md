@@ -105,6 +105,12 @@ To use a custom mirror, set `$SONAR_SCANNER_MIRROR`.
 export SONAR_SCANNER_MIRROR=https://npm.taobao.org/mirrors/sonar-scanner/
 ```
 
+or alternatively set variable in `.npmrc`
+
+```
+    sonar_scanner_mirror=https://npm.taobao.org/mirrors/sonar-scanner/
+```
+
 ## License
 
 `sonarqube-scanner` is licensed under the [LGPL v3 License](http://www.gnu.org/licenses/lgpl.txt).
