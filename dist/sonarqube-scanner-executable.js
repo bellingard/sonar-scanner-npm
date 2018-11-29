@@ -14,7 +14,8 @@ module.exports.prepareExecEnvironment = prepareExecEnvironment
 module.exports.getSonarQubeScannerExecutable = getSonarQubeScannerExecutable
 module.exports.getLocalSonarQubeScannerExecutable = getLocalSonarQubeScannerExecutable
 
-const SONAR_SCANNER_MIRROR = 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/';
+const SONAR_SCANNER_MIRROR = 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/'
+const SONAR_SCANNER_VERSION = '3.2.0.1227'
 
 const bar = new ProgressBar('[:bar] :percent :etas', {
   complete: '=',
@@ -58,7 +59,7 @@ function prepareExecEnvironment(params, process) {
  * Returns the SQ Scanner executable for the current platform
  */
 function getSonarQubeScannerExecutable(passExecutableCallback) {
-  const platformBinariesVersion = '3.2.0.1227'
+  const platformBinariesVersion = process.env.SONAR_SCANNER_VERSION || process.env.npm_config_sonar_scanner_version || SONAR_SCANNER_VERSION
   var targetOS = findTargetOS()
   var installFolder = path.join(os.homedir(), '.sonar', 'native-sonar-scanner')
   var binaryExtension = ''

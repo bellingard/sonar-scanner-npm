@@ -98,17 +98,19 @@ var sonarqubeScanner = require('sonarqube-scanner').customScanner;
 ## Download From Mirrors
 
 By default, SonarQube scanner binaries are downloaded from `https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/`.
-To use a custom mirror, set `$SONAR_SCANNER_MIRROR`.
+To use a custom mirror, set `$SONAR_SCANNER_MIRROR`. Or download precise version with `$SONAR_SCANNER_VERSION`
 
 **Example:**
 ```shell
 export SONAR_SCANNER_MIRROR=https://npm.taobao.org/mirrors/sonar-scanner/
+export SONAR_SCANNER_VERSION=3.2.0.1227
 ```
 
 or alternatively set variable in `.npmrc`
 
 ```
     sonar_scanner_mirror=https://npm.taobao.org/mirrors/sonar-scanner/
+    sonar_scanner_version=3.2.0.1227
 ```
 
 ## License
