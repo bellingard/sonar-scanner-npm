@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "download": "7.0.0",
-    "extend": "3.0.1",
+    "extend": "3.0.2",
     "fancy-log": "^1.1.0",
     "lodash.get": "^4.4.2",
     "lodash.uniq": "^4.5.0",
