@@ -20,6 +20,7 @@ function scan(params, callback) {
  */
 function scanCLI(cliArgs, params, callback) {
   log('Starting SonarQube analysis...')
+  // TODO blabla
 
   // prepare the exec options, most notably with the SQ params
   var optionsExec = prepareExecEnvironment(params, process)
