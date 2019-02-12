@@ -11,10 +11,7 @@ describe('sqScannerParams', function() {
 
   it('should provide default values', function() {
     var expectedResult = {
-      'sonar.projectKey': 'fake_project_with_no_package_file',
-      'sonar.projectName': 'fake_project_with_no_package_file',
       'sonar.projectDescription': 'No description.',
-      'sonar.projectVersion': '0.0.1',
       'sonar.sources': '.',
       'sonar.exclusions': exclusions
     }
@@ -33,10 +30,7 @@ describe('sqScannerParams', function() {
     var expectedResult = {
       'sonar.host.url': 'https://sonarcloud.io',
       'sonar.login': 'my_token',
-      'sonar.projectKey': 'fake_project_with_no_package_file',
-      'sonar.projectName': 'fake_project_with_no_package_file',
       'sonar.projectDescription': 'No description.',
-      'sonar.projectVersion': '0.0.1',
       'sonar.sources': '.',
       'sonar.exclusions': exclusions
     }
@@ -52,10 +46,8 @@ describe('sqScannerParams', function() {
 
   it('should allow to override default settings and add new ones', function() {
     var expectedResult = {
-      'sonar.projectKey': 'fake_project_with_no_package_file',
       'sonar.projectName': 'Foo',
       'sonar.projectDescription': 'No description.',
-      'sonar.projectVersion': '0.0.1',
       'sonar.sources': '.',
       'sonar.tests': 'specs',
       'sonar.exclusions': exclusions
@@ -106,10 +98,7 @@ describe('sqScannerParams', function() {
     var expectedResult = {
       'sonar.host.url': 'https://sonarcloud.io',
       'sonar.login': 'my_token',
-      'sonar.projectKey': 'fake_project_with_no_package_file',
-      'sonar.projectName': 'fake_project_with_no_package_file',
       'sonar.projectDescription': 'No description.',
-      'sonar.projectVersion': '0.0.1',
       'sonar.sources': '.',
       'sonar.exclusions': exclusions
     }
@@ -126,10 +115,7 @@ describe('sqScannerParams', function() {
     var expectedResult = {
       'sonar.host.url': 'https://sonarcloud.io',
       'sonar.login': 'my_token',
-      'sonar.projectKey': 'fake_project_with_no_package_file',
-      'sonar.projectName': 'fake_project_with_no_package_file',
       'sonar.projectDescription': 'No description.',
-      'sonar.projectVersion': '0.0.1',
       'sonar.sources': '.',
       'sonar.exclusions': exclusions
     }

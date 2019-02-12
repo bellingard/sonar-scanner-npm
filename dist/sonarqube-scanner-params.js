@@ -23,9 +23,6 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
   } catch (e) {
     // No 'sonar-project.properties' file - let's add some default values
     extend(sonarqubeScannerParams, {
-      'sonar.projectKey': slugify(path.basename(projectBaseDir)),
-      'sonar.projectName': path.basename(projectBaseDir),
-      'sonar.projectVersion': '0.0.1',
       'sonar.projectDescription': 'No description.',
       'sonar.sources': '.',
       'sonar.exclusions': 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'
