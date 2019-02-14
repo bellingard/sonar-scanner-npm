@@ -95,6 +95,13 @@ of the example by:
 var sonarqubeScanner = require('sonarqube-scanner').customScanner;
 ```
 
+### In my Docker container, the scanner fails with ".../jre/bin/java: not found", how do I solve this?
+
+You are probably relying on Alpine for your Docker image, and Alpine does not include glibc by default. 
+It needs to be [installed manually](https://ghost.kontena.io/docker-for-mac-glibc-issues/).
+
+Thanks to [Philipp Eschenbach](https://github.com/peh) for troubleshooting this on [issue #59](https://github.com/bellingard/sonar-scanner-npm/issues/59).
+
 ## Download From Mirrors
 
 By default, SonarQube scanner binaries are downloaded from `https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/`.
