@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-var scan = require("../index").cli;
+var scan = require('../index').cli
 
 var options = []
 if (process.argv.length > 2) {
-    options = process.argv.slice(2);
+  options = process.argv.slice(2)
 }
 
-scan(options, {}, () => {});
+scan(options, {}, () => {})
