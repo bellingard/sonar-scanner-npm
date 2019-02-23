@@ -26,9 +26,13 @@ function scanCLI(cliArgs, params, callback) {
 
   // determine the command to run and execute it
   sonarQubeExecutable(sqScannerCommand => {
-    exec(sqScannerCommand, cliArgs, optionsExec)
-    log('SonarQube analysis finished.')
-    callback()
+    try {
+      exec(sqScannerCommand, cliArgs, optionsExec)
+      log('SonarQube analysis finished.')
+      callback()
+    } catch (error) {
+      process.exit(error.status)
+    }
   })
 }
 
@@ -43,8 +47,12 @@ function scanUsingCustomSonarQubeScanner(params, callback) {
 
   // determine the command to run and execute it
   localSonarQubeExecutable(sqScannerCommand => {
-    exec(sqScannerCommand, [], optionsExec)
-    log('SonarQube analysis finished.')
-    callback()
+    try {
+      exec(sqScannerCommand, [], optionsExec)
+      log('SonarQube analysis finished.')
+      callback()
+    } catch (error) {
+      process.exit(error.status)
+    }
   })
 }
