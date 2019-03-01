@@ -70,8 +70,18 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
     })
   }
   if (pkg) {
-    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name)
-    sonarqubeScannerParams['sonar.projectName'] = pkg.name
+    if (pkg.name.startsWith('@')) {
+      const packageNameComponents = pkg.name.split('/')
+      const organizationName = packageNameComponents[0].substring(1)
+      const packageName = packageNameComponents[1]
+
+      sonarqubeScannerParams['sonar.projectKey'] = slugify(organizationName) + ':' + slugify(packageName)
+      sonarqubeScannerParams['sonar.projectName'] = packageName
+    } else {
+      sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name)
+      sonarqubeScannerParams['sonar.projectName'] = pkg.name
+    }
+
     sonarqubeScannerParams['sonar.projectVersion'] = pkg.version
     if (pkg.description) {
       sonarqubeScannerParams['sonar.projectDescription'] = pkg.description

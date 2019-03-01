@@ -94,6 +94,21 @@ describe('sqScannerParams', function() {
     )
   })
 
+  it('should get mandatory information from basic package.json file with organization.', function () {
+    var expectedResult = {
+      'sonar.projectKey': 'fake-org:fake-basic-project',
+      'sonar.projectName': 'fake-basic-project',
+      'sonar.projectDescription': 'No description.',
+      'sonar.projectVersion': '1.0.0',
+      'sonar.sources': '.',
+      'sonar.exclusions': 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'
+    }
+    assert.deepEqual(
+        sqScannerParams({}, pathForProject('fake_project_with_org_package_file'), null),
+        expectedResult
+    )
+  })
+
   it('should take into account SONARQUBE_SCANNER_PARAMS env variable', function() {
     var expectedResult = {
       'sonar.host.url': 'https://sonarcloud.io',
