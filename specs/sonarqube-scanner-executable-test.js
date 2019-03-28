@@ -59,6 +59,13 @@ describe('sqScannerExecutable', function() {
   })
 })
 
+describe('getSonarQubeScannerExecutable', function() {
+  it('should use SONAR_BINARY_CACHE env when exists', function() {
+    process.env.SONAR_BINARY_CACHE = './test-cache'
+    assert.equal(index.getInstallFolderPath(), 'test-cache/.sonar/native-sonar-scanner', 'congrats')
+  })
+})
+
 function pathForProject(projectFolder) {
   return path.join(process.cwd(), 'specs', 'resources', projectFolder)
 }
