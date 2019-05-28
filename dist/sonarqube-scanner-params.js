@@ -9,6 +9,8 @@ var uniq = require('lodash.uniq')
 
 module.exports = defineSonarQubeScannerParams
 
+var invalidCharacterRegex = /[?$*+~.()'"!:@/]/g
+
 /*
  * Try to be smart and guess most SQ parameters from JS files that
  * might exist - like 'package.json'.
@@ -70,7 +72,9 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
     })
   }
   if (pkg) {
-    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name)
+    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name, {
+      remove: invalidCharacterRegex
+    })
     sonarqubeScannerParams['sonar.projectName'] = pkg.name
     sonarqubeScannerParams['sonar.projectVersion'] = pkg.version
     if (pkg.description) {

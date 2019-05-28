@@ -75,6 +75,18 @@ describe('sqScannerParams', function() {
     assert.deepEqual(sqScannerParams({}, pathForProject('fake_project_with_basic_package_file'), null), expectedResult)
   })
 
+  it('should get mandatory information from scoped packages package.json file', function() {
+    var expectedResult = {
+      'sonar.projectKey': 'myfake-basic-project',
+      'sonar.projectName': '@my/fake-basic-project',
+      'sonar.projectDescription': 'No description.',
+      'sonar.projectVersion': '1.0.0',
+      'sonar.sources': '.',
+      'sonar.exclusions': 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'
+    }
+    assert.deepEqual(sqScannerParams({}, pathForProject('fake_project_with_scoped_package_name'), null), expectedResult)
+  })
+
   it('should get all information from package.json file', function() {
     var expectedResult = {
       'sonar.projectKey': 'fake-project',
