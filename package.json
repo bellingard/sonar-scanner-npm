@@ -1,7 +1,7 @@
 {
   "name": "sonarqube-scanner",
   "description": "SonarQube/SonarCloud Scanner for the JavaScript world",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "homepage": "https://github.com/bellingard/sonar-scanner-npm",
   "author": {
     "name": "Fabrice Bellingard",
