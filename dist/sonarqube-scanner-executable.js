@@ -58,7 +58,8 @@ function prepareExecEnvironment(params, process) {
 function getSonarQubeScannerExecutable(passExecutableCallback) {
   const platformBinariesVersion = '4.0.0.1744'
   var targetOS = findTargetOS()
-  var installFolder = path.join(os.homedir(), '.sonar', 'native-sonar-scanner')
+  var homedir = process.env.SONARQUBE_SCANNER_HOME || os.homedir()
+  var installFolder = path.join(homedir, '.sonar', 'native-sonar-scanner')
   var binaryExtension = ''
   if (isWindows()) {
     binaryExtension = '.bat'
