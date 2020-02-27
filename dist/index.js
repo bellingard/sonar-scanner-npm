@@ -33,7 +33,7 @@ function scanCLI(cliArgs, params, callback) {
     } catch (error) {
       process.exit(error.status)
     }
-  })
+  }, params)
 }
 
 /*

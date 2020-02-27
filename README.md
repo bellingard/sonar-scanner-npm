@@ -58,6 +58,7 @@ gulp.task('default', function(callback) {
 * `parameters` *Map*
   * `serverUrl` *String* (optional) The URL of the SonarQube server. Defaults to http://localhost:9000
   * `token` *String* (optional) The token used to connect to the SonarQube server. Empty by default.
+  * `platformBinariesVersion` *String* (optional) The binaries version of the SonarQube client to use. Defaults to 4.0.0.1744
   * `options` *Map* (optional) Used to pass extra parameters for the SonarQube analysis. See the [official documentation](http://redirect.sonarsource.com/doc/analysis-parameters.html) for more details.
 * `callback` *Function* (optional)
 Callback (the execution of the analysis is asynchronous).
