@@ -23,28 +23,26 @@
     "node": ">= 0.10"
   },
   "dependencies": {
-    "download": "7.0.0",
+    "download": "^7.1.0",
     "extend": "3.0.2",
-    "fancy-log": "^1.1.0",
+    "fancy-log": "^1.3.3",
     "lodash.get": "^4.4.2",
     "lodash.uniq": "^4.5.0",
-    "mkdirp": "0.5.1",
-    "progress": "^2.0.0",
+    "mkdirp": "^1.0.3",
+    "progress": "^2.0.3",
     "read-pkg": "2.0.0",
-    "slugify": "1.3.1"
+    "slugify": "^1.4.0"
   },
   "devDependencies": {
-    "eslint": "^4.8.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.2.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "gulp": "^3.9.1",
-    "gulp-istanbul": "^1.1.1",
-    "gulp-mocha": "^3.0.1",
-    "mocha": "^3.1.2",
-    "mocha-sonarqube-reporter": "^1.0.1"
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "mocha": "^7.1.0",
+    "mocha-sonarqube-reporter": "^1.0.1",
+    "nyc": "^15.0.0"
   },
   "keywords": [
     "sonarqube",
@@ -53,5 +51,9 @@
     "sonarqube-runner",
     "sonar-scanner",
     "sonar-runner"
-  ]
+  ],
+  "scripts": {
+    "test": "npx nyc mocha",
+    "ci": "npm run test && node ci-analysis.js"
+  }
 }

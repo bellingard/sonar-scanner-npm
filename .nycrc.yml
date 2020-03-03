@@ -1,0 +1,4 @@
+reporter:
+  - text
+  - text-summary
+  - lcov
