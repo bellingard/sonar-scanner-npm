@@ -16,7 +16,7 @@ module.exports.getLocalSonarQubeScannerExecutable = getLocalSonarQubeScannerExec
 module.exports.getInstallFolderPath = getInstallFolderPath
 
 const SONAR_SCANNER_MIRROR = 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/'
-const SONAR_SCANNER_VERSION = '4.2.0.1873'
+const SONAR_SCANNER_VERSION = '4.3.0.2102'
 
 const bar = new ProgressBar('[:bar] :percent :etas', {
   complete: '=',
