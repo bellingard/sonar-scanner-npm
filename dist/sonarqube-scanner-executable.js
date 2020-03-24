@@ -14,6 +14,9 @@ module.exports.prepareExecEnvironment = prepareExecEnvironment
 module.exports.getSonarQubeScannerExecutable = getSonarQubeScannerExecutable
 module.exports.getLocalSonarQubeScannerExecutable = getLocalSonarQubeScannerExecutable
 
+const SONAR_SCANNER_MIRROR = 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/'
+const SONAR_SCANNER_VERSION = '4.2.0.1873'
+
 const bar = new ProgressBar('[:bar] :percent :etas', {
   complete: '=',
   incomplete: ' ',
@@ -56,7 +59,8 @@ function prepareExecEnvironment(params, process) {
  * Returns the SQ Scanner executable for the current platform
  */
 function getSonarQubeScannerExecutable(passExecutableCallback) {
-  const platformBinariesVersion = '4.2.0.1873'
+  const platformBinariesVersion =
+    process.env.SONAR_SCANNER_VERSION || process.env.npm_config_sonar_scanner_version || SONAR_SCANNER_VERSION
   var targetOS = findTargetOS()
   var installFolder = path.join(os.homedir(), '.sonar', 'native-sonar-scanner')
   var binaryExtension = ''
@@ -91,7 +95,7 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
   log('Proceed with download of the platform binaries for SonarQube Scanner...')
   log('Creating ' + installFolder)
   mkdirs(installFolder)
-  var baseUrl = process.env.SONAR_SCANNER_MIRROR || 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/'
+  var baseUrl = process.env.SONAR_SCANNER_MIRROR || process.env.npm_config_sonar_scanner_mirror || SONAR_SCANNER_MIRROR
   var fileName = 'sonar-scanner-cli-' + platformBinariesVersion + '-' + targetOS + '.zip'
   var downloadUrl = baseUrl + fileName
   log(`Downloading from ${downloadUrl}`)
@@ -104,10 +108,12 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
     .then(() => {
       passExecutableCallback(platformExecutable)
     })
-    .catch((err) => {
+    .catch(err => {
       logError(`ERROR: impossible to download and extract binary: ${err.message}`)
       logError(`       SonarQube Scanner binaries probably don't exist for your OS (${targetOS}).`)
-      logError('       In such situation, the best solution is to install the standard SonarQube Scanner (requires a JVM).')
+      logError(
+        '       In such situation, the best solution is to install the standard SonarQube Scanner (requires a JVM).'
+      )
       logError('       Check it out at https://redirect.sonarsource.com/doc/install-configure-scanner.html')
     })
 }
