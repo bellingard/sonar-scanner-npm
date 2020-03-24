@@ -13,6 +13,7 @@ var sonarQubeParams = require('./sonarqube-scanner-params')
 module.exports.prepareExecEnvironment = prepareExecEnvironment
 module.exports.getSonarQubeScannerExecutable = getSonarQubeScannerExecutable
 module.exports.getLocalSonarQubeScannerExecutable = getLocalSonarQubeScannerExecutable
+module.exports.getInstallFolderPath = getInstallFolderPath
 
 const SONAR_SCANNER_MIRROR = 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/'
 const SONAR_SCANNER_VERSION = '4.2.0.1873'
@@ -62,7 +63,7 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
   const platformBinariesVersion =
     process.env.SONAR_SCANNER_VERSION || process.env.npm_config_sonar_scanner_version || SONAR_SCANNER_VERSION
   var targetOS = findTargetOS()
-  var installFolder = path.join(os.homedir(), '.sonar', 'native-sonar-scanner')
+  var installFolder = getInstallFolderPath()
   var binaryExtension = ''
   if (isWindows()) {
     binaryExtension = '.bat'
@@ -156,6 +157,11 @@ function findTargetOS() {
     return 'macosx'
   }
   throw Error(`Your platform '${process.platform}' is currently not supported.`)
+}
+
+function getInstallFolderPath() {
+  var basePath = process.env.SONAR_BINARY_CACHE ? process.env.SONAR_BINARY_CACHE : os.homedir()
+  return path.join(basePath, '.sonar', 'native-sonar-scanner')
 }
 
 /*
