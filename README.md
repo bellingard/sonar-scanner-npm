@@ -4,12 +4,9 @@
 / [SonarCloud](https://sonarcloud.io) analyses on a JavaScript code base, without needing 
 to install any specific tool or (Java) runtime.
 
-This module is analyzed on SonarCloud using
-itself:
-- See the [Gulp file](https://github.com/bellingard/sonar-scanner-npm/blob/master/gulpfile.js)
-- See the [analysis results on SonarCloud](https://sonarcloud.io/dashboard?id=sonarqube-scanner)
+This module is analyzed on SonarCloud.
 
-[![Build status](https://travis-ci.org/bellingard/sonar-scanner-npm.svg?branch=master)](https://travis-ci.org/bellingard/sonar-scanner-npm) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=sonarqube-scanner&metric=alert_status)](https://sonarcloud.io/dashboard/index/sonarqube-scanner) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sonarqube-scanner&metric=coverage)](https://sonarcloud.io/dashboard/index/sonarqube-scanner) [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=sonarqube-scanner&metric=sqale_rating)](https://sonarcloud.io/dashboard/index/sonarqube-scanner) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=sonarqube-scanner&metric=reliability_rating)](https://sonarcloud.io/dashboard/index/sonarqube-scanner) [![Security](https://sonarcloud.io/api/project_badges/measure?project=sonarqube-scanner&metric=security_rating)](https://sonarcloud.io/dashboard/index/sonarqube-scanner) [![Releases](https://img.shields.io/github/release/bellingard/sonar-scanner-npm.svg)](https://github.com/bellingard/sonar-scanner-npm/releases)
+[![Build status](https://travis-ci.org/bellingard/sonar-scanner-npm.svg?branch=master)](https://travis-ci.org/bellingard/sonar-scanner-npm) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=bellingard_sonar-scanner-npm&metric=alert_status)](https://sonarcloud.io/dashboard/index/bellingard_sonar-scanner-npm) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sonarqube-scanner&metric=coverage)](https://sonarcloud.io/dashboard/index/sonarqube-scanner) [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=bellingard_sonar-scanner-npm&metric=sqale_rating)](https://sonarcloud.io/dashboard/index/bellingard_sonar-scanner-npm) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=bellingard_sonar-scanner-npm&metric=reliability_rating)](https://sonarcloud.io/dashboard/index/bellingard_sonar-scanner-npm) [![Security](https://sonarcloud.io/api/project_badges/measure?project=bellingard_sonar-scanner-npm&metric=security_rating)](https://sonarcloud.io/dashboard/index/bellingard_sonar-scanner-npm) [![Releases](https://img.shields.io/github/release/bellingard/sonar-scanner-npm.svg)](https://github.com/bellingard/sonar-scanner-npm/releases)
 
 
 ## Installation
@@ -33,22 +30,24 @@ npm install -g sonarqube-scanner
 _Prerequisite: you've installed the package as a dev dependency._
 
 The following example shows how to run an analysis on a JavaScript
-project using Gulp, and pushing the results to [SonarCloud](https://sonarcloud.io),
-the online code-analysis service based on SonarQube:
+project, and pushing the results to a SonarQube instance:
 
 ```javascript
-var gulp = require('gulp');
-var sonarqubeScanner = require('sonarqube-scanner');
+const sonarqubeScanner = require('sonarqube-scanner');
 
-gulp.task('default', function(callback) {
-  sonarqubeScanner({
-    serverUrl : "https://sonarcloud.io",
+sonarqubeScanner(
+  {
+    serverUrl : 'https://sonarqube.mycompany.com',
     token : "019d1e2e04eefdcd0caee1468f39a45e69d33d3f",
-    options : {
-      "sonar.organization": "my-org"
+    options: {
+      'sonar.projectName': 'My App',
+      'sonar.projectDescription': 'Description for "My App" project...',
+      'sonar.sources': 'dist',
+      'sonar.tests': 'specs'
     }
-  }, callback);
-});
+  },
+  () => process.exit()
+)
 ```
 
 **Syntax:** sonarqube-scanner **(** `parameters`, [`callback`] **)**
