@@ -103,7 +103,7 @@ Thanks to [Philipp Eschenbach](https://github.com/peh) for troubleshooting this 
 
 ## Download From Mirrors
 
-By default, SonarQube scanner binaries are downloaded from `https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/`.
+By default, the scanner binaries are downloaded from `https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/`.
 To use a custom mirror, set `$SONAR_SCANNER_MIRROR`. Or download precise version with `$SONAR_SCANNER_VERSION`
 
 **Example:**
@@ -117,6 +117,22 @@ or alternatively set variable in `.npmrc`
 ```
     sonar_scanner_mirror=https://npm.taobao.org/mirrors/sonar-scanner/
     sonar_scanner_version=3.2.0.1227
+```
+
+## Specifying the cache folder
+
+By default, the scanner binaries are cached into `$HOME/.sonar/native-sonar-scanner` folder.
+To use a custom cache fodler instead of `$HOME`, set `$SONAR_BINARY_CACHE`.
+
+**Example:**
+```shell
+export SONAR_BINARY_CACHE=/Users/myaccount/cache
+```
+
+or alternatively set variable in `.npmrc`
+
+```
+    sonar_binary_cache=/Users/myaccount/cache
 ```
 
 ## License

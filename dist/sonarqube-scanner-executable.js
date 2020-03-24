@@ -160,7 +160,7 @@ function findTargetOS() {
 }
 
 function getInstallFolderPath() {
-  var basePath = process.env.SONAR_BINARY_CACHE ? process.env.SONAR_BINARY_CACHE : os.homedir()
+  var basePath = process.env.SONAR_BINARY_CACHE || process.env.npm_config_sonar_binary_cache || os.homedir()
   return path.join(basePath, '.sonar', 'native-sonar-scanner')
 }
 
