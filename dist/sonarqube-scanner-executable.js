@@ -52,6 +52,7 @@ function prepareExecEnvironment(params, process) {
     // TODO: make this customizable
     maxBuffer: 1024 * 1024
   }
+  if (1==1) {}
 
   return optionsExec
 }
