@@ -7,6 +7,9 @@ var localSonarQubeExecutable = require('./sonarqube-scanner-executable').getLoca
 module.exports = scan
 module.exports.cli = scanCLI
 module.exports.customScanner = scanUsingCustomSonarQubeScanner
+module.exports.fromParam = fromParam
+
+const version = require('../package.json').version
 
 /*
  * Function used programmatically to trigger an analysis.
@@ -27,7 +30,7 @@ function scanCLI(cliArgs, params, callback) {
   // determine the command to run and execute it
   sonarQubeExecutable(sqScannerCommand => {
     try {
-      exec(sqScannerCommand, cliArgs, optionsExec)
+      exec(sqScannerCommand, fromParam().concat(cliArgs), optionsExec)
       log('SonarQube analysis finished.')
       callback()
     } catch (error) {
@@ -48,11 +51,15 @@ function scanUsingCustomSonarQubeScanner(params, callback) {
   // determine the command to run and execute it
   localSonarQubeExecutable(sqScannerCommand => {
     try {
-      exec(sqScannerCommand, [], optionsExec)
+      exec(sqScannerCommand, fromParam(), optionsExec)
       log('SonarQube analysis finished.')
       callback()
     } catch (error) {
       process.exit(error.status)
     }
   })
+}
+
+function fromParam() {
+  return [`--from=ScannerNpm/${version}`]
 }

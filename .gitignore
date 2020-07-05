@@ -117,6 +117,9 @@ typings/
 # dotenv environment variables file
 .env
 
+# test report file
+xunit.xml
+
 
 ### SonarQube ###
 # SonarQube ignore files.
