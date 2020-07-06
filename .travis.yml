@@ -1,15 +1,8 @@
-# Using trusty because the Travis Addon for SonarQube.com requires Java 8
 dist: trusty
 sudo: required
 
 node_js:
   - 12
-
-addons:
-  sonarcloud:
-    organization: default
-    token:
-      secure: "KcUbk6T/Rjx2SaQGyG5oTFr/82EsHsGyQqnnKalPKCN83O809lZAOmgg+Y4qx/240CAhrrRck5+qNI9Lm35sJxD+M6RC2VuUn6gsZs+nFDwzwd430hb3Zi0f825+5eZGZfQ7vo2kJKMwxiQHgy6AR89sTsQEwJv/aoroqAGjMvfg1Wcd9Z2hr5zMW1YGirphZvKpRGP/akOuvQnfGDZCL0n9sgozUlY3IYKwArGWuGkiIjciNxXZLQaaN15aNqL6dYXdkDwoLmLKej+EqSrVD9yb2v1Va6d3oC0MwbwH/KhxkgI5awG/i/vsY8yhF52Y9Dy10afNC/u62/N2hsRn6FKAQ387jPwjcrkH0DWOXVDpvYIxjjDCr8Nd8QERpupnb1JZX+viSMIWsKWRIBi1Z9i6uxPHhaL4zX69NBVZGHNN62lXQE5yhAeSuHqVNx56Hx3JH5FNnnfjgwCkWIoZ2t+rrcQ84xCAOzJazDFRn2iOcjOwB+P20xIhKVQNYJdhMP/hK8sZzA0WZbwFgy09+1UdOH4REKjC5R93CL+mg24fvPQiv61OcvV+xz4HcJNTyQPU25VtQWDZkm0BDTv98TZRMi6EzP2cQsxl7tXxNj0Mu5GZdNWyPVmiEMFJm32hn5SDmKFl7UNitawyq3GPjnGFOmtBM/8tDTU/bTqNT/U="
 
 install:
   - npm install
