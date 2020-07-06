@@ -8,11 +8,11 @@ var download = require('download')
 var ProgressBar = require('progress')
 var log = require('fancy-log')
 var logError = log.error
-var sonarQubeParams = require('./sonarqube-scanner-params')
+var sonarScannerParams = require('./sonar-scanner-params')
 
 module.exports.prepareExecEnvironment = prepareExecEnvironment
-module.exports.getSonarQubeScannerExecutable = getSonarQubeScannerExecutable
-module.exports.getLocalSonarQubeScannerExecutable = getLocalSonarQubeScannerExecutable
+module.exports.getSonarScannerExecutable = getSonarScannerExecutable
+module.exports.getLocalSonarScannerExecutable = getLocalSonarScannerExecutable
 module.exports.getInstallFolderPath = getInstallFolderPath
 
 const SONAR_SCANNER_MIRROR = 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/'
@@ -35,7 +35,7 @@ function prepareExecEnvironment(params, process) {
   if (process.env.SONARQUBE_SCANNER_PARAMS) {
     processEnvParams = JSON.parse(process.env.SONARQUBE_SCANNER_PARAMS)
   }
-  var sqScannerParams = sonarQubeParams(params, process.cwd(), processEnvParams)
+  var sqScannerParams = sonarScannerParams(params, process.cwd(), processEnvParams)
 
   // We need to merge the existing env variables (process.env) with the SQ ones
   var mergedEnv = {}
@@ -59,7 +59,7 @@ function prepareExecEnvironment(params, process) {
 /*
  * Returns the SQ Scanner executable for the current platform
  */
-function getSonarQubeScannerExecutable(passExecutableCallback) {
+function getSonarScannerExecutable(passExecutableCallback) {
   const platformBinariesVersion =
     process.env.SONAR_SCANNER_VERSION || process.env.npm_config_sonar_scanner_version || SONAR_SCANNER_VERSION
   var targetOS = findTargetOS()
@@ -81,7 +81,7 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
     log('Checking if executable exists: ' + platformExecutable)
     fs.accessSync(platformExecutable, fs.F_OK)
     // executable exists!
-    log('Platform binaries for SonarQube scanner found. Using it.')
+    log('Platform binaries for SonarScanner found. Using it.')
     executableFound = true
   } catch (e) {
     log('Could not find executable in "' + installFolder + '".')
@@ -93,7 +93,7 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
 
   // #2 - Download the binaries and unzip them
   //      They are located at https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${version}-${os}.zip
-  log('Proceed with download of the platform binaries for SonarQube Scanner...')
+  log('Proceed with download of the platform binaries for SonarScanner...')
   log('Creating ' + installFolder)
   mkdirs(installFolder)
   var baseUrl = process.env.SONAR_SCANNER_MIRROR || process.env.npm_config_sonar_scanner_mirror || SONAR_SCANNER_MIRROR
@@ -111,9 +111,9 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
     })
     .catch(err => {
       logError(`ERROR: impossible to download and extract binary: ${err.message}`)
-      logError(`       SonarQube Scanner binaries probably don't exist for your OS (${targetOS}).`)
+      logError(`       SonarScanner binaries probably don't exist for your OS (${targetOS}).`)
       logError(
-        '       In such situation, the best solution is to install the standard SonarQube Scanner (requires a JVM).'
+        '       In such situation, the best solution is to install the standard SonarScanner (requires a JVM).'
       )
       logError('       Check it out at https://redirect.sonarsource.com/doc/install-configure-scanner.html')
     })
@@ -122,7 +122,7 @@ function getSonarQubeScannerExecutable(passExecutableCallback) {
 /*
  * Returns the SQ Scanner executable if one available in the PATH (meaning user has also JAVA)
  */
-function getLocalSonarQubeScannerExecutable(passExecutableCallback) {
+function getLocalSonarScannerExecutable(passExecutableCallback) {
   var command = 'sonar-scanner'
   if (isWindows()) {
     command += '.bat'
@@ -130,16 +130,16 @@ function getLocalSonarQubeScannerExecutable(passExecutableCallback) {
 
   // Try to execute the 'sonar-scanner' command to see if it's installed locally
   try {
-    log('Trying to find a local install of the SonarQube Scanner')
+    log('Trying to find a local install of the SonarScanner')
     exec(command + ' -v', {})
     // if we're here, this means that the SQ Scanner can be executed
     // TODO: we should check that it's at least v2.8+
-    log('Local install of SonarQube scanner found. Using it.')
+    log('Local install of Sonarscanner found. Using it.')
     passExecutableCallback(command)
     return
   } catch (e) {
     // sonar-scanner is not in the PATH
-    throw Error('Local install of SonarQube scanner not found.')
+    throw Error('Local install of SonarScanner not found.')
   }
 }
 

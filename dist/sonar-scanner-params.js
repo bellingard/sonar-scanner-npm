@@ -7,7 +7,7 @@ var log = require('fancy-log')
 var get = require('lodash.get')
 var uniq = require('lodash.uniq')
 
-module.exports = defineSonarQubeScannerParams
+module.exports = defineSonarScannerParams
 
 var invalidCharacterRegex = /[?$*+~.()'"!:@/]/g
 
@@ -15,16 +15,16 @@ var invalidCharacterRegex = /[?$*+~.()'"!:@/]/g
  * Try to be smart and guess most SQ parameters from JS files that
  * might exist - like 'package.json'.
  */
-function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFromEnvVariable) {
+function defineSonarScannerParams(params, projectBaseDir, sqScannerParamsFromEnvVariable) {
   // #1 - set default values
-  var sonarqubeScannerParams = {}
+  var sonarScannerParams = {}
   try {
     var sqFile = path.join(projectBaseDir, 'sonar-project.properties')
     fs.accessSync(sqFile, fs.F_OK)
     // there's a 'sonar-project.properties' file - no need to set default values
   } catch (e) {
     // No 'sonar-project.properties' file - let's add some default values
-    extend(sonarqubeScannerParams, {
+    extend(sonarScannerParams, {
       'sonar.projectDescription': 'No description.',
       'sonar.sources': '.',
       'sonar.exclusions': 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'
@@ -32,34 +32,34 @@ function defineSonarQubeScannerParams(params, projectBaseDir, sqScannerParamsFro
 
     // If there's a 'package.json' file, read it to grab info
     try {
-      extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir)
-    } catch (e) {
+      extractInfoFromPackageFile(sonarScannerParams, projectBaseDir)
+    } catch (extractError) {
       // No 'package.json' file (or invalid one) - let's remain on the defaults
-      log(`No 'package.json' file found (or no valid one): ${e.message}`)
+      log(`No 'package.json' file found (or no valid one): ${extractError.message}`)
       log('=> Using default settings.')
     }
   }
 
   // #2 - if SONARQUBE_SCANNER_PARAMS exists, extend the current params
   if (sqScannerParamsFromEnvVariable) {
-    extend(sonarqubeScannerParams, sqScannerParamsFromEnvVariable)
+    extend(sonarScannerParams, sqScannerParamsFromEnvVariable)
   }
 
   // #3 - check what's passed in the call params - these are prevalent params
   if (params.serverUrl) {
-    sonarqubeScannerParams['sonar.host.url'] = params.serverUrl
+    sonarScannerParams['sonar.host.url'] = params.serverUrl
   }
   if (params.token) {
-    sonarqubeScannerParams['sonar.login'] = params.token
+    sonarScannerParams['sonar.login'] = params.token
   }
   if (params.options) {
-    extend(sonarqubeScannerParams, params.options)
+    extend(sonarScannerParams, params.options)
   }
 
-  return sonarqubeScannerParams
+  return sonarScannerParams
 }
 
-function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
+function extractInfoFromPackageFile(sonarScannerParams, projectBaseDir) {
   var packageFile = path.join(projectBaseDir, 'package.json')
   var pkg = readPackage(packageFile)
   log('Getting info from "package.json" file')
@@ -72,22 +72,22 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
     })
   }
   if (pkg) {
-    sonarqubeScannerParams['sonar.projectKey'] = slugify(pkg.name, {
+    sonarScannerParams['sonar.projectKey'] = slugify(pkg.name, {
       remove: invalidCharacterRegex
     })
-    sonarqubeScannerParams['sonar.projectName'] = pkg.name
-    sonarqubeScannerParams['sonar.projectVersion'] = pkg.version
+    sonarScannerParams['sonar.projectName'] = pkg.name
+    sonarScannerParams['sonar.projectVersion'] = pkg.version
     if (pkg.description) {
-      sonarqubeScannerParams['sonar.projectDescription'] = pkg.description
+      sonarScannerParams['sonar.projectDescription'] = pkg.description
     }
     if (pkg.homepage) {
-      sonarqubeScannerParams['sonar.links.homepage'] = pkg.homepage
+      sonarScannerParams['sonar.links.homepage'] = pkg.homepage
     }
     if (pkg.bugs && pkg.bugs.url) {
-      sonarqubeScannerParams['sonar.links.issues'] = pkg.bugs.url
+      sonarScannerParams['sonar.links.issues'] = pkg.bugs.url
     }
     if (pkg.repository && pkg.repository.url) {
-      sonarqubeScannerParams['sonar.links.scm'] = pkg.repository.url
+      sonarScannerParams['sonar.links.scm'] = pkg.repository.url
     }
 
     uniq(
@@ -99,8 +99,8 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
         // See: https://github.com/istanbuljs/nyc#configuring-nyc
         'nyc.report-dir'
       ]
-        .map(function(path) {
-          return get(pkg, path)
+        .map(function(aPath) {
+          return get(pkg, aPath)
         })
         .filter(Boolean)
         .concat(
@@ -110,9 +110,9 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
     ).find(function(lcovReportDir) {
       var lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info')
       if (fileExistsInProjectSync(lcovReportPath)) {
-        sonarqubeScannerParams['sonar.exclusions'] += ',' + path.posix.join(lcovReportDir, '**')
+        sonarScannerParams['sonar.exclusions'] += ',' + path.posix.join(lcovReportDir, '**')
         // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
-        sonarqubeScannerParams['sonar.javascript.lcov.reportPaths'] = lcovReportPath
+        sonarScannerParams['sonar.javascript.lcov.reportPaths'] = lcovReportPath
         // TODO: use Generic Test Data to remove dependence of SonarJS, it is need transformation lcov to sonar generic coverage format
         return true
       }
@@ -120,7 +120,7 @@ function extractInfoFromPackageFile(sonarqubeScannerParams, projectBaseDir) {
 
     if (dependenceExists('mocha-sonarqube-reporter') && fileExistsInProjectSync('xunit.xml')) {
       // https://docs.sonarqube.org/display/SONAR/Generic+Test+Data
-      sonarqubeScannerParams['sonar.testExecutionReportPaths'] = 'xunit.xml'
+      sonarScannerParams['sonar.testExecutionReportPaths'] = 'xunit.xml'
     }
     // TODO: use `glob` to lookup xunit format files and transformation to sonar generic report format
   }

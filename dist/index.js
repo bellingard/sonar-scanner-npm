@@ -1,12 +1,12 @@
 var exec = require('child_process').execFileSync
 var log = require('fancy-log')
-var prepareExecEnvironment = require('./sonarqube-scanner-executable').prepareExecEnvironment
-var sonarQubeExecutable = require('./sonarqube-scanner-executable').getSonarQubeScannerExecutable
-var localSonarQubeExecutable = require('./sonarqube-scanner-executable').getLocalSonarQubeScannerExecutable
+var prepareExecEnvironment = require('./sonar-scanner-executable').prepareExecEnvironment
+var scannerExecutable = require('./sonar-scanner-executable').getSonarScannerExecutable
+var localscannerExecutable = require('./sonar-scanner-executable').getLocalSonarScannerExecutable
 
 module.exports = scan
 module.exports.cli = scanCLI
-module.exports.customScanner = scanUsingCustomSonarQubeScanner
+module.exports.customScanner = scanUsingCustomScanner
 module.exports.fromParam = fromParam
 
 const version = require('../package.json').version
@@ -22,16 +22,16 @@ function scan(params, callback) {
  * Function used by the '/bin/sonar-scanner' executable that accepts command line arguments.
  */
 function scanCLI(cliArgs, params, callback) {
-  log('Starting SonarQube analysis...')
+  log('Starting analysis...')
 
   // prepare the exec options, most notably with the SQ params
   var optionsExec = prepareExecEnvironment(params, process)
 
   // determine the command to run and execute it
-  sonarQubeExecutable(sqScannerCommand => {
+  scannerExecutable(sqScannerCommand => {
     try {
       exec(sqScannerCommand, fromParam().concat(cliArgs), optionsExec)
-      log('SonarQube analysis finished.')
+      log('Analysis finished.')
       callback()
     } catch (error) {
       process.exit(error.status)
@@ -40,19 +40,19 @@ function scanCLI(cliArgs, params, callback) {
 }
 
 /*
- * Alternatively, trigger an analysis with a local install of the SonarQube Scanner.
+ * Alternatively, trigger an analysis with a local install of the SonarScanner.
  */
-function scanUsingCustomSonarQubeScanner(params, callback) {
-  log('Starting SonarQube analysis (with local install of the SonarQube Scanner)...')
+function scanUsingCustomScanner(params, callback) {
+  log('Starting analysis (with local install of the SonarScanner)...')
 
   // prepare the exec options, most notably with the SQ params
   var optionsExec = prepareExecEnvironment(params, process)
 
   // determine the command to run and execute it
-  localSonarQubeExecutable(sqScannerCommand => {
+  localscannerExecutable(sqScannerCommand => {
     try {
       exec(sqScannerCommand, fromParam(), optionsExec)
-      log('SonarQube analysis finished.')
+      log('Analysis finished.')
       callback()
     } catch (error) {
       process.exit(error.status)

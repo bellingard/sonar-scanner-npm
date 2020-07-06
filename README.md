@@ -33,9 +33,9 @@ The following example shows how to run an analysis on a JavaScript
 project, and pushing the results to a SonarQube instance:
 
 ```javascript
-const sonarqubeScanner = require('sonarqube-scanner');
+const scanner = require('sonarqube-scanner');
 
-sonarqubeScanner(
+scanner(
   {
     serverUrl : 'https://sonarqube.mycompany.com',
     token : "019d1e2e04eefdcd0caee1468f39a45e69d33d3f",
@@ -56,8 +56,8 @@ sonarqubeScanner(
 
 * `parameters` *Map*
   * `serverUrl` *String* (optional) The URL of the SonarQube server. Defaults to http://localhost:9000
-  * `token` *String* (optional) The token used to connect to the SonarQube server. Empty by default.
-  * `options` *Map* (optional) Used to pass extra parameters for the SonarQube analysis. See the [official documentation](http://redirect.sonarsource.com/doc/analysis-parameters.html) for more details.
+  * `token` *String* (optional) The token used to connect to the SonarQube/SonarCloud server. Empty by default.
+  * `options` *Map* (optional) Used to pass extra parameters for the analysis. See the [official documentation](http://redirect.sonarsource.com/doc/analysis-parameters.html) for more details.
 * `callback` *Function* (optional)
 Callback (the execution of the analysis is asynchronous).
 
@@ -76,7 +76,7 @@ sonar-scanner
 **Specifying properties/settings**
 
 * If there's a `package.json` file in the folder, it will be read to feed the analysis with basic information (like project name or version)
-* If there's a `sonar-project.properties` file in the folder, it will behave like the [original SonarQube Scanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html)
+* If there's a `sonar-project.properties` file in the folder, it will behave like the [original SonarScanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html)
 * Additional [analysis parameters](https://redirect.sonarsource.com/doc/analysis-parameters.html) can be passed on the command line using the standard `-Dsonar.xxx=yyy` syntax
   * Example: 
   
@@ -84,14 +84,14 @@ sonar-scanner
 
 ## FAQ
 
-#### *I constantly get "Impossible to download and extract binary [...] In such situation, the best solution is to install the standard SonarQube Scanner", what can I do?*
+#### *I constantly get "Impossible to download and extract binary [...] In such situation, the best solution is to install the standard SonarScanner", what can I do?*
 
-You can install manually the [standard SonarQube Scanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html),
+You can install manually the [standard SonarScanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html),
 which requires to have a Java Runtime Environment available too (Java 8+). Once this is done, you can replace the 2nd line
 of the example by:
 
 ```javascript
-var sonarqubeScanner = require('sonarqube-scanner').customScanner;
+var scanner = require('sonarqube-scanner').customScanner;
 ```
 
 ### In my Docker container, the scanner fails with ".../jre/bin/java: not found", how do I solve this?

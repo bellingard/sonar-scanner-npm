@@ -1,6 +1,6 @@
 var assert = require('assert')
 var path = require('path')
-var index = require('../dist/sonarqube-scanner-executable')
+var index = require('../dist/sonar-scanner-executable')
 
 describe('sqScannerExecutable', function() {
   var exclusions = 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'
@@ -59,7 +59,7 @@ describe('sqScannerExecutable', function() {
   })
 })
 
-describe('getSonarQubeScannerExecutable', function() {
+describe('getSonarScannerExecutable', function() {
   it('should use SONAR_BINARY_CACHE env when exists', function() {
     process.env.SONAR_BINARY_CACHE = './test-cache'
     assert.equal(index.getInstallFolderPath(), 'test-cache/.sonar/native-sonar-scanner', 'congrats')
