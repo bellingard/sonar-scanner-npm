@@ -99,9 +99,16 @@ function getSonarScannerExecutable(passExecutableCallback) {
   var baseUrl = process.env.SONAR_SCANNER_MIRROR || process.env.npm_config_sonar_scanner_mirror || SONAR_SCANNER_MIRROR
   var fileName = 'sonar-scanner-cli-' + platformBinariesVersion + '-' + targetOS + '.zip'
   var downloadUrl = baseUrl + fileName
+  var baseUrlAuthorization = process.env.SONAR_SCANNER_MIRROR_AUTHORIZATION;
   log(`Downloading from ${downloadUrl}`)
   log(`(executable will be saved in cache folder: ${installFolder})`)
-  download(downloadUrl, installFolder, { extract: true })
+  var options = { extract: true };
+  if (baseUrlAuthorization) {
+    options[headers] = {
+      'Authorization': 'Basic ' + baseUrlAuthorization
+    }
+  }
+  download(downloadUrl, installFolder, options)
     .on('response', res => {
       bar.total = res.headers['content-length']
       res.on('data', data => bar.tick(data.length))
