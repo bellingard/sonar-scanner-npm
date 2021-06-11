@@ -34,7 +34,8 @@ function scanCLI(cliArgs, params, callback) {
       log('Analysis finished.')
       callback()
     } catch (error) {
-      process.exit(error.status)
+      log('SonarQube analysis failed with error: ' + error)
+      callback(error);
     }
   })
 }
@@ -55,7 +56,8 @@ function scanUsingCustomScanner(params, callback) {
       log('Analysis finished.')
       callback()
     } catch (error) {
-      process.exit(error.status)
+      log('SonarQube analysis failed with error: ' + error)
+      callback(error);
     }
   })
 }
