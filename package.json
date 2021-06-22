@@ -15,9 +15,9 @@
     "url": "https://github.com/bellingard/sonar-scanner-npm/issues"
   },
   "license": "LGPL-3.0",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "bin": {
-    "sonar-scanner": "dist/bin/sonar-scanner"
+    "sonar-scanner": "src/bin/sonar-scanner"
   },
   "engines": {
     "node": ">= 0.10"

@@ -1,6 +1,6 @@
 var assert = require('assert')
 var path = require('path')
-var index = require('../dist/sonar-scanner-executable')
+var index = require('../src/sonar-scanner-executable')
 
 describe('sqScannerExecutable', function() {
   var exclusions = 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'

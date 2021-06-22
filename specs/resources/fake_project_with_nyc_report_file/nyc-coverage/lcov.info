@@ -1,5 +1,5 @@
 TN:
-SF:E:\work\sonar-scanner-npm\dist\sonarqube-scanner-executable.js
+SF:E:\work\sonar-scanner-npm\src\sonarqube-scanner-executable.js
 FN:22,prepareExecEnvironment
 FN:56,getSonarQubeScannerExecutable
 FN:103,(anonymous_2)
@@ -117,7 +117,7 @@ BRF:18
 BRH:2
 end_of_record
 TN:
-SF:E:\work\sonar-scanner-npm\dist\sonarqube-scanner-params.js
+SF:E:\work\sonar-scanner-npm\src\sonarqube-scanner-params.js
 FN:14,defineSonarQubeScannerParams
 FN:64,extractInfoFromPackageFile
 FNF:2

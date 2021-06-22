@@ -1,5 +1,5 @@
 var assert = require('assert')
-var index = require('../dist/index')
+var index = require('../src/index')
 
 describe('fromParam', function() {
   it('should provide the correct identity', function() {
