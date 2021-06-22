@@ -42,7 +42,7 @@ scanner(
     options: {
       'sonar.projectName': 'My App',
       'sonar.projectDescription': 'Description for "My App" project...',
-      'sonar.sources': 'dist',
+      'sonar.sources': 'src',
       'sonar.tests': 'specs'
     }
   },

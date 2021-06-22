@@ -1,6 +1,6 @@
 var assert = require('assert')
 var path = require('path')
-var sqScannerParams = require('../dist/sonar-scanner-params')
+var sqScannerParams = require('../src/sonar-scanner-params')
 
 describe('sqScannerParams', function() {
   function pathForProject(projectFolder) {
