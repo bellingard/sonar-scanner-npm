@@ -4,7 +4,8 @@ var os = require('os')
 var exec = require('child_process').execSync
 var mkdirs = require('mkdirp').sync
 var extend = require('extend')
-var download = require('download')
+var { DownloaderHelper } = require('node-downloader-helper')
+var decompress = require('decompress')
 var ProgressBar = require('progress')
 var log = require('fancy-log')
 var logError = log.error
@@ -101,13 +102,23 @@ function getSonarScannerExecutable(passExecutableCallback) {
   var downloadUrl = baseUrl + fileName
   log(`Downloading from ${downloadUrl}`)
   log(`(executable will be saved in cache folder: ${installFolder})`)
-  download(downloadUrl, installFolder, { extract: true })
-    .on('response', res => {
-      bar.total = res.headers['content-length']
-      res.on('data', data => bar.tick(data.length))
-    })
+  var downloader = new DownloaderHelper(downloadUrl, installFolder)
+  // node-downloader-helper recommends defining both an onError and a catch because:
+  //   "if on('error') is not defined, an error will be thrown when the error event is emitted and
+  //    not listing, this is because EventEmitter is designed to throw an unhandled error event
+  //    error if not been listened and is too late to change it now."
+  downloader.on('error', (_) => {})
+  downloader.on('download', downloadInfo => {
+    bar.total = downloadInfo.totalSize
+  })
+  downloader.on('progress', stats => {
+    bar.update(stats.progress / 100)
+  })
+  downloader.start()
     .then(() => {
-      passExecutableCallback(platformExecutable)
+      decompress(`${installFolder}/${fileName}`, installFolder).then(() => {
+        passExecutableCallback(platformExecutable)
+      })
     })
     .catch(err => {
       logError(`ERROR: impossible to download and extract binary: ${err.message}`)
