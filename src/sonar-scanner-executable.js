@@ -1,14 +1,15 @@
-var fs = require('fs')
-var path = require('path')
-var os = require('os')
-var exec = require('child_process').execSync
-var mkdirs = require('mkdirp').sync
-var extend = require('extend')
-var download = require('download')
-var ProgressBar = require('progress')
-var log = require('fancy-log')
-var logError = log.error
-var sonarScannerParams = require('./sonar-scanner-params')
+const fs = require('fs')
+const path = require('path')
+const os = require('os')
+const exec = require('child_process').execSync
+const mkdirs = require('mkdirp').sync
+const extend = require('extend')
+const { DownloaderHelper } = require('node-downloader-helper')
+const decompress = require('decompress')
+const ProgressBar = require('progress')
+const log = require('fancy-log')
+const logError = log.error
+const sonarScannerParams = require('./sonar-scanner-params')
 
 module.exports.prepareExecEnvironment = prepareExecEnvironment
 module.exports.getSonarScannerExecutable = getSonarScannerExecutable
@@ -31,20 +32,20 @@ const bar = new ProgressBar('[:bar] :percent :etas', {
  */
 function prepareExecEnvironment(params, process) {
   // Define what the SQ Scanner params must be
-  var processEnvParams = {}
+  let processEnvParams = {}
   if (process.env.SONARQUBE_SCANNER_PARAMS) {
     processEnvParams = JSON.parse(process.env.SONARQUBE_SCANNER_PARAMS)
   }
-  var sqScannerParams = sonarScannerParams(params, process.cwd(), processEnvParams)
+  const sqScannerParams = sonarScannerParams(params, process.cwd(), processEnvParams)
 
   // We need to merge the existing env variables (process.env) with the SQ ones
-  var mergedEnv = {}
+  let mergedEnv = {}
   extend(mergedEnv, process.env, {
     SONARQUBE_SCANNER_PARAMS: JSON.stringify(sqScannerParams)
   })
 
   // this is the actual object that the process.exec function is waiting for
-  var optionsExec = {
+  const optionsExec = {
     env: mergedEnv,
     stdio: [0, 1, 2],
     // Increase the amount of data allowed on stdout or stderr
@@ -62,13 +63,13 @@ function prepareExecEnvironment(params, process) {
 function getSonarScannerExecutable(passExecutableCallback) {
   const platformBinariesVersion =
     process.env.SONAR_SCANNER_VERSION || process.env.npm_config_sonar_scanner_version || SONAR_SCANNER_VERSION
-  var targetOS = findTargetOS()
-  var installFolder = getInstallFolderPath()
-  var binaryExtension = ''
+  const targetOS = findTargetOS()
+  const installFolder = getInstallFolderPath()
+  let binaryExtension = ''
   if (isWindows()) {
     binaryExtension = '.bat'
   }
-  var platformExecutable = path.join(
+  const platformExecutable = path.join(
     installFolder,
     `sonar-scanner-${platformBinariesVersion}-${targetOS}`,
     'bin',
@@ -76,7 +77,7 @@ function getSonarScannerExecutable(passExecutableCallback) {
   )
 
   // #1 - Try to execute the scanner
-  var executableFound = false
+  let executableFound = false
   try {
     log('Checking if executable exists: ' + platformExecutable)
     fs.accessSync(platformExecutable, fs.F_OK)
@@ -96,18 +97,28 @@ function getSonarScannerExecutable(passExecutableCallback) {
   log('Proceed with download of the platform binaries for SonarScanner...')
   log('Creating ' + installFolder)
   mkdirs(installFolder)
-  var baseUrl = process.env.SONAR_SCANNER_MIRROR || process.env.npm_config_sonar_scanner_mirror || SONAR_SCANNER_MIRROR
-  var fileName = 'sonar-scanner-cli-' + platformBinariesVersion + '-' + targetOS + '.zip'
-  var downloadUrl = baseUrl + fileName
+  const baseUrl = process.env.SONAR_SCANNER_MIRROR || process.env.npm_config_sonar_scanner_mirror || SONAR_SCANNER_MIRROR
+  const fileName = 'sonar-scanner-cli-' + platformBinariesVersion + '-' + targetOS + '.zip'
+  const downloadUrl = baseUrl + fileName
   log(`Downloading from ${downloadUrl}`)
   log(`(executable will be saved in cache folder: ${installFolder})`)
-  download(downloadUrl, installFolder, { extract: true })
-    .on('response', res => {
-      bar.total = res.headers['content-length']
-      res.on('data', data => bar.tick(data.length))
-    })
+  const downloader = new DownloaderHelper(downloadUrl, installFolder)
+  // node-downloader-helper recommends defining both an onError and a catch because:
+  //   "if on('error') is not defined, an error will be thrown when the error event is emitted and
+  //    not listing, this is because EventEmitter is designed to throw an unhandled error event
+  //    error if not been listened and is too late to change it now."
+  downloader.on('error', (_) => {})
+  downloader.on('download', downloadInfo => {
+    bar.total = downloadInfo.totalSize
+  })
+  downloader.on('progress', stats => {
+    bar.update(stats.progress / 100)
+  })
+  downloader.start()
     .then(() => {
-      passExecutableCallback(platformExecutable)
+      decompress(`${installFolder}/${fileName}`, installFolder).then(() => {
+        passExecutableCallback(platformExecutable)
+      })
     })
     .catch(err => {
       logError(`ERROR: impossible to download and extract binary: ${err.message}`)
@@ -123,7 +134,7 @@ function getSonarScannerExecutable(passExecutableCallback) {
  * Returns the SQ Scanner executable if one available in the PATH (meaning user has also JAVA)
  */
 function getLocalSonarScannerExecutable(passExecutableCallback) {
-  var command = 'sonar-scanner'
+  let command = 'sonar-scanner'
   if (isWindows()) {
     command += '.bat'
   }
@@ -160,7 +171,7 @@ function findTargetOS() {
 }
 
 function getInstallFolderPath() {
-  var basePath = process.env.SONAR_BINARY_CACHE || process.env.npm_config_sonar_binary_cache || os.homedir()
+  const basePath = process.env.SONAR_BINARY_CACHE || process.env.npm_config_sonar_binary_cache || os.homedir()
   return path.join(basePath, '.sonar', 'native-sonar-scanner')
 }
 

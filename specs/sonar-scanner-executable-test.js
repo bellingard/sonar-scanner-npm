@@ -64,6 +64,18 @@ describe('getSonarScannerExecutable', function() {
     process.env.SONAR_BINARY_CACHE = './test-cache'
     assert.equal(index.getInstallFolderPath(), 'test-cache/.sonar/native-sonar-scanner', 'congrats')
   })
+
+  it('should not execute callback when download of executable failed', function() {
+    process.env.SONAR_SCANNER_MIRROR = 'http://fake.url/sonar-scanner'
+    let executed = false
+    const callback = function() {
+      executed = true
+    }
+
+    index.getSonarScannerExecutable(callback)
+
+    assert.equal(executed, false)
+  })
 })
 
 function pathForProject(projectFolder) {
