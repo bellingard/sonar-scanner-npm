@@ -72,10 +72,21 @@ function extractInfoFromPackageFile(sonarScannerParams, projectBaseDir) {
     })
   }
   if (pkg) {
-    sonarScannerParams['sonar.projectKey'] = slugify(pkg.name, {
-      remove: invalidCharacterRegex
-    })
-    sonarScannerParams['sonar.projectName'] = pkg.name
+    if (pkg.name.startsWith('@')) {
+      const packageNameComponents = pkg.name.split('/')
+      const scopeName = packageNameComponents[0].substring(1)
+      const packageName = packageNameComponents[1]
+
+      sonarScannerParams['sonar.projectKey'] =
+          slugify(scopeName, { remove: invalidCharacterRegex }) + ':' + slugify(packageName, { remove: invalidCharacterRegex })
+      sonarScannerParams['sonar.projectName'] = packageName
+    } else {
+      sonarScannerParams['sonar.projectKey'] = slugify(pkg.name, {
+        remove: invalidCharacterRegex
+      })
+      sonarScannerParams['sonar.projectName'] = pkg.name
+    }
+
     sonarScannerParams['sonar.projectVersion'] = pkg.version
     if (pkg.description) {
       sonarScannerParams['sonar.projectDescription'] = pkg.description
