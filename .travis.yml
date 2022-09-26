@@ -2,7 +2,7 @@ dist: trusty
 sudo: required
 
 node_js:
-  - 12
+  - 16
 
 install:
   - npm install
