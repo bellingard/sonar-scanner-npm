@@ -102,20 +102,27 @@ function getSonarScannerExecutable(passExecutableCallback) {
   const fileName = 'sonar-scanner-cli-' + platformBinariesVersion + '-' + targetOS + '.zip'
   const downloadUrl = baseUrl + fileName
   const proxy = process.env.http_proxy || ''
-  // create an instance of the `HttpsProxyAgent` class with the proxy server information
-  const proxyAgent = new HttpsProxyAgent(proxy)
+  let proxyAgent
+  let httpOptions = {}
   log(`Downloading from ${downloadUrl}`)
   log(`(executable will be saved in cache folder: ${installFolder})`)
-  log(`Using proxy server ${proxy}`)
-  const downloader = new DownloaderHelper(downloadUrl, installFolder, {
-    httpRequestOptions: { agent: proxyAgent },
-    httpsRequestOptions: { agent: proxyAgent }
-  })
+  if (proxy && proxy !== '') {
+    proxyAgent = new HttpsProxyAgent(proxy)
+    const proxyUrl = new URL(proxy)
+    httpOptions = {
+      httpRequestOptions: { agent: proxyAgent },
+      httpsRequestOptions: { agent: proxyAgent }
+    }
+    const port = proxyUrl.port === '' ? '' : `:${proxyUrl.port}`
+    log(`Using proxy server ${proxyUrl.protocol}//${proxyUrl.hostname}${port}`)
+  }
+  const downloader = new DownloaderHelper(downloadUrl, installFolder, httpOptions)
   // node-downloader-helper recommends defining both an onError and a catch because:
   //   "if on('error') is not defined, an error will be thrown when the error event is emitted and
   //    not listing, this is because EventEmitter is designed to throw an unhandled error event
   //    error if not been listened and is too late to change it now."
-  downloader.on('error', (_) => {})
+  downloader.on('error', (_) => {
+  })
   downloader.on('download', downloadInfo => {
     bar.total = downloadInfo.totalSize
   })
