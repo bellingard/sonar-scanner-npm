@@ -149,12 +149,6 @@ export http_proxy=http://mycompanyproxy.com:PORT
 export http_proxy=http://user:password@mycompanyproxy.com:PORT
 ```
 
-or alternatively set variable in `.npmrc`
-
-```
-    sonar_binary_cache=/Users/myaccount/cache
-```
-
 ## License
 
 `sonarqube-scanner` is licensed under the [LGPL v3 License](http://www.gnu.org/licenses/lgpl.txt).
