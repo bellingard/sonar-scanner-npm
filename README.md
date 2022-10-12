@@ -87,11 +87,35 @@ sonar-scanner
 #### *I constantly get "Impossible to download and extract binary [...] In such situation, the best solution is to install the standard SonarScanner", what can I do?*
 
 You can install manually the [standard SonarScanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html),
-which requires to have a Java Runtime Environment available too (Java 8+). Once this is done, you can replace the 2nd line
-of the example by:
+which requires to have a Java Runtime Environment available too (Java 8+). 
+
+It is important to make sure that the SonarScanner `$install_directory/bin` location is added to the system `$PATH` environment variable. This will ensure that `sonar-scanner` command will be resolved by the customScanner, and prevent the error:
+
+``` javascript
+Error: Local install of SonarScanner not found.
+    at getLocalSonarScannerExecutable (<project_dir>/node_modules/sonarqube-scanner/src/sonar-scanner-executable.js:153:11)
+    at scanUsingCustomScanner (<project_dir>/node_modules/sonarqube-scanner/src/index.js:52:3)
+...
+```    
+
+Once local installation is done, you can replace the 2nd line of the example:
 
 ```javascript
 var scanner = require('sonarqube-scanner').customScanner;
+
+scanner(
+  {
+    serverUrl : 'https://sonarqube.mycompany.com',
+    token : "019d1e2e04eefdcd0caee1468f39a45e69d33d3f",
+    options: {
+      'sonar.projectName': 'My App',
+      'sonar.projectDescription': 'Description for "My App" project...',
+      'sonar.sources': 'src',
+      'sonar.tests': 'specs'
+    }
+  },
+  () => process.exit()
+)
 ```
 
 ### In my Docker container, the scanner fails with ".../jre/bin/java: not found", how do I solve this?
