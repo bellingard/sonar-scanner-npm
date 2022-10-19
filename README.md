@@ -102,20 +102,6 @@ Once local installation is done, you can replace the 2nd line of the example:
 
 ```javascript
 var scanner = require('sonarqube-scanner').customScanner;
-
-scanner(
-  {
-    serverUrl : 'https://sonarqube.mycompany.com',
-    token : "019d1e2e04eefdcd0caee1468f39a45e69d33d3f",
-    options: {
-      'sonar.projectName': 'My App',
-      'sonar.projectDescription': 'Description for "My App" project...',
-      'sonar.sources': 'src',
-      'sonar.tests': 'specs'
-    }
-  },
-  () => process.exit()
-)
 ```
 
 ### In my Docker container, the scanner fails with ".../jre/bin/java: not found", how do I solve this?
