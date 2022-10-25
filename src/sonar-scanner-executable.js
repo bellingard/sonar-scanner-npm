@@ -5,6 +5,7 @@ const exec = require('child_process').execSync
 const mkdirs = require('mkdirp').sync
 const extend = require('extend')
 const { DownloaderHelper } = require('node-downloader-helper')
+const HttpsProxyAgent = require('https-proxy-agent')
 const decompress = require('decompress')
 const ProgressBar = require('progress')
 const log = require('fancy-log')
@@ -100,14 +101,28 @@ function getSonarScannerExecutable(passExecutableCallback) {
   const baseUrl = process.env.SONAR_SCANNER_MIRROR || process.env.npm_config_sonar_scanner_mirror || SONAR_SCANNER_MIRROR
   const fileName = 'sonar-scanner-cli-' + platformBinariesVersion + '-' + targetOS + '.zip'
   const downloadUrl = baseUrl + fileName
+  const proxy = process.env.http_proxy || ''
+  let proxyAgent
+  let httpOptions = {}
   log(`Downloading from ${downloadUrl}`)
   log(`(executable will be saved in cache folder: ${installFolder})`)
-  const downloader = new DownloaderHelper(downloadUrl, installFolder)
+  if (proxy && proxy !== '') {
+    proxyAgent = new HttpsProxyAgent(proxy)
+    const proxyUrl = new URL(proxy)
+    httpOptions = {
+      httpRequestOptions: { agent: proxyAgent },
+      httpsRequestOptions: { agent: proxyAgent }
+    }
+    const port = proxyUrl.port === '' ? '' : `:${proxyUrl.port}`
+    log(`Using proxy server ${proxyUrl.protocol}//${proxyUrl.hostname}${port}`)
+  }
+  const downloader = new DownloaderHelper(downloadUrl, installFolder, httpOptions)
   // node-downloader-helper recommends defining both an onError and a catch because:
   //   "if on('error') is not defined, an error will be thrown when the error event is emitted and
   //    not listing, this is because EventEmitter is designed to throw an unhandled error event
   //    error if not been listened and is too late to change it now."
-  downloader.on('error', (_) => {})
+  downloader.on('error', (_) => {
+  })
   downloader.on('download', downloadInfo => {
     bar.total = downloadInfo.totalSize
   })

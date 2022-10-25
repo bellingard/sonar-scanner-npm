@@ -145,6 +145,20 @@ or alternatively set variable in `.npmrc`
     sonar_binary_cache=/Users/myaccount/cache
 ```
 
+## Download behind proxy
+
+In order to be able to download binaries when you're behind a proxy it will be enough to set http_proxy environment variable.
+
+**Example:**
+```shell
+export http_proxy=http://mycompanyproxy.com:PORT
+```
+
+**Behind authenticated proxy:**
+```shell
+export http_proxy=http://user:password@mycompanyproxy.com:PORT
+```
+
 ## License
 
 `sonarqube-scanner` is licensed under the [LGPL v3 License](http://www.gnu.org/licenses/lgpl.txt).
