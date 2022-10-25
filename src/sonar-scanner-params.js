@@ -84,7 +84,7 @@ function extractInfoFromPackageFile(sonarScannerParams, projectBaseDir) {
       sonarScannerParams['sonar.links.homepage'] = pkg.homepage
     }
     if (pkg.bugs && pkg.bugs.url) {
-      sonarScannerParams['sonar.links.issues'] = pkg.bugs.url
+      sonarScannerParams['sonar.links.issue'] = pkg.bugs.url
     }
     if (pkg.repository && pkg.repository.url) {
       sonarScannerParams['sonar.links.scm'] = pkg.repository.url
