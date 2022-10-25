@@ -94,7 +94,7 @@ describe('sqScannerParams', function() {
       'sonar.projectDescription': 'A fake project',
       'sonar.projectVersion': '1.0.0',
       'sonar.links.homepage': 'https://github.com/fake/project',
-      'sonar.links.issues': 'https://github.com/fake/project/issues',
+      'sonar.links.issue': 'https://github.com/fake/project/issues',
       'sonar.links.scm': 'git+https://github.com/fake/project.git',
       'sonar.sources': '.',
       'sonar.testExecutionReportPaths': 'xunit.xml',
