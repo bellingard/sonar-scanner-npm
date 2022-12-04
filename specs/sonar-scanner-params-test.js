@@ -1,16 +1,16 @@
-var assert = require('assert')
-var path = require('path')
-var sqScannerParams = require('../src/sonar-scanner-params')
+const assert = require('assert')
+const path = require('path')
+const sqScannerParams = require('../src/sonar-scanner-params')
 
 describe('sqScannerParams', function() {
   function pathForProject(projectFolder) {
     return path.join(process.cwd(), 'specs', 'resources', projectFolder)
   }
 
-  var exclusions = 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'
+  const exclusions = 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'
 
   it('should provide default values', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.projectDescription': 'No description.',
       'sonar.sources': '.',
       'sonar.exclusions': exclusions
@@ -19,7 +19,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should not set default values if sonar-project.properties file exists', function() {
-    var expectedResult = {}
+    const expectedResult = {}
     assert.deepEqual(
       sqScannerParams({}, pathForProject('fake_project_with_sonar_properties_file'), null),
       expectedResult
@@ -27,7 +27,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should propagate custom server and token', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.host.url': 'https://sonarcloud.io',
       'sonar.login': 'my_token',
       'sonar.projectDescription': 'No description.',
@@ -45,7 +45,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should allow to override default settings and add new ones', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.projectName': 'Foo',
       'sonar.projectDescription': 'No description.',
       'sonar.sources': '.',
@@ -63,7 +63,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should get mandatory information from basic package.json file', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.javascript.lcov.reportPaths': 'coverage/lcov.info',
       'sonar.projectKey': 'fake-basic-project',
       'sonar.projectName': 'fake-basic-project',
@@ -76,7 +76,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should get mandatory information from scoped packages package.json file', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.projectKey': 'myfake-basic-project',
       'sonar.projectName': '@my/fake-basic-project',
       'sonar.projectDescription': 'No description.',
@@ -88,7 +88,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should get all information from package.json file', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.projectKey': 'fake-project',
       'sonar.projectName': 'fake-project',
       'sonar.projectDescription': 'A fake project',
@@ -107,7 +107,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should take into account SONARQUBE_SCANNER_PARAMS env variable', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.host.url': 'https://sonarcloud.io',
       'sonar.login': 'my_token',
       'sonar.projectDescription': 'No description.',
@@ -124,7 +124,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should make priority to user options over SONARQUBE_SCANNER_PARAMS env variable', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.host.url': 'https://sonarcloud.io',
       'sonar.login': 'my_token',
       'sonar.projectDescription': 'No description.',
@@ -145,7 +145,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should get nyc lcov file path from package.json file', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.javascript.lcov.reportPaths': 'nyc-coverage/lcov.info',
       'sonar.projectKey': 'fake-basic-project',
       'sonar.projectName': 'fake-basic-project',
@@ -158,7 +158,7 @@ describe('sqScannerParams', function() {
   })
 
   it('should get jest lcov file path from package.json file', function() {
-    var expectedResult = {
+    const expectedResult = {
       'sonar.javascript.lcov.reportPaths': 'jest-coverage/lcov.info',
       'sonar.projectKey': 'fake-basic-project',
       'sonar.projectName': 'fake-basic-project',

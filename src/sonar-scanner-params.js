@@ -1,15 +1,15 @@
-var fs = require('fs')
-var path = require('path')
-var extend = require('extend')
-var readPackage = require('read-pkg').sync
-var slugify = require('slugify')
-var log = require('fancy-log')
-var get = require('lodash.get')
-var uniq = require('lodash.uniq')
+const fs = require('fs')
+const path = require('path')
+const extend = require('extend')
+const readPackage = require('read-pkg').sync
+const slugify = require('slugify')
+const log = require('fancy-log')
+const get = require('lodash.get')
+const uniq = require('lodash.uniq')
 
 module.exports = defineSonarScannerParams
 
-var invalidCharacterRegex = /[?$*+~.()'"!:@/]/g
+const invalidCharacterRegex = /[?$*+~.()'"!:@/]/g
 
 /*
  * Try to be smart and guess most SQ parameters from JS files that
@@ -17,9 +17,9 @@ var invalidCharacterRegex = /[?$*+~.()'"!:@/]/g
  */
 function defineSonarScannerParams(params, projectBaseDir, sqScannerParamsFromEnvVariable) {
   // #1 - set default values
-  var sonarScannerParams = {}
+  const sonarScannerParams = {}
   try {
-    var sqFile = path.join(projectBaseDir, 'sonar-project.properties')
+    const sqFile = path.join(projectBaseDir, 'sonar-project.properties')
     fs.accessSync(sqFile, fs.F_OK)
     // there's a 'sonar-project.properties' file - no need to set default values
   } catch (e) {
@@ -60,8 +60,8 @@ function defineSonarScannerParams(params, projectBaseDir, sqScannerParamsFromEnv
 }
 
 function extractInfoFromPackageFile(sonarScannerParams, projectBaseDir) {
-  var packageFile = path.join(projectBaseDir, 'package.json')
-  var pkg = readPackage(packageFile)
+  const packageFile = path.join(projectBaseDir, 'package.json')
+  const pkg = readPackage(packageFile)
   log('Getting info from "package.json" file')
   function fileExistsInProjectSync(file) {
     return fs.existsSync(path.resolve(projectBaseDir, file))
@@ -108,7 +108,7 @@ function extractInfoFromPackageFile(sonarScannerParams, projectBaseDir) {
           'coverage'
         )
     ).find(function(lcovReportDir) {
-      var lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info')
+      const lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info')
       if (fileExistsInProjectSync(lcovReportPath)) {
         sonarScannerParams['sonar.exclusions'] += ',' + path.posix.join(lcovReportDir, '**')
         // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import

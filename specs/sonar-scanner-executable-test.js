@@ -1,12 +1,12 @@
-var assert = require('assert')
-var path = require('path')
-var index = require('../src/sonar-scanner-executable')
+const assert = require('assert')
+const path = require('path')
+const index = require('../src/sonar-scanner-executable')
 
 describe('sqScannerExecutable', function() {
-  var exclusions = 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'
+  const exclusions = 'node_modules/**,bower_components/**,jspm_packages/**,typings/**,lib-cov/**'
 
   it('should provide default values', function() {
-    var expectedResult = {
+    const expectedResult = {
       maxBuffer: 1024 * 1024,
       stdio: [0, 1, 2],
       env: {
@@ -18,7 +18,7 @@ describe('sqScannerExecutable', function() {
       }
     }
 
-    var fakeProcess = {
+    const fakeProcess = {
       env: {},
       cwd: function() {
         return pathForProject('fake_project_with_no_package_file')
@@ -29,7 +29,7 @@ describe('sqScannerExecutable', function() {
   })
 
   it('should read SONARQUBE_SCANNER_PARAMS provided by environment if it exists', function() {
-    var expectedResult = {
+    const expectedResult = {
       maxBuffer: 1024 * 1024,
       stdio: [0, 1, 2],
       env: {
@@ -43,7 +43,7 @@ describe('sqScannerExecutable', function() {
       }
     }
 
-    var fakeProcess = {
+    const fakeProcess = {
       env: {
         SONARQUBE_SCANNER_PARAMS: JSON.stringify({
           'sonar.host.url': 'https://sonarcloud.io',

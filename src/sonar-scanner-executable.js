@@ -40,7 +40,7 @@ function prepareExecEnvironment(params, process) {
   const sqScannerParams = sonarScannerParams(params, process.cwd(), processEnvParams)
 
   // We need to merge the existing env variables (process.env) with the SQ ones
-  let mergedEnv = {}
+  const mergedEnv = {}
   extend(mergedEnv, process.env, {
     SONARQUBE_SCANNER_PARAMS: JSON.stringify(sqScannerParams)
   })

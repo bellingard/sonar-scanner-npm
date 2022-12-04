@@ -1,8 +1,8 @@
-var exec = require('child_process').execFileSync
-var log = require('fancy-log')
-var prepareExecEnvironment = require('./sonar-scanner-executable').prepareExecEnvironment
-var scannerExecutable = require('./sonar-scanner-executable').getSonarScannerExecutable
-var localscannerExecutable = require('./sonar-scanner-executable').getLocalSonarScannerExecutable
+const exec = require('child_process').execFileSync
+const log = require('fancy-log')
+const prepareExecEnvironment = require('./sonar-scanner-executable').prepareExecEnvironment
+const scannerExecutable = require('./sonar-scanner-executable').getSonarScannerExecutable
+const localscannerExecutable = require('./sonar-scanner-executable').getLocalSonarScannerExecutable
 
 module.exports = scan
 module.exports.cli = scanCLI
@@ -25,7 +25,7 @@ function scanCLI(cliArgs, params, callback) {
   log('Starting analysis...')
 
   // prepare the exec options, most notably with the SQ params
-  var optionsExec = prepareExecEnvironment(params, process)
+  const optionsExec = prepareExecEnvironment(params, process)
 
   // determine the command to run and execute it
   scannerExecutable(sqScannerCommand => {
@@ -46,7 +46,7 @@ function scanUsingCustomScanner(params, callback) {
   log('Starting analysis (with local install of the SonarScanner)...')
 
   // prepare the exec options, most notably with the SQ params
-  var optionsExec = prepareExecEnvironment(params, process)
+  const optionsExec = prepareExecEnvironment(params, process)
 
   // determine the command to run and execute it
   localscannerExecutable(sqScannerCommand => {

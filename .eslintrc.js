@@ -5,6 +5,6 @@ module.exports = {
     // allow paren-less arrow functions
     'arrow-parens': 0,
     'space-before-function-paren': ['error', 'never'],
-    'indent': ['error', 2]
+    indent: ['error', 2]
   }
 }
