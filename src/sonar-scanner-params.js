@@ -116,6 +116,7 @@ function extractInfoFromPackageFile(sonarScannerParams, projectBaseDir) {
         // TODO: use Generic Test Data to remove dependence of SonarJS, it is need transformation lcov to sonar generic coverage format
         return true
       }
+      return false
     })
 
     if (dependenceExists('mocha-sonarqube-reporter') && fileExistsInProjectSync('xunit.xml')) {
