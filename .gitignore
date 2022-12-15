@@ -134,4 +134,4 @@ xunit.xml
 
 # End of https://www.gitignore.io/api/node,SonarQube,intellij+all
 
-!specs/resources/**/*
+!test/resources/**/*

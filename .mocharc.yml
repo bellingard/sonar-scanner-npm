@@ -1,6 +1,0 @@
-spec: specs/**/*-test.js
-reporter:
-  - 'mocha-sonarqube-reporter'
-watch-files:
-  - 'src/**/*.js'
-  - 'specs/**/*.js'

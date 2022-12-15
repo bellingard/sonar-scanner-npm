@@ -11,7 +11,7 @@ scanner(
       'sonar.projectName': 'SonarScanner for NPM',
       'sonar.projectDescription': 'SonarQube/SonarCloud Scanner for the JavaScript world',
       'sonar.sources': 'src',
-      'sonar.tests': 'specs'
+      'sonar.tests': 'test'
     }
   },
   () => process.exit()

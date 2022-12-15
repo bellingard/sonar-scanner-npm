@@ -43,7 +43,7 @@ scanner(
       'sonar.projectName': 'My App',
       'sonar.projectDescription': 'Description for "My App" project...',
       'sonar.sources': 'src',
-      'sonar.tests': 'specs'
+      'sonar.tests': 'test'
     }
   },
   () => process.exit()
