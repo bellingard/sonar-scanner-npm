@@ -1,12 +1,12 @@
 # NPM module to run SonarQube/SonarCloud analyses
 
 `sonarqube-scanner` makes it very easy to trigger [SonarQube](https://www.sonarqube.org)
-/ [SonarCloud](https://sonarcloud.io) analyses on a JavaScript code base, without needing 
+/ [SonarCloud](https://sonarcloud.io) analyses on a JavaScript code base, without needing
 to install any specific tool or (Java) runtime.
 
 This module is analyzed on SonarCloud.
 
-[![Build status](https://travis-ci.org/bellingard/sonar-scanner-npm.svg?branch=master)](https://travis-ci.org/bellingard/sonar-scanner-npm) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=bellingard_sonar-scanner-npm&metric=alert_status)](https://sonarcloud.io/dashboard/index/bellingard_sonar-scanner-npm) [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=bellingard_sonar-scanner-npm&metric=sqale_rating)](https://sonarcloud.io/dashboard/index/bellingard_sonar-scanner-npm) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=bellingard_sonar-scanner-npm&metric=reliability_rating)](https://sonarcloud.io/dashboard/index/bellingard_sonar-scanner-npm) [![Security](https://sonarcloud.io/api/project_badges/measure?project=bellingard_sonar-scanner-npm&metric=security_rating)](https://sonarcloud.io/dashboard/index/bellingard_sonar-scanner-npm) [![Releases](https://img.shields.io/github/release/bellingard/sonar-scanner-npm.svg)](https://github.com/bellingard/sonar-scanner-npm/releases) [![Coverage Status](https://coveralls.io/repos/github/bellingard/sonar-scanner-npm/badge.svg)](https://coveralls.io/github/bellingard/sonar-scanner-npm)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=alert_status)](https://sonarcloud.io/dashboard/index/SonarSource_sonar-scanner-npm) [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=sqale_rating)](https://sonarcloud.io/dashboard/index/SonarSource_sonar-scanner-npm) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=reliability_rating)](https://sonarcloud.io/dashboard/index/SonarSource_sonar-scanner-npm) [![Security](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=security_rating)](https://sonarcloud.io/dashboard/index/SonarSource_sonar-scanner-npm) [![Releases](https://img.shields.io/github/release/SonarSource/sonar-scanner-npm.svg)](https://github.com/SonarSource/sonar-scanner-npm/releases) [![Coverage Status](https://coveralls.io/repos/github/bellingard/sonar-scanner-npm/badge.svg)](https://coveralls.io/github/bellingard/sonar-scanner-npm)
 
 
 ## Installation
