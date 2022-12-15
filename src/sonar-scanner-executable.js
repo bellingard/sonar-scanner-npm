@@ -3,7 +3,6 @@ const path = require('path');
 const os = require('os');
 const exec = require('child_process').execSync;
 const mkdirs = require('mkdirp').sync;
-const extend = require('extend');
 const { DownloaderHelper } = require('node-downloader-helper');
 const HttpsProxyAgent = require('https-proxy-agent');
 const decompress = require('decompress');
@@ -41,8 +40,7 @@ function prepareExecEnvironment(params, process) {
   const sqScannerParams = sonarScannerParams(params, process.cwd(), processEnvParams);
 
   // We need to merge the existing env variables (process.env) with the SQ ones
-  const mergedEnv = {};
-  extend(mergedEnv, process.env, {
+  const mergedEnv = Object.assign({}, process.env, {
     SONARQUBE_SCANNER_PARAMS: JSON.stringify(sqScannerParams),
   });
 

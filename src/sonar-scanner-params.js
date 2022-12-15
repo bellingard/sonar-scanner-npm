@@ -1,11 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const extend = require('extend');
-const readPackage = require('read-pkg').sync;
 const slugify = require('slugify');
 const log = require('fancy-log');
-const get = require('lodash.get');
-const uniq = require('lodash.uniq');
 
 module.exports = defineSonarScannerParams;
 
@@ -17,14 +13,14 @@ const invalidCharacterRegex = /[?$*+~.()'"!:@/]/g;
  */
 function defineSonarScannerParams(params, projectBaseDir, sqScannerParamsFromEnvVariable) {
   // #1 - set default values
-  const sonarScannerParams = {};
+  let sonarScannerParams = {};
   try {
     const sqFile = path.join(projectBaseDir, 'sonar-project.properties');
     fs.accessSync(sqFile, fs.F_OK);
     // there's a 'sonar-project.properties' file - no need to set default values
   } catch (e) {
     // No 'sonar-project.properties' file - let's add some default values
-    extend(sonarScannerParams, {
+    sonarScannerParams = Object.assign(sonarScannerParams, {
       'sonar.projectDescription': 'No description.',
       'sonar.sources': '.',
       'sonar.exclusions':
@@ -43,7 +39,7 @@ function defineSonarScannerParams(params, projectBaseDir, sqScannerParamsFromEnv
 
   // #2 - if SONARQUBE_SCANNER_PARAMS exists, extend the current params
   if (sqScannerParamsFromEnvVariable) {
-    extend(sonarScannerParams, sqScannerParamsFromEnvVariable);
+    sonarScannerParams = Object.assign(sonarScannerParams, sqScannerParamsFromEnvVariable);
   }
 
   // #3 - check what's passed in the call params - these are prevalent params
@@ -54,7 +50,7 @@ function defineSonarScannerParams(params, projectBaseDir, sqScannerParamsFromEnv
     sonarScannerParams['sonar.login'] = params.token;
   }
   if (params.options) {
-    extend(sonarScannerParams, params.options);
+    sonarScannerParams = Object.assign(sonarScannerParams, params.options);
   }
 
   return sonarScannerParams;
@@ -62,7 +58,8 @@ function defineSonarScannerParams(params, projectBaseDir, sqScannerParamsFromEnv
 
 function extractInfoFromPackageFile(sonarScannerParams, projectBaseDir) {
   const packageFile = path.join(projectBaseDir, 'package.json');
-  const pkg = readPackage(packageFile);
+  const packageData = fs.readFileSync(packageFile);
+  const pkg = JSON.parse(packageData);
   log('Getting info from "package.json" file');
   function fileExistsInProjectSync(file) {
     return fs.existsSync(path.resolve(projectBaseDir, file));
@@ -91,24 +88,21 @@ function extractInfoFromPackageFile(sonarScannerParams, projectBaseDir) {
       sonarScannerParams['sonar.links.scm'] = pkg.repository.url;
     }
 
-    uniq(
-      [
-        // jest coverage output directory
-        // See: http://facebook.github.io/jest/docs/en/configuration.html#coveragedirectory-string
-        'jest.coverageDirectory',
-        // nyc coverage output directory
-        // See: https://github.com/istanbuljs/nyc#configuring-nyc
-        'nyc.report-dir',
-      ]
-        .map(function (aPath) {
-          return get(pkg, aPath);
-        })
-        .filter(Boolean)
-        .concat(
-          // default coverage output directory
-          'coverage',
-        ),
-    ).find(function (lcovReportDir) {
+    const potentialCoverageDirs = [
+      // jest coverage output directory
+      // See: http://facebook.github.io/jest/docs/en/configuration.html#coveragedirectory-string
+      pkg['nyc']?.['report-dir'],
+      // nyc coverage output directory
+      // See: https://github.com/istanbuljs/nyc#configuring-nyc
+      pkg['jest']?.['coverageDirectory'],
+    ]
+      .filter(Boolean)
+      .concat(
+        // default coverage output directory
+        'coverage',
+      );
+    const uniqueCoverageDirs = Array.from(new Set(potentialCoverageDirs));
+    uniqueCoverageDirs.find(function (lcovReportDir) {
       const lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info');
       if (fileExistsInProjectSync(lcovReportPath)) {
         sonarScannerParams['sonar.exclusions'] += ',' + path.posix.join(lcovReportDir, '**');
