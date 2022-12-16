@@ -4,7 +4,7 @@
 
 *Prerequisites:* Node v16+
 
-- Fetch dependencies: `npm i`
+- Fetch dependencies and transpile: `npm run build`
 - Transpile TypeScript: `npm run compile`
 - Start SonarQube instance: `npm run sonarqube`
 - Test all functions: `npm test`

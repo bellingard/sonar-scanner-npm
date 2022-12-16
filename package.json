@@ -48,10 +48,12 @@
     "sonar-runner"
   ],
   "scripts": {
+    "build": "npm ci && npm run check-format && node ./scripts/build-orchestrator.js",
     "test": "npx nyc mocha test/unit/**/*.test.js",
     "test-integration": "npx nyc mocha test/integration/**/*.test.js",
     "ci": "npm run test && node ci-analysis.js",
-    "format": "prettier --write \"{src,test}/**/!(*.lint).js\""
+    "format": "prettier --write \"{src,test}/**/!(*.lint).js\"",
+    "check-format": "prettier --list-different \"{src,test}/**/!(*.lint).js\""
   },
   "prettier": {
     "printWidth": 100,
