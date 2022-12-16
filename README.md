@@ -11,6 +11,8 @@ This module is analyzed on SonarCloud.
 
 ## Installation
 
+_Prerequisite: Node v14+ (otherwise use sonarqube-scanner v2.9.1)_
+
 This package is available on npm as: `sonarqube-scanner`
 
 To add code analysis to your build files, simply add the package to your project dev dependencies:
