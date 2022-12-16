@@ -35,8 +35,7 @@ build_task:
   build_script:
     - jfrog config add repox --url $ARTIFACTORY_URL --access-token $ARTIFACTORY_DEPLOY_ACCESS_TOKEN
     - jfrog npm-config --repo-resolve npm --repo-deploy sonarsource-npm-public-qa
-    - jfrog npm ci
-    - npm test
+    - npm run build
 
 mend_task:
   depends_on:
@@ -46,8 +45,9 @@ mend_task:
     cpu: 2
     memory: 2G
   # run only on master and long-term branches
-#  only_if: $CIRRUS_USER_COLLABORATOR == 'true' && ($CIRRUS_BRANCH == "master" || $CIRRUS_BRANCH =~ "branch-.*")
+  only_if: $CIRRUS_USER_COLLABORATOR == 'true' && ($CIRRUS_BRANCH == "master" || $CIRRUS_BRANCH =~ "branch-.*")
   env:
+#    TODO replace secret with vault
     WS_APIKEY: ENCRYPTED[!3929c6148b9dfc751a2d17c590b15d755f82cd9c108f2de5f24a5b32f2a0c26144e921fab7e2c959fc2824d6d6d1550d!]
   run_script:
     - .cirrus/run_ws_scan.sh
@@ -55,3 +55,14 @@ mend_task:
   always:
     mend_artifacts:
       path: "whitesource/**/*"
+
+qa_task:
+  depends_on:
+    - build
+  eks_container:
+    <<: *CONTAINER_DEFINITION
+    cpu: 4
+    memory: 8G
+  qa_script:
+    - npm run build
+    - npm run test-integration
