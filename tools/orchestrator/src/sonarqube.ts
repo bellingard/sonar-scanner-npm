@@ -1,6 +1,5 @@
 import * as path from 'path';
 import { spawn } from 'child_process';
-import * as http from 'http';
 const axios = require('axios').default;
 
 const DEFAULT_FOLDER = path.join(__dirname, '..', 'test', 'cache', 'sonarqube-9.7.1.62043', 'bin', 'macosx-universal-64');
@@ -10,6 +9,7 @@ const CREATE_TOKEN_PATH = '/api/user_tokens/generate';
 const CREATE_PROJECT_PATH = '/api/projects/create';
 const IS_READY_PATH = '/api/analysis_reports/is_queue_empty';
 const GET_ISSUES_PATH = '/api/issues/search';
+const DEFAULT_MAX_WAIT_MS = 60 * 1000;
 
 const instance = axios.create({
   baseURL: `http://${DEFAULT_HOST}:${DEFAULT_PORT}`,
@@ -25,9 +25,9 @@ const instance = axios.create({
  * @param sqPath The path where SQ was downloaded and unzipped
  * @returns
  */
-export async function startAndReady(sqPath: string = DEFAULT_FOLDER) {
+export async function startAndReady(sqPath: string = DEFAULT_FOLDER, maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
   const process = start(sqPath);
-  await waitForStart();
+  await waitForStart(maxWaitMs);
   return process;
 }
 
@@ -70,10 +70,14 @@ function getPathForPlatform(sqPath: string) {
   }
 }
 
-async function waitForStart() {
+async function waitForStart(maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
+  const startWaitMs = Date.now();
   let isReady = false;
   while (! isReady) {
     try {
+      if (isBeyondWaitingTime(startWaitMs, maxWaitMs)) {
+        return console.log(`Waiting for server ready aborted because we have waited more than ${maxWaitMs} ms.`)
+      }
       const [response] = await Promise.all([
         isApiReady(),
         sleep(),
@@ -82,6 +86,10 @@ async function waitForStart() {
     } catch (error: any) {
       await sleep();
     }
+  }
+
+  function isBeyondWaitingTime(startWaitMs: number, maxWaitMs: number) {
+    return (Date.now() - startWaitMs) > maxWaitMs;
   }
 }
 
