@@ -32,10 +32,14 @@ build_task:
     <<: *CONTAINER_DEFINITION
     cpu: 4
     memory: 8G
+  env:
+    SONAR_TOKEN: ENCRYPTED[6aa9305c4d78b8f753d86e26171ff2c6f40600c03d514cf2bff683d14d466078169f17a408af03ad2ee85de8458157b6]
   build_script:
     - jfrog config add repox --url $ARTIFACTORY_URL --access-token $ARTIFACTORY_DEPLOY_ACCESS_TOKEN
     - jfrog npm-config --repo-resolve npm --repo-deploy sonarsource-npm-public-qa
     - npm run build
+  sonarcloud_analysis_script:
+    - node ./ci-analysis.js
 
 mend_task:
   depends_on:
@@ -63,6 +67,8 @@ qa_task:
     <<: *CONTAINER_DEFINITION
     cpu: 4
     memory: 8G
-  qa_script:
+  build_script:
+#    TODO replace by downloading artifact build in build task
     - npm run build
+  qa_script:
     - npm run test-integration

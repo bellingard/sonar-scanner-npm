@@ -8,10 +8,13 @@ const scanner = require('./src/index')
 scanner(
   {
     options: {
+      'sonar.projectKey': 'SonarSource_sonar-scanner-npm',
+      'sonar.organization': 'sonarsource',
       'sonar.projectName': 'SonarScanner for NPM',
       'sonar.projectDescription': 'SonarQube/SonarCloud Scanner for the JavaScript world',
       'sonar.sources': 'src',
-      'sonar.tests': 'test'
+      'sonar.tests': 'test',
+      'sonar.host.url': 'https://sonarcloud.io'
     }
   },
   () => process.exit()
