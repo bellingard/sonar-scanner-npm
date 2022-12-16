@@ -45,7 +45,7 @@ describe('scanner', function () {
         startLine: 1,
         endLine: 1,
         startOffset: 0,
-        endOffset: 13,
+        endOffset: 7,
       });
     }).timeout(60 * 1000);
   });
