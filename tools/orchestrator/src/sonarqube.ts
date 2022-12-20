@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { ChildProcess, spawn } from 'child_process';
+import { ChildProcess, spawn, exec } from 'child_process';
 const axios = require('axios').default;
 
 const DEFAULT_FOLDER = path.join(__dirname, '..', 'test', 'cache', 'sonarqube-9.7.1.62043', 'bin', 'macosx-universal-64');
@@ -120,8 +120,14 @@ async function isApiReady(logs: string[], startIndex: number): Promise<any> {
  * @returns
  */
 export function stop(sqPath: string = DEFAULT_FOLDER) {
-  const pathToBin = getPathForPlatform(sqPath);
-  return spawn(`${pathToBin}`, ['stop'], {stdio: 'inherit'});
+  return exec(`java ${__dirname}/stop.java ${sqPath}`, undefined,  (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
+  });
 }
 
 /**

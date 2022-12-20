@@ -27,6 +27,14 @@ container_definition: &CONTAINER_DEFINITION
   region: eu-central-1
   namespace: default
 
+ec2_instance: &INSTANCE_DEFINITION
+  experimental: true # see https://github.com/cirruslabs/cirrus-ci-docs/issues/1051
+  region: eu-central-1
+  subnet_id: ${CIRRUS_AWS_SUBNET}
+  type: t3.medium
+  image: base-windows-jdk17-v*
+  platform: windows
+
 build_task:
   eks_container:
     <<: *CONTAINER_DEFINITION
@@ -63,12 +71,24 @@ mend_task:
 qa_task:
   depends_on:
     - build
+  <<: *ONLY_SONARSOURCE_QA
   eks_container:
     <<: *CONTAINER_DEFINITION
     cpu: 4
     memory: 8G
   build_script:
 #    TODO replace by downloading artifact build in build task
+    - npm run build
+  qa_script:
+    - npm run test-integration
+
+qa_win_task:
+  depends_on:
+    - build
+  <<: *ONLY_SONARSOURCE_QA
+  <<: *INSTANCE_DEFINITION
+  build_script:
+    #    TODO replace by downloading artifact build in build task
     - npm run build
   qa_script:
     - npm run test-integration

@@ -1,3 +1,4 @@
+const path = require('node:path');
 const { assert } = require('chai');
 const { findTargetOS, buildInstallFolderPath } = require('../../src/utils');
 const sinon = require('sinon');
@@ -36,7 +37,10 @@ describe('utils', function () {
   describe('buildInstallFolderPath()', function () {
     it('should use SONAR_BINARY_CACHE env when exists', function () {
       const basePath = './test-cache';
-      assert.equal(buildInstallFolderPath(basePath), 'test-cache/.sonar/native-sonar-scanner');
+      assert.equal(
+        buildInstallFolderPath(basePath),
+        path.join('test-cache', '.sonar', 'native-sonar-scanner'),
+      );
     });
   });
 });
