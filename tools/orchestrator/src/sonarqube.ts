@@ -7,7 +7,7 @@ const DEFAULT_HOST = 'localhost';
 const DEFAULT_PORT = 9000;
 const CREATE_TOKEN_PATH = '/api/user_tokens/generate';
 const CREATE_PROJECT_PATH = '/api/projects/create';
-const IS_READY_PATH = '/api/analysis_reports/is_queue_empty';
+const IS_ANALYSIS_FINISHED_PATH = '/api/analysis_reports/is_queue_empty';
 const GET_ISSUES_PATH = '/api/issues/search';
 const DEFAULT_MAX_WAIT_MS = 60 * 1000;
 
@@ -39,7 +39,7 @@ export async function startAndReady(sqPath: string = DEFAULT_FOLDER, maxWaitMs: 
  */
 function start(sqPath: string = DEFAULT_FOLDER) {
   const pathToBin = getPathForPlatform(sqPath);
-  return spawn(`${pathToBin}`, ['console'], {stdio: ['inherit', 'pipe', process.stderr]});
+  return spawn(`${pathToBin}`, ['console'], {stdio: ['inherit', 'pipe', 'inherit']});
 }
 
 /**
@@ -155,6 +155,36 @@ export async function createProject(): Promise<string> {
   });
   return response.data.project.key;
 }
+
+export async function waitForAnalysisFinished(maxWaitMs: number = DEFAULT_MAX_WAIT_MS): Promise<void> {
+    const startWaitMs = Date.now();
+    let isFinished = false;
+    while (! isFinished) {
+      try {
+        if (isBeyondWaitingTime(startWaitMs, maxWaitMs)) {
+          return console.log(`Waiting for server ready aborted because we have waited more than ${maxWaitMs} ms.`)
+        }
+        [isFinished] = await Promise.all([
+          isAnalysisFinished(),
+          sleep(),
+        ]);
+      } catch (error: any) {
+        await sleep();
+      }
+    }
+
+    function isBeyondWaitingTime(startWaitMs: number, maxWaitMs: number) {
+      return (Date.now() - startWaitMs) > maxWaitMs;
+    }
+
+
+  async function isAnalysisFinished(): Promise<boolean> {
+    const response = await instance.get(IS_ANALYSIS_FINISHED_PATH);
+    return response.data;
+  }
+}
+
+
 
 /**
  * Fetch issues for a given projectKey

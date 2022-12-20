@@ -1,5 +1,5 @@
 const { getLatestSonarQube } = require('../dist/download');
-const { createProject, generateToken, startAndReady, stop, getIssues } = require('../dist/sonarqube');
+const { createProject, generateToken, startAndReady, stop, waitForAnalysisFinished, getIssues } = require('../dist/sonarqube');
 
 (async () => {
   try {
@@ -10,6 +10,8 @@ const { createProject, generateToken, startAndReady, stop, getIssues } = require
     console.log('got token', token);
     const projectKey = await createProject();
     console.log('got project', projectKey);
+    await waitForAnalysisFinished();
+    console.log('no analysis waiting');
     const issues = await getIssues(projectKey);
     console.log('got issues', issues);
     stop(latest);

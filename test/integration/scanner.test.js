@@ -8,6 +8,7 @@ const {
   generateToken,
   startAndReady,
   stop,
+  waitForAnalysisFinished,
   getIssues,
 } = require('../../tools/orchestrator/dist');
 
@@ -39,6 +40,7 @@ describe('scanner', function () {
           'sonar.sources': path.join(__dirname, '/resources/fake_project_for_integration/src'),
         },
       });
+      await waitForAnalysisFinished();
       const issues = await getIssues(projectKey);
       assert.equal(issues.length, 1);
       assert.deepEqual(issues[0].textRange, {
