@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { spawn } from 'child_process';
+import { ChildProcess, spawn } from 'child_process';
 const axios = require('axios').default;
 
 const DEFAULT_FOLDER = path.join(__dirname, '..', 'test', 'cache', 'sonarqube-9.7.1.62043', 'bin', 'macosx-universal-64');
@@ -27,7 +27,7 @@ const instance = axios.create({
  */
 export async function startAndReady(sqPath: string = DEFAULT_FOLDER, maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
   const process = start(sqPath);
-  await waitForStart(maxWaitMs);
+  await waitForStart(process, maxWaitMs);
   return process;
 }
 
@@ -39,7 +39,7 @@ export async function startAndReady(sqPath: string = DEFAULT_FOLDER, maxWaitMs: 
  */
 function start(sqPath: string = DEFAULT_FOLDER) {
   const pathToBin = getPathForPlatform(sqPath);
-  return spawn(`${pathToBin}`, ['console'], {stdio: 'inherit'});
+  return spawn(`${pathToBin}`, ['console'], {stdio: ['inherit', 'pipe', process.stderr]});
 }
 
 /**
@@ -70,7 +70,16 @@ function getPathForPlatform(sqPath: string) {
   }
 }
 
-async function waitForStart(maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
+async function waitForStart(process: ChildProcess, maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
+  const logs: string[] = [];
+  let logsIndex = 0;
+  process.stdout?.setEncoding('utf8');
+  process.stdout?.on('data', data => {
+    // print logs by node process
+    console.log(data.toString());
+    logs.push(data.toString());
+  })
+
   const startWaitMs = Date.now();
   let isReady = false;
   while (! isReady) {
@@ -79,10 +88,11 @@ async function waitForStart(maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
         return console.log(`Waiting for server ready aborted because we have waited more than ${maxWaitMs} ms.`)
       }
       const [response] = await Promise.all([
-        isApiReady(),
+        isApiReady(logs, logsIndex),
         sleep(),
       ]);
-      isReady = response.data;
+      isReady = response.isReady;
+      logsIndex = response.readIndex;
     } catch (error: any) {
       await sleep();
     }
@@ -93,8 +103,14 @@ async function waitForStart(maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
   }
 }
 
-async function isApiReady(): Promise<any> {
-  return await instance.get(IS_READY_PATH);
+async function isApiReady(logs: string[], startIndex: number): Promise<any> {
+  const SQ_READY_LINE = 'SonarQube is operational';
+  for (let i=startIndex; i<logs.length; i++) {
+    if (logs[i].includes(SQ_READY_LINE)) {
+      return { isReady: true };
+    }
+  }
+  return { isReady: false, readIndex: logs.length };
 }
 
 /**
