@@ -23,11 +23,13 @@ import { execSync } from 'child_process';
 import * as urlLib from 'url';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
+import * as os from 'os';
 
-const DEFAULT_VERSION: string = '9.7.1.62043';
-const VERSIONS_URL: string = 'https://repox.jfrog.io/repox/api/search/versions?g=org.sonarsource.sonarqube&a=sonar-application&remote=0&repos=sonarsource-releases&v=*'
-const CACHE_PATH: string = path.join(__dirname, '..', 'test', 'cache');
-const DEFAULT_SONARQUBE_PATH: string = path.join(CACHE_PATH, 'sonarqube');
+const DEFAULT_VERSION = '9.7.1.62043';
+const ARTIFACTORY_URL = process.env.ARTIFACTORY_URL || 'https://repox.jfrog.io';
+const VERSIONS_URL = new URL(`/repox/api/search/versions?g=org.sonarsource.sonarqube&a=sonar-application&remote=0&repos=sonarsource-releases&v=*`, ARTIFACTORY_URL).href;
+const CACHE_PATH = path.join(os.homedir(), '.sonar');
+const DEFAULT_SONARQUBE_PATH = path.join(CACHE_PATH, 'sonarqube');
 
 /**
  * Downloads the latest SonarQube Community edition
@@ -97,7 +99,7 @@ function download(version: string = DEFAULT_VERSION, downloadFolder: string = CA
         // change path for where to unzip this
         execSync(`unzip -o -q ${zipFilePath} -d ${outputFolderPath}`);
         console.log('unzipped in ', outputFolderPath);
-        resolve(buildSonarQubePath(outputFolderPath));
+        resolve(buildSonarQubePath(outputFolderPath, version));
       });
       file.on('error', (error: Error) => {
         reject(error);
@@ -107,10 +109,11 @@ function download(version: string = DEFAULT_VERSION, downloadFolder: string = CA
 }
 
 function buildSonarQubeUrl(version: string) {
-  return `https://repox.jfrog.io/repox/sonarsource/org/sonarsource/sonarqube/sonar-application/${version}/sonar-application-${version}.zip`;
+  return new URL(`repox/sonarsource/org/sonarsource/sonarqube/sonar-application/${version}/sonar-application-${version}.zip`, ARTIFACTORY_URL).href;
 }
 
-function buildSonarQubePath(folder: string) {
-  const [sqDir] = fs.readdirSync(folder);
+function buildSonarQubePath(folder: string, version: string) {
+  const sqDir = fs.readdirSync(folder).find(sq => sq.includes(version));
+  if (! sqDir) return '';
   return path.join(folder, sqDir);
 }
