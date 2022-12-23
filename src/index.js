@@ -19,14 +19,14 @@
  */
 const exec = require('child_process').execFileSync;
 const log = require('fancy-log');
+const { getScannerParams, extendWithExecParams } = require('./config');
 const {
-  prepareExecEnvironment,
   getSonarScannerExecutable,
   getLocalSonarScannerExecutable,
 } = require('./sonar-scanner-executable');
 
 module.exports = scan;
-module.exports.promise = scanPromise;
+module.exports.async = scanAsync;
 module.exports.cli = scanCLI;
 module.exports.customScanner = scanUsingCustomScanner;
 module.exports.fromParam = fromParam;
@@ -40,24 +40,17 @@ function scan(params, callback) {
   scanCLI([], params, callback);
 }
 
-function scanPromise(params) {
-  return new Promise((resolve, reject) => {
-    log('Starting analysis...');
+async function scanAsync(params) {
+  log('Starting analysis...');
 
-    // prepare the exec options, most notably with the SQ params
-    const optionsExec = prepareExecEnvironment(params, process);
+  // determine the command to run and execute it
+  const sqScannerCommand = await getSonarScannerExecutable();
 
-    // determine the command to run and execute it
-    getSonarScannerExecutable(sqScannerCommand => {
-      try {
-        exec(sqScannerCommand, fromParam(), optionsExec);
-        log('Analysis finished.');
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    });
-  });
+  // prepare the exec options, most notably with the SQ params
+  const scannerParams = getScannerParams(params, process.cwd());
+  const execOptions = extendWithExecParams(scannerParams);
+  exec(sqScannerCommand, fromParam(), execOptions);
+  log('Analysis finished.');
 }
 
 /*
@@ -66,13 +59,12 @@ function scanPromise(params) {
 function scanCLI(cliArgs, params, callback) {
   log('Starting analysis...');
 
-  // prepare the exec options, most notably with the SQ params
-  const optionsExec = prepareExecEnvironment(params, process);
+  getSonarScannerExecutable().then(sqScannerCommand => {
+    const scannerParams = getScannerParams(params, process.cwd());
+    const execOptions = extendWithExecParams(scannerParams);
 
-  // determine the command to run and execute it
-  getSonarScannerExecutable(sqScannerCommand => {
     try {
-      exec(sqScannerCommand, fromParam().concat(cliArgs), optionsExec);
+      exec(sqScannerCommand, fromParam().concat(cliArgs), execOptions);
       log('Analysis finished.');
       callback();
     } catch (error) {
@@ -87,13 +79,14 @@ function scanCLI(cliArgs, params, callback) {
 function scanUsingCustomScanner(params, callback) {
   log('Starting analysis (with local install of the SonarScanner)...');
 
-  // prepare the exec options, most notably with the SQ params
-  const optionsExec = prepareExecEnvironment(params, process);
-
   // determine the command to run and execute it
-  getLocalSonarScannerExecutable(sqScannerCommand => {
+  getLocalSonarScannerExecutable().then(sqScannerCommand => {
+    // prepare the exec options, most notably with the SQ params
+    const scannerParams = getScannerParams(params, process.cwd());
+    const execOptions = extendWithExecParams(scannerParams);
+
     try {
-      exec(sqScannerCommand, fromParam(), optionsExec);
+      exec(sqScannerCommand, fromParam(), execOptions);
       log('Analysis finished.');
       callback();
     } catch (error) {

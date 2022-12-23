@@ -6,7 +6,7 @@ to install any specific tool or (Java) runtime.
 
 This module is analyzed on SonarCloud.
 
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=alert_status)](https://sonarcloud.io/dashboard/index/SonarSource_sonar-scanner-npm) [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=sqale_rating)](https://sonarcloud.io/dashboard/index/SonarSource_sonar-scanner-npm) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=reliability_rating)](https://sonarcloud.io/dashboard/index/SonarSource_sonar-scanner-npm) [![Security](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=security_rating)](https://sonarcloud.io/dashboard/index/SonarSource_sonar-scanner-npm) [![Releases](https://img.shields.io/github/release/SonarSource/sonar-scanner-npm.svg)](https://github.com/SonarSource/sonar-scanner-npm/releases)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=alert_status)](https://sonarcloud.io/project/overview?id=SonarSource_sonar-scanner-npm) [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=sqale_rating)](https://sonarcloud.io/project/overview?id=SonarSource_sonar-scanner-npm) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=reliability_rating)](https://sonarcloud.io/project/overview?id=SonarSource_sonar-scanner-npm) [![Security](https://sonarcloud.io/api/project_badges/measure?project=SonarSource_sonar-scanner-npm&metric=security_rating)](https://sonarcloud.io/project/overview?id=SonarSource_sonar-scanner-npm) [![Releases](https://img.shields.io/github/release/SonarSource/sonar-scanner-npm.svg)](https://github.com/SonarSource/sonar-scanner-npm/releases)
 
 
 ## Installation
@@ -80,8 +80,8 @@ sonar-scanner
 * If there's a `package.json` file in the folder, it will be read to feed the analysis with basic information (like project name or version)
 * If there's a `sonar-project.properties` file in the folder, it will behave like the [original SonarScanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html)
 * Additional [analysis parameters](https://redirect.sonarsource.com/doc/analysis-parameters.html) can be passed on the command line using the standard `-Dsonar.xxx=yyy` syntax
-  * Example: 
-  
+  * Example:
+
     `sonar-scanner -Dsonar.host.url=https://myserver.com -Dsonar.login=019d1e2e04e`
 
 ## FAQ
@@ -89,7 +89,7 @@ sonar-scanner
 #### *I constantly get "Impossible to download and extract binary [...] In such situation, the best solution is to install the standard SonarScanner", what can I do?*
 
 You can install manually the [standard SonarScanner](https://redirect.sonarsource.com/doc/install-configure-scanner.html),
-which requires to have a Java Runtime Environment available too (Java 8+). 
+which requires to have a Java Runtime Environment available too (Java 8+).
 
 It is important to make sure that the SonarScanner `$install_directory/bin` location is added to the system `$PATH` environment variable. This will ensure that `sonar-scanner` command will be resolved by the customScanner, and prevent the error:
 
@@ -98,7 +98,7 @@ Error: Local install of SonarScanner not found.
     at getLocalSonarScannerExecutable (<project_dir>/node_modules/sonarqube-scanner/src/sonar-scanner-executable.js:153:11)
     at scanUsingCustomScanner (<project_dir>/node_modules/sonarqube-scanner/src/index.js:52:3)
 ...
-```    
+```
 
 Once local installation is done, you can replace the 2nd line of the example:
 
@@ -108,7 +108,7 @@ var scanner = require('sonarqube-scanner').customScanner;
 
 ### In my Docker container, the scanner fails with ".../jre/bin/java: not found", how do I solve this?
 
-You are probably relying on Alpine for your Docker image, and Alpine does not include glibc by default. 
+You are probably relying on Alpine for your Docker image, and Alpine does not include glibc by default.
 It needs to be [installed manually](https://laptrinhx.com/docker-for-mac-alpine-glibc-issues-802275018).
 
 Thanks to [Philipp Eschenbach](https://github.com/peh) for troubleshooting this on [issue #59](https://github.com/bellingard/sonar-scanner-npm/issues/59).

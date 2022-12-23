@@ -21,7 +21,15 @@ import * as path from 'path';
 import { ChildProcess, spawn, exec } from 'child_process';
 const axios = require('axios').default;
 
-const DEFAULT_FOLDER = path.join(__dirname, '..', 'test', 'cache', 'sonarqube-9.7.1.62043', 'bin', 'macosx-universal-64');
+const DEFAULT_FOLDER = path.join(
+  __dirname,
+  '..',
+  'test',
+  'cache',
+  'sonarqube-9.7.1.62043',
+  'bin',
+  'macosx-universal-64',
+);
 const DEFAULT_HOST = 'localhost';
 const DEFAULT_PORT = 9000;
 const CREATE_TOKEN_PATH = '/api/user_tokens/generate';
@@ -44,7 +52,10 @@ const instance = axios.create({
  * @param sqPath The path where SQ was downloaded and unzipped
  * @returns
  */
-export async function startAndReady(sqPath: string = DEFAULT_FOLDER, maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
+export async function startAndReady(
+  sqPath: string = DEFAULT_FOLDER,
+  maxWaitMs: number = DEFAULT_MAX_WAIT_MS,
+) {
   const process = start(sqPath);
   await waitForStart(process, maxWaitMs);
   return process;
@@ -58,7 +69,7 @@ export async function startAndReady(sqPath: string = DEFAULT_FOLDER, maxWaitMs: 
  */
 function start(sqPath: string = DEFAULT_FOLDER) {
   const pathToBin = getPathForPlatform(sqPath);
-  return spawn(`${pathToBin}`, ['console'], {stdio: ['inherit', 'pipe', 'inherit']});
+  return spawn(`${pathToBin}`, ['console'], { stdio: ['inherit', 'pipe', 'inherit'] });
 }
 
 /**
@@ -89,42 +100,44 @@ function getPathForPlatform(sqPath: string) {
   }
 }
 
-async function waitForStart(process: ChildProcess, maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
+async function waitForStart(sqProcess: ChildProcess, maxWaitMs: number = DEFAULT_MAX_WAIT_MS) {
   const logs: string[] = [];
   let logsIndex = 0;
-  process.stdout?.setEncoding('utf8');
-  process.stdout?.on('data', data => {
+  sqProcess.stdout?.setEncoding('utf8');
+  sqProcess.stdout?.on('data', data => {
     // print logs by node process
-    console.log(data.toString());
+    process.stdout.write(data.toString());
     logs.push(data.toString());
-  })
+  });
 
   const startWaitMs = Date.now();
   let isReady = false;
-  while (! isReady) {
+  while (!isReady) {
     try {
       if (isBeyondWaitingTime(startWaitMs, maxWaitMs)) {
-        return console.log(`Waiting for server ready aborted because we have waited more than ${maxWaitMs} ms.`)
+        return console.log(
+          `Waiting for server ready aborted because we have waited more than ${maxWaitMs} ms.`,
+        );
       }
-      const [response] = await Promise.all([
-        isApiReady(logs, logsIndex),
-        sleep(),
-      ]);
+      const [response] = await Promise.all([isSonarQubeReady(logs, logsIndex), sleep()]);
       isReady = response.isReady;
       logsIndex = response.readIndex;
     } catch (error: any) {
       await sleep();
     }
   }
-
-  function isBeyondWaitingTime(startWaitMs: number, maxWaitMs: number) {
-    return (Date.now() - startWaitMs) > maxWaitMs;
-  }
 }
 
-async function isApiReady(logs: string[], startIndex: number): Promise<any> {
+/**
+ * Reads logs from line 'startIndex' until the end, looking for the SQ_READY_LINE
+ *
+ * @param logs
+ * @param startIndex
+ * @returns
+ */
+async function isSonarQubeReady(logs: string[], startIndex: number): Promise<any> {
   const SQ_READY_LINE = 'SonarQube is operational';
-  for (let i=startIndex; i<logs.length; i++) {
+  for (let i = startIndex; i < logs.length; i++) {
     if (logs[i].includes(SQ_READY_LINE)) {
       return { isReady: true };
     }
@@ -139,7 +152,7 @@ async function isApiReady(logs: string[], startIndex: number): Promise<any> {
  * @returns
  */
 export function stop(sqPath: string = DEFAULT_FOLDER) {
-  return exec(`java ${__dirname}/stop.java ${sqPath}`, undefined,  (error, stdout, stderr) => {
+  return exec(`java ${__dirname}/stop.java ${sqPath}`, undefined, (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
@@ -156,12 +169,16 @@ export function stop(sqPath: string = DEFAULT_FOLDER) {
  */
 export async function generateToken(): Promise<string> {
   const name = generateId();
-  const response = await instance.post(CREATE_TOKEN_PATH, {}, {
-    params: {
-      name,
-      type: 'GLOBAL_ANALYSIS_TOKEN',
+  const response = await instance.post(
+    CREATE_TOKEN_PATH,
+    {},
+    {
+      params: {
+        name,
+        type: 'GLOBAL_ANALYSIS_TOKEN',
+      },
     },
-  })
+  );
   return response.data.token;
 }
 
@@ -172,44 +189,42 @@ export async function generateToken(): Promise<string> {
  */
 export async function createProject(): Promise<string> {
   const project = generateId();
-  const response =  await instance.post(CREATE_PROJECT_PATH, {}, {
-    params: {
-      name: project,
-      project,
-    }
-  });
+  const response = await instance.post(
+    CREATE_PROJECT_PATH,
+    {},
+    {
+      params: {
+        name: project,
+        project,
+      },
+    },
+  );
   return response.data.project.key;
 }
 
-export async function waitForAnalysisFinished(maxWaitMs: number = DEFAULT_MAX_WAIT_MS): Promise<void> {
-    const startWaitMs = Date.now();
-    let isFinished = false;
-    while (! isFinished) {
-      try {
-        if (isBeyondWaitingTime(startWaitMs, maxWaitMs)) {
-          return console.log(`Waiting for server ready aborted because we have waited more than ${maxWaitMs} ms.`)
-        }
-        [isFinished] = await Promise.all([
-          isAnalysisFinished(),
-          sleep(),
-        ]);
-      } catch (error: any) {
-        await sleep();
+export async function waitForAnalysisFinished(
+  maxWaitMs: number = DEFAULT_MAX_WAIT_MS,
+): Promise<void> {
+  const startWaitMs = Date.now();
+  let isFinished = false;
+  while (!isFinished) {
+    try {
+      if (isBeyondWaitingTime(startWaitMs, maxWaitMs)) {
+        return console.log(
+          `Waiting for server ready aborted because we have waited more than ${maxWaitMs} ms.`,
+        );
       }
+      [isFinished] = await Promise.all([isAnalysisFinished(), sleep()]);
+    } catch (error: any) {
+      await sleep();
     }
-
-    function isBeyondWaitingTime(startWaitMs: number, maxWaitMs: number) {
-      return (Date.now() - startWaitMs) > maxWaitMs;
-    }
-
+  }
 
   async function isAnalysisFinished(): Promise<boolean> {
     const response = await instance.get(IS_ANALYSIS_FINISHED_PATH);
     return response.data;
   }
 }
-
-
 
 /**
  * Fetch issues for a given projectKey
@@ -218,7 +233,7 @@ export async function waitForAnalysisFinished(maxWaitMs: number = DEFAULT_MAX_WA
  * @returns the issues for this project
  */
 export async function getIssues(projectKey: string): Promise<any> {
-  const response =  await instance.get(GET_ISSUES_PATH, {
+  const response = await instance.get(GET_ISSUES_PATH, {
     params: {
       componentKeys: projectKey,
     },
@@ -235,11 +250,11 @@ export async function getIssues(projectKey: string): Promise<any> {
  * @returns the random string
  */
 function generateId(length: number = 10): string {
-  let result             = '';
-  const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
-  for ( let i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   // ensure that there is at least 1 number
   return result + '1';
@@ -247,4 +262,8 @@ function generateId(length: number = 10): string {
 
 function sleep(timeMs: number = 2000) {
   return new Promise(resolve => setTimeout(resolve, timeMs));
+}
+
+function isBeyondWaitingTime(startWaitMs: number, maxWaitMs: number) {
+  return Date.now() - startWaitMs > maxWaitMs;
 }

@@ -18,7 +18,14 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 const { getLatestSonarQube } = require('../dist/download');
-const { createProject, generateToken, startAndReady, stop, waitForAnalysisFinished, getIssues } = require('../dist/sonarqube');
+const {
+  createProject,
+  generateToken,
+  startAndReady,
+  stop,
+  waitForAnalysisFinished,
+  getIssues,
+} = require('../dist/sonarqube');
 
 (async () => {
   try {

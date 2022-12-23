@@ -4,10 +4,12 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm ci && npm run compile",
+    "build": "npm ci && npm run check-format && npm run compile",
     "compile": "tsc -b . && cp src/stop.java dist/stop.java",
     "sonarqube": "npm run compile && node scripts/sonarqube.js",
-    "test": "npm run compile && node scripts/full.js"
+    "test": "npm run compile && node scripts/full.js",
+    "format": "prettier --write \"{src,scripts}/**/!(*.lint).(js|ts)\"",
+    "check-format": "prettier --list-different \"{src,scripts}/**/!(*.lint).(js|ts)\""
   },
   "keywords": [],
   "author": "",
@@ -19,6 +21,13 @@
   "devDependencies": {
     "@types/mkdirp": "^1.0.2",
     "@types/node": "^18.11.12",
+    "prettier": "^2.8.1",
     "typescript": "^4.9.4"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "trailingComma": "all",
+    "singleQuote": true,
+    "arrowParens": "avoid"
   }
 }

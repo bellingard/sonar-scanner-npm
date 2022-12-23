@@ -132,3 +132,6 @@ xunit.xml
 # End of https://www.gitignore.io/api/node,SonarQube,intellij+all
 
 !test/**/resources/**/*
+
+# MacOS
+.DS_Store

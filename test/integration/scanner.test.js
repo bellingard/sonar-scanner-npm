@@ -18,7 +18,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 // Regular users will call 'require('sonarqube-scanner')' - but not here: eat your own dog food! :-)
-const { promise: scannerPromise } = require('../../src/index');
+const { async: scanAsync } = require('../../src/index');
 const path = require('path');
 const { assert } = require('chai');
 const {
@@ -52,7 +52,7 @@ describe('scanner', function () {
       stop(sqPath);
     });
     it('should run an analysis', async function () {
-      await scannerPromise({
+      await scanAsync({
         serverUrl: 'http://localhost:9000',
         token,
         options: {
