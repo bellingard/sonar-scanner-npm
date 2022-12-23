@@ -33,6 +33,7 @@ module.exports.DEFAULT_EXCLUSIONS = DEFAULT_EXCLUSIONS;
 const DEFAULT_SCANNER_VERSION = '4.7.0.2747';
 module.exports.DEFAULT_SCANNER_VERSION = DEFAULT_SCANNER_VERSION;
 const SONAR_SCANNER_MIRROR = 'https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/';
+module.exports.SONAR_SCANNER_MIRROR = SONAR_SCANNER_MIRROR;
 
 /**
  * Build the SONARQUBE_SCANNER_PARAMS which will be passed as an environment
@@ -40,7 +41,7 @@ const SONAR_SCANNER_MIRROR = 'https://binaries.sonarsource.com/Distribution/sona
  *
  * @returns
  */
-function getScannerParams(params = {}, basePath) {
+function getScannerParams(basePath, params = {}) {
   const config = {};
 
   const sqScannerParams = sonarScannerParams(

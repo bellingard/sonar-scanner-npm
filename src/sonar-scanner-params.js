@@ -170,18 +170,16 @@ function extractInfoFromPackageFile(projectBaseDir, exclusions) {
         'coverage',
       );
     const uniqueCoverageDirs = Array.from(new Set(potentialCoverageDirs));
-    uniqueCoverageDirs.find(function (lcovReportDir) {
-      packageJsonParams['sonar.exclusions'] = exclusions;
+    packageJsonParams['sonar.exclusions'] = exclusions;
+    for (const lcovReportDir of uniqueCoverageDirs) {
       const lcovReportPath = path.posix.join(lcovReportDir, 'lcov.info');
       if (fileExistsInProjectSync(lcovReportPath)) {
         packageJsonParams['sonar.exclusions'] += ',' + path.posix.join(lcovReportDir, '**');
         // https://docs.sonarqube.org/display/PLUG/JavaScript+Coverage+Results+Import
         packageJsonParams['sonar.javascript.lcov.reportPaths'] = lcovReportPath;
         // TODO: use Generic Test Data to remove dependence of SonarJS, it is need transformation lcov to sonar generic coverage format
-        return true;
       }
-      return false;
-    });
+    }
 
     if (dependenceExists('mocha-sonarqube-reporter') && fileExistsInProjectSync('xunit.xml')) {
       // https://docs.sonarqube.org/display/SONAR/Generic+Test+Data

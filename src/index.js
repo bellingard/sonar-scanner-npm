@@ -47,7 +47,7 @@ async function scanAsync(params) {
   const sqScannerCommand = await getSonarScannerExecutable();
 
   // prepare the exec options, most notably with the SQ params
-  const scannerParams = getScannerParams(params, process.cwd());
+  const scannerParams = getScannerParams(process.cwd(), params);
   const execOptions = extendWithExecParams(scannerParams);
   exec(sqScannerCommand, fromParam(), execOptions);
   log('Analysis finished.');
@@ -60,7 +60,7 @@ function scanCLI(cliArgs, params, callback) {
   log('Starting analysis...');
 
   getSonarScannerExecutable().then(sqScannerCommand => {
-    const scannerParams = getScannerParams(params, process.cwd());
+    const scannerParams = getScannerParams(process.cwd(), params);
     const execOptions = extendWithExecParams(scannerParams);
 
     try {
@@ -82,7 +82,7 @@ function scanUsingCustomScanner(params, callback) {
   // determine the command to run and execute it
   getLocalSonarScannerExecutable().then(sqScannerCommand => {
     // prepare the exec options, most notably with the SQ params
-    const scannerParams = getScannerParams(params, process.cwd());
+    const scannerParams = getScannerParams(process.cwd(), params);
     const execOptions = extendWithExecParams(scannerParams);
 
     try {

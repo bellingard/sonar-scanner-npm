@@ -19,7 +19,17 @@
  */
 const { assert } = require('chai');
 const path = require('path');
-const { getScannerParams, extendWithExecParams, DEFAULT_EXCLUSIONS } = require('../../src/config');
+const os = require('os');
+const {
+  getScannerParams,
+  extendWithExecParams,
+  DEFAULT_EXCLUSIONS,
+  getExecutableParams,
+  DEFAULT_SCANNER_VERSION,
+  SONAR_SCANNER_MIRROR,
+} = require('../../src/config');
+const { buildInstallFolderPath, buildExecutablePath } = require('../../src/utils/paths');
+const { findTargetOS } = require('../../src/utils/platform');
 
 function pathForProject(projectFolder) {
   return path.join(__dirname, 'resources', projectFolder);
@@ -46,7 +56,7 @@ describe('config', function () {
 
       assert.deepEqual(
         JSON.parse(
-          getScannerParams({}, pathForProject('fake_project_with_no_package_file'))
+          getScannerParams(pathForProject('fake_project_with_no_package_file'))
             .SONARQUBE_SCANNER_PARAMS,
         ),
         expectedResult,
@@ -57,7 +67,7 @@ describe('config', function () {
       const expectedResult = {};
 
       assert.deepEqual(
-        getScannerParams({}, pathForProject('fake_project_with_sonar_properties_file')),
+        getScannerParams(pathForProject('fake_project_with_sonar_properties_file')),
         expectedResult,
       );
     });
@@ -71,10 +81,10 @@ describe('config', function () {
         'sonar.exclusions': exclusions,
       };
 
-      const sqParams = getScannerParams(
-        { serverUrl: 'https://sonarcloud.io', token: 'my_token' },
-        pathForProject('fake_project_with_no_package_file'),
-      ).SONARQUBE_SCANNER_PARAMS;
+      const sqParams = getScannerParams(pathForProject('fake_project_with_no_package_file'), {
+        serverUrl: 'https://sonarcloud.io',
+        token: 'my_token',
+      }).SONARQUBE_SCANNER_PARAMS;
 
       assert.deepEqual(JSON.parse(sqParams), expectedResult);
     });
@@ -88,10 +98,9 @@ describe('config', function () {
         'sonar.exclusions': exclusions,
       };
 
-      const sqParams = getScannerParams(
-        { options: { 'sonar.projectName': 'Foo', 'sonar.tests': 'specs' } },
-        pathForProject('fake_project_with_no_package_file'),
-      ).SONARQUBE_SCANNER_PARAMS;
+      const sqParams = getScannerParams(pathForProject('fake_project_with_no_package_file'), {
+        options: { 'sonar.projectName': 'Foo', 'sonar.tests': 'specs' },
+      }).SONARQUBE_SCANNER_PARAMS;
 
       assert.deepEqual(JSON.parse(sqParams), expectedResult);
     });
@@ -109,7 +118,6 @@ describe('config', function () {
       };
 
       const sqParams = getScannerParams(
-        {},
         pathForProject('fake_project_with_basic_package_file'),
       ).SONARQUBE_SCANNER_PARAMS;
 
@@ -128,7 +136,6 @@ describe('config', function () {
       };
 
       const sqParams = getScannerParams(
-        {},
         pathForProject('fake_project_with_scoped_package_name'),
       ).SONARQUBE_SCANNER_PARAMS;
 
@@ -150,7 +157,6 @@ describe('config', function () {
       };
 
       const sqParams = getScannerParams(
-        {},
         pathForProject('fake_project_with_complete_package_file'),
       ).SONARQUBE_SCANNER_PARAMS;
 
@@ -174,7 +180,6 @@ describe('config', function () {
       };
 
       const sqParams = getScannerParams(
-        {},
         pathForProject('fake_project_with_no_package_file'),
       ).SONARQUBE_SCANNER_PARAMS;
 
@@ -197,10 +202,10 @@ describe('config', function () {
         }),
       };
 
-      const sqParams = getScannerParams(
-        { serverUrl: 'https://sonarcloud.io', token: 'my_token' },
-        pathForProject('fake_project_with_no_package_file'),
-      ).SONARQUBE_SCANNER_PARAMS;
+      const sqParams = getScannerParams(pathForProject('fake_project_with_no_package_file'), {
+        serverUrl: 'https://sonarcloud.io',
+        token: 'my_token',
+      }).SONARQUBE_SCANNER_PARAMS;
 
       assert.deepEqual(JSON.parse(sqParams), expectedResult);
     });
@@ -218,7 +223,6 @@ describe('config', function () {
       };
 
       const sqParams = getScannerParams(
-        {},
         pathForProject('fake_project_with_nyc_report_file'),
       ).SONARQUBE_SCANNER_PARAMS;
       assert.deepEqual(JSON.parse(sqParams), expectedResult);
@@ -237,7 +241,6 @@ describe('config', function () {
       };
 
       const sqParams = getScannerParams(
-        {},
         pathForProject('fake_project_with_jest_report_file'),
       ).SONARQUBE_SCANNER_PARAMS;
       assert.deepEqual(JSON.parse(sqParams), expectedResult);
@@ -262,7 +265,7 @@ describe('config', function () {
       };
 
       assert.ownInclude(
-        getScannerParams({}, pathForProject('fake_project_with_no_package_file')),
+        getScannerParams(pathForProject('fake_project_with_no_package_file')),
         expectedResult,
       );
     });
@@ -281,6 +284,32 @@ describe('config', function () {
           hello: 2,
           whatsup: 'dog',
         },
+      });
+    });
+
+    it('should set default empty object if no params are provided', function () {
+      process.env = {};
+
+      assert.deepEqual(extendWithExecParams(), {
+        env: {},
+        maxBuffer: 1024 * 1024,
+        stdio: 'inherit',
+      });
+    });
+  });
+
+  describe('getExecutableParams()', function () {
+    it('should set default values if no params are provided', function () {
+      process.env = {};
+      const targetOS = findTargetOS();
+      const fileName = 'sonar-scanner-cli-' + DEFAULT_SCANNER_VERSION + '-' + targetOS + '.zip';
+      const installFolder = buildInstallFolderPath(os.homedir());
+      assert.deepEqual(getExecutableParams(), {
+        installFolder,
+        fileName,
+        platformExecutable: buildExecutablePath(installFolder, DEFAULT_SCANNER_VERSION),
+        targetOS,
+        downloadUrl: new URL(fileName, SONAR_SCANNER_MIRROR).href,
       });
     });
   });
