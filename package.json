@@ -56,8 +56,8 @@
     "test-integration": "npx nyc mocha test/integration/**/*.test.js",
     "format": "prettier --write \"{src,test}/**/!(*.lint).js\"",
     "check-format": "prettier --list-different \"{src,test}/**/!(*.lint).js\"",
-    "license": "eslint --ext js,ts src test tools",
-    "license-fix": "eslint --fix --ext js,ts src test tools"
+    "license": "eslint --ext js,ts src test tools scripts .",
+    "license-fix": "eslint --fix --ext js,ts src test tools scripts ."
   },
   "prettier": {
     "printWidth": 100,
