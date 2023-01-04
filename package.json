@@ -64,5 +64,8 @@
     "trailingComma": "all",
     "singleQuote": true,
     "arrowParens": "avoid"
-  }
+  },
+  "files": [
+    "src/**"
+  ]
 }

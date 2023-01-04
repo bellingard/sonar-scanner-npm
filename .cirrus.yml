@@ -7,6 +7,8 @@ env:
   SONAR_TOKEN: VAULT[development/kv/data/sonarcloud data.token]
   ARTIFACTORY_URL: https://repox.jfrog.io/
   ARTIFACTORY_DEPLOY_ACCESS_TOKEN : VAULT[development/artifactory/token/${CIRRUS_REPO_OWNER}-${CIRRUS_REPO_NAME}-qa-deployer access_token]
+  ARTIFACTORY_PRIVATE_USERNAME: vault-${CIRRUS_REPO_OWNER}-${CIRRUS_REPO_NAME}-private-reader
+  ARTIFACTORY_PRIVATE_PASSWORD: VAULT[development/artifactory/token/${CIRRUS_REPO_OWNER}-${CIRRUS_REPO_NAME}-private-reader access_token]
   ARTIFACTORY_PROMOTE_ACCESS_TOKEN : VAULT[development/artifactory/token/${CIRRUS_REPO_OWNER}-${CIRRUS_REPO_NAME}-promoter access_token]
   # Use bash (instead of sh on linux or cmd.exe on windows)
   CIRRUS_SHELL: bash
@@ -47,7 +49,9 @@ build_task:
     - jfrog npm-config --repo-resolve npm --repo-deploy sonarsource-npm-public-qa
     - npm run build
   sonarcloud_analysis_script:
-    - node ./ci-analysis.js
+    - node ./scripts/ci-analysis.js
+  publish_script:
+    - ./scripts/publish.sh
 
 mend_task:
   depends_on:
@@ -76,10 +80,9 @@ qa_task:
     <<: *CONTAINER_DEFINITION
     cpu: 4
     memory: 8G
-  build_script:
-#    TODO replace by downloading artifact build in build task
-    - npm run build
   qa_script:
+    - ./scripts/qa.sh
+    - node ./scripts/build-orchestrator.js
     - npm run test-integration
 
 qa_win_task:
@@ -87,8 +90,20 @@ qa_win_task:
     - build
   <<: *ONLY_SONARSOURCE_QA
   <<: *INSTANCE_DEFINITION
-  build_script:
-    #    TODO replace by downloading artifact build in build task
-    - npm run build
   qa_script:
+    - ./scripts/qa.sh
+    - node ./scripts/build-orchestrator.js
     - npm run test-integration
+
+
+promote_task:
+  depends_on:
+    - qa
+    - qa_win
+  <<: *ONLY_SONARSOURCE_QA
+  eks_container:
+    <<: *CONTAINER_DEFINITION
+    cpu: 1
+    memory: 1G
+  qa_script:
+    - ./scripts/promote.sh

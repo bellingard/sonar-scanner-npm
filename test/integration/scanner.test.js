@@ -17,8 +17,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-// Regular users will call 'require('sonarqube-scanner')' - but not here: eat your own dog food! :-)
-const { async: scanAsync } = require('../../src/index');
+const { async: scanAsync } = require('sonarqube-scanner');
 const path = require('path');
 const { assert } = require('chai');
 const {
