@@ -80,6 +80,9 @@ qa_task:
     <<: *CONTAINER_DEFINITION
     cpu: 4
     memory: 8G
+  node_version_script:
+    - node --version
+    - npm --version
   qa_script:
     - ./scripts/qa.sh
     - node ./scripts/build-orchestrator.js

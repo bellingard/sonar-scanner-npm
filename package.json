@@ -33,14 +33,15 @@
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^5.47.0",
+    "chai": "^4.3.7",
     "eslint": "^8.30.0",
     "eslint-plugin-notice": "^0.9.10",
-    "chai": "^4.3.7",
     "mocha": "^10.1.0",
     "nyc": "^15.1.0",
     "prettier": "^2.8.0",
     "rimraf": "^3.0.2",
-    "sinon": "^15.0.0"
+    "sinon": "^15.0.0",
+    "typescript": "^4.9.5"
   },
   "keywords": [
     "sonarqube",
@@ -53,7 +54,7 @@
   "scripts": {
     "build": "npm ci && npm run check-format && npm run license && npm run test && node ./scripts/build-orchestrator.js",
     "test": "npx nyc mocha --timeout 5000 test/unit/**/*.test.js",
-    "test-integration": "npx nyc mocha test/integration/**/*.test.js",
+    "test-integration": "cd test/integration && npm run test-integration",
     "format": "prettier --write \"{src,test}/**/!(*.lint).js\"",
     "check-format": "prettier --list-different \"{src,test}/**/!(*.lint).js\"",
     "license": "eslint --ext js,ts src test tools scripts .",
