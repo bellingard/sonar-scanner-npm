@@ -84,6 +84,16 @@ sonar-scanner
 
     `sonar-scanner -Dsonar.host.url=https://myserver.com -Dsonar.login=019d1e2e04e`
 
+## Usage: run analyses with npx
+
+To run analyses without explicitly installing the scanner, run the following command instead:
+
+``` sh
+npx sonarqube-scanner
+```
+
+Similar to the above, you can specify analysis properties and settings using either a `package.json` file, a `sonar-project.properties` file, or command line arguments.
+
 ## FAQ
 
 #### *I constantly get "Impossible to download and extract binary [...] In such situation, the best solution is to install the standard SonarScanner", what can I do?*
