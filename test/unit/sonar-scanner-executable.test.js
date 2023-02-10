@@ -23,7 +23,10 @@ const fs = require('fs');
 const os = require('os');
 const mkdirpSync = require('mkdirp').sync;
 const rimraf = require('rimraf');
-const { getSonarScannerExecutable } = require('../../src/sonar-scanner-executable');
+const {
+  getSonarScannerExecutable,
+  getLocalSonarScannerExecutable,
+} = require('../../src/sonar-scanner-executable');
 const { DEFAULT_SCANNER_VERSION, getExecutableParams } = require('../../src/config');
 const { buildInstallFolderPath, buildExecutablePath } = require('../../src/utils');
 const { startServer, closeServerPromise } = require('./resources/webserver/server');
@@ -83,6 +86,15 @@ describe('sqScannerExecutable', function () {
         });
         assert.equal(execPath, expectedPlatformExecutablePath);
       });
+    });
+  });
+
+  describe('getLocalSonarScannerExecutable', () => {
+    it('should fail when the executable is not found', () => {
+      assert.throws(
+        getLocalSonarScannerExecutable,
+        'Local install of SonarScanner not found in: sonar-scanner',
+      );
     });
   });
 });
